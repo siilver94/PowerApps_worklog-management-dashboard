@@ -1,0 +1,254 @@
+Screens:
+  Cal_Screen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
+      OnVisible: |-
+        =Set(varFirstDayOfMonth, 
+            Date(
+                Year(Today()),
+                Month(Today()),
+                1
+            )
+        )
+    Children:
+      - gal_Calendar_Weekdays:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Horizontal_TwoTextOneImageVariant_pcfCore
+          Properties:
+            BorderColor: =RGBA(243, 242, 241, 1)
+            Fill: =ColorValue("#FD625E")
+            FocusedBorderColor: =RGBA(98, 100, 167, 1)
+            FocusedBorderThickness: =2
+            Height: |+
+              =30
+            Items: =Calendar.WeekdaysShort()
+            ShowScrollbar: =false
+            TemplateSize: =Self.Width/7
+            Width: =gal_Calendar_Days.Width
+            X: =gal_Calendar_Days.X
+            Y: =gal_Calendar_Days.Y - Self.Height
+          Children:
+            - Rectangle12:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledFill: =RGBA(0,0,0,0)
+                  Fill: =RGBA(0,0,0,0)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  Height: =Parent.TemplateHeight
+                  HoverFill: =RGBA(0,0,0,0)
+                  OnSelect: =Select(Parent)
+                  PressedFill: =RGBA(0,0,0,0)
+                  TabIndex: =0
+                  Width: =Parent.TemplateWidth
+                  X: =gal_Calendar_Days.X
+            - Title11:
+                Control: FluentV8/Label@1.6.0
+                Properties:
+                  Alignment: =Align.Center
+                  Color: =Color.White
+                  FontWeight: =FontWeight.Semibold
+                  Height: =Parent.TemplateHeight
+                  OnSelect: =Select(Parent)
+                  TabIndex: =-1
+                  Text: =ThisItem.Value
+                  VerticalAlignment: =VerticalAlign.Top
+                  Width: =Parent.TemplateWidth
+            - Subtitle9:
+                Control: FluentV8/Label@1.6.0
+                Properties:
+                  FontSize: =9
+                  FontWeight: =FontWeight.Normal
+                  Height: =24
+                  OnSelect: =Select(Parent)
+                  TabIndex: =-1
+                  Text: =ThisItem.Value
+                  VerticalAlignment: =VerticalAlign.Top
+                  Width: =Title11.Width
+                  X: =Title11.X
+                  Y: =Title11.Y + Title11.Height - 4
+      - gal_Calendar_Days:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_pcfCore
+          Properties:
+            BorderColor: =RGBA(243, 242, 241, 1)
+            Fill: =Color.White
+            FocusedBorderColor: =RGBA(98, 100, 167, 1)
+            FocusedBorderThickness: =2
+            Height: =504
+            Items: |+
+              =ForAll(
+                  Sequence(42),
+                  varFirstDayOfMonth
+                  +Value-Weekday(varFirstDayOfMonth, StartOfWeek.Sunday)
+              )
+            TemplateSize: =Self.Height/6
+            Width: =903
+            WrapCount: =7
+            X: =184
+            Y: =232
+          Children:
+            - Rectangle6:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =0.5
+                  DisabledFill: =RGBA(0,0,0,0)
+                  Fill: =RGBA(0,0,0,0)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  Height: =Parent.TemplateHeight
+                  HoverFill: =ColorValue("#FD625E10")
+                  OnSelect: =Select(Parent)
+                  PressedFill: =ColorValue("#FD625E30")
+                  TabIndex: =0
+                  Width: =Parent.TemplateWidth
+            - Title5:
+                Control: FluentV8/Label@1.6.0
+                Properties:
+                  FontWeight: =FontWeight.Normal
+                  Height: =24
+                  OnSelect: =Select(Parent)
+                  TabIndex: =-1
+                  Text: =ThisItem.Value
+                  VerticalAlignment: =VerticalAlign.Top
+                  Width: =Parent.TemplateWidth - 24
+                  X: =12
+                  Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2) - 2
+      - btn_Calendar_Today:
+          Control: FluentV8/Button@1.5.2
+          Properties:
+            OnSelect: |-
+              =Set(varFirstDayOfMonth, 
+                  Date(
+                      Year(Today()),
+                      Month(Today()),
+                      1
+                  )
+              )
+            Text: ="Today"
+            X: =932
+            Y: =118
+      - Label4:
+          Control: FluentV8/Label@1.6.0
+          Properties:
+            Font: =Font.Verdana
+            FontSize: =15
+            FontWeight: =FontWeight.Semibold
+            Height: =44
+            Text: =Text(varFirstDayOfMonth,"[$-en-US]mmmm yyyy")
+            Width: =330
+            X: =184
+            Y: =126
+      - Label11:
+          Control: FluentV8/Label@1.6.0
+          Properties:
+            Text: =User().Email
+            X: =406
+            Y: =66
+      - Label11_1:
+          Control: FluentV8/Label@1.6.0
+          Properties:
+            Text: =User().FullName
+            X: =406
+            Y: =97
+      - Label11_2:
+          Control: FluentV8/Label@1.6.0
+          Properties:
+            Text: =User().EntraObjectId
+            X: =406
+            Y: =129
+      - Label11_3:
+          Control: FluentV8/Label@1.6.0
+          Properties:
+            Text: =User().Image
+            X: =406
+            Y: =160
+      - Header_con_1:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(34, 35, 58, 1)
+            Height: =64
+            Width: =1366
+          Children:
+            - Label9_1:
+                Control: FluentV8/Label@1.6.0
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontSize: =8
+                  Height: =25
+                  Text: |+
+                    =If(
+                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
+                        Concatenate(
+                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
+                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
+                        ),
+                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
+                    )
+                  Width: =50
+                  X: =1310
+                  Y: =8
+            - Label8_2:
+                Control: FluentV8/Label@1.6.0
+                Properties:
+                  Color: =RGBA(244, 244, 243, 1)
+                  Font: =Font.Verdana
+                  FontSize: =14
+                  FontWeight: =FontWeight.Bold
+                  Text: ="업무현황판"
+                  Width: =104
+                  X: =11
+                  Y: =1
+            - Container8_2:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =RGBA(214, 221, 224, 0.44)
+                  Height: =28
+                  Width: =1366
+                  Y: =36
+                Children:
+                  - ButtonCanvas3_6:
+                      Control: Button@0.0.44
+                      Properties:
+                        BasePaletteColor: =If(currentView = "등록화면", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        Height: =25
+                        OnSelect: |+
+                          =Set(currentView, "등록화면"); // '리스트'로 상태 업데이트
+                          Navigate(Daily_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                        Text: ="등록화면"
+                        Width: =80
+                        X: =1
+                        Y: =1
+                  - ButtonCanvas3_7:
+                      Control: Button@0.0.44
+                      Properties:
+                        BasePaletteColor: =If(currentView = "일정", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        Height: =25
+                        OnSelect: |-
+                          =Set(currentView, "일정"); // '달력'으로 상태 업데이트
+                          Navigate(Cal_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
+                        Text: ="일정"
+                        Width: =80
+                        X: =85
+                        Y: =1
+                  - ButtonCanvas3_8:
+                      Control: Button@0.0.44
+                      Properties:
+                        BasePaletteColor: =If(currentView = "타임라인", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        Height: =25
+                        OnSelect: |+
+                          =Set(currentView, "타임라인"); // '리스트'로 상태 업데이트
+                          Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                        Text: ="업무현황"
+                        Width: =80
+                        X: =170
+                        Y: =1
