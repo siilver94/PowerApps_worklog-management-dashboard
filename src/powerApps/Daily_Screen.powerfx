@@ -1,0 +1,94 @@
+Screens:
+  Daily_Screen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
+    Children:
+      - Header_con_2:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(34, 35, 58, 1)
+            Height: =64
+            Width: =1366
+          Children:
+            - Label9_2:
+                Control: FluentV8/Label@1.6.0
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontSize: =8
+                  Height: =25
+                  Text: |+
+                    =If(
+                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
+                        Concatenate(
+                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
+                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
+                        ),
+                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
+                    )
+                  Width: =50
+                  X: =1310
+                  Y: =8
+            - Label8_1:
+                Control: FluentV8/Label@1.6.0
+                Properties:
+                  Color: =RGBA(244, 244, 243, 1)
+                  Font: =Font.Verdana
+                  FontSize: =14
+                  FontWeight: =FontWeight.Bold
+                  Text: ="업무현황판"
+                  Width: =104
+                  X: =11
+                  Y: =1
+            - Container8_1:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =RGBA(214, 221, 224, 0.44)
+                  Height: =28
+                  Width: =1366
+                  Y: =36
+                Children:
+                  - ButtonCanvas3_3:
+                      Control: Button@0.0.44
+                      Properties:
+                        BasePaletteColor: =If(currentView = "등록화면", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        Height: =25
+                        OnSelect: |+
+                          =Set(currentView, "등록화면"); // '리스트'로 상태 업데이트
+                          Navigate(Daily_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                        Text: ="등록화면"
+                        Width: =80
+                        X: =1
+                        Y: =1
+                  - ButtonCanvas3_4:
+                      Control: Button@0.0.44
+                      Properties:
+                        BasePaletteColor: =If(currentView = "일정", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        Height: =25
+                        OnSelect: |-
+                          =Set(currentView, "일정"); // '달력'으로 상태 업데이트
+                          Navigate(Cal_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
+                        Text: ="일정"
+                        Width: =80
+                        X: =85
+                        Y: =1
+                  - ButtonCanvas3_5:
+                      Control: Button@0.0.44
+                      Properties:
+                        BasePaletteColor: =If(currentView = "타임라인", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        Height: =25
+                        OnSelect: |+
+                          =Set(currentView, "타임라인"); // '리스트'로 상태 업데이트
+                          Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                        Text: ="업무현황"
+                        Width: =80
+                        X: =170
+                        Y: =1
