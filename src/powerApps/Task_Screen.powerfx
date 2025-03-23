@@ -4,661 +4,318 @@ Screens:
       Fill: =RGBA(255, 255, 255, 0.5)
       LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
     Children:
-      - Heatbox_con_1:
+      - Container1:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
           Properties:
-            Fill: =RGBA(255, 255, 255, 1)
-            Height: =59
-            Width: =315
-            X: =677
-            Y: =97
-          Children:
-            - ButtonCanvas2:
-                Control: Button@0.0.44
-                Properties:
-                  BasePaletteColor: =If(FilterMode = "All", RGBA(40,134, 222, 1), RGBA(200, 200, 200, 1))
-                  Font: =Font.Verdana
-                  FontSize: =11
-                  Height: =30
-                  OnSelect: |+
-                    =Set(FilterMode, "All");
-                  Text: ="전체"
-                  Width: =75
-                  X: =28
-                  Y: =16
-            - ButtonCanvas2_1:
-                Control: Button@0.0.44
-                Properties:
-                  BasePaletteColor: =If(FilterMode = "InProgress", RGBA(40,134, 222, 1), RGBA(200, 200, 200, 1))
-                  Font: =Font.Verdana
-                  FontSize: =11
-                  Height: =30
-                  OnSelect: =Set(FilterMode, "InProgress")
-                  Text: ="현재 날짜"
-                  Width: =75
-                  X: =122
-                  Y: =16
-            - new_btn:
-                Control: Button@0.0.44
-                Properties:
-                  BasePaletteColor: =RGBA(141, 229, 250, 1)
-                  Font: =Font.Verdana
-                  FontSize: =11
-                  Height: =28
-                  OnSelect: |+
-                    =Set(editMode, true);
-                    NewForm(Form1_1);
-                    Set(ShowPopup, true);
-                  Text: ="New"
-                  Width: =82
-                  X: =209
-                  Y: =18
-      - TaskList_con:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            Fill: =RGBA(255, 255, 255, 1)
-            Height: =565
-            Width: =315
-            X: =20
-            Y: =191
-          Children:
-            - Table1:
-                Control: Table@1.0.278
-                Properties:
-                  Font: =Font.Verdana
-                  FontSize: =11
-                  HeaderFont: =Font.Verdana
-                  HeaderFontSize: =10
-                  Height: =565
-                  Items: |-
-                    =Search(
-                        SortByColumns(
-                            Filter(
-                                Task_DB,
-                                FilterMode = "All" || (DateValue(업무_시작일자) <= Today() && DateValue(업무_종료일자) >= Today())
-                            ),
-                            "OData__xc5c5__xbb34___xc2dc__xc791__xc",
-                            SortOrder.Descending
-                        ),
-                        SearchBox.Value,
-                        업무제목
-                    )
-                  NoDataText: =
-                  OnSelect: |+
-                    =Set(SelectedItem, Table1.Selected);
-
-                    Set(ShowPopup, true);
-                    Set(editMode, false);
-                    Set(EscPressed, false); // Esc 초기화
-                  ReflowBehavior: ='PowerAppsOneGrid.ReflowBehavior'.GridOnly
-                  Width: =315
-                Children:
-                  - OData__xc5c5__xbb34___xc2dc__xc791__xc1:
-                      Control: TableDataField@1.5.0
-                      Variant: textualColumn
-                      IsLocked: true
-                      Properties:
-                        FieldDisplayName: ="OData__xc5c5__xbb34___xc2dc__xc791__xc"
-                        FieldName: ="OData__xc5c5__xbb34___xc2dc__xc791__xc"
-                        FieldType: ="D"
-                        Order: =4
-                  - 상태1:
-                      Control: TableDataField@1.5.0
-                      Variant: textualColumn
-                      IsLocked: true
-                      Properties:
-                        FieldDisplayName: ="상태"
-                        FieldName: ="field_7"
-                        FieldType: ="s"
-                        Order: =2
-                  - 프로젝트명1:
-                      Control: TableDataField@1.5.0
-                      Variant: textualColumn
-                      IsLocked: true
-                      Properties:
-                        FieldDisplayName: ="프로젝트명"
-                        FieldName: ="OData__xd504__xb85c__xc81d__xd2b8__xba"
-                        FieldType: ="s"
-                        Order: =5
-      - Heatbox_con:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            Fill: =RGBA(255, 255, 255, 1)
-            Height: =59
-            Width: =315
-            X: =20
-            Y: =131
-          Children:
-            - SearchBox:
-                Control: FluentV8/TextBox@1.6.1
-                Properties:
-                  Placeholder: ="Search"
-                  Value: =
-                  Width: =277
-                  X: =20
-                  Y: =16
-      - done_con:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            BorderStyle: =BorderStyle.None
-            Height: =430
-            PaddingBottom: |+
-              =10
-            Width: =290
-            X: =1043
-            Y: =189
-          Children:
-            - Container4_1:
-                Control: GroupContainer@1.3.0
-                Variant: ManualLayout
-                Properties:
-                  Fill: =RGBA(45, 128, 40, 1)
-                  Height: =31
-                  Width: =290
-                Children:
-                  - Label10_1:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Alignment: =Align.Center
-                        Color: =RGBA(255, 255, 255, 1)
-                        Font: =Font.Verdana
-                        FontSize: =12
-                        FontWeight: =FontWeight.Semibold
-                        Height: =31
-                        Text: ="완료"
-                        Width: =92
-                        X: =96
-            - Gallery6_2:
-                Control: Gallery@2.15.0
-                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
-                Properties:
-                  BorderColor: =RGBA(153, 153, 153, 1)
-                  BorderStyle: =BorderStyle.None
-                  BorderThickness: =1
-                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                  FocusedBorderThickness: =2
-                  Height: =398
-                  Items: |-
-                    =With(
-                        {FilteredData: Filter(
-                            Task_DB, 
-                            작성자 = user_name.Text &&
-                            (FilterMode = "All" || (DateValue(업무_시작일자) <= Today() && DateValue(업무_종료일자) >= Today()))
-                        )},
-                        SortByColumns(
-                            Filter(FilteredData, 상태 = Label10_1.Text),
-                            "OData__xc5c5__xbb34___xc2dc__xc791__xc",
-                            SortOrder.Descending
-                        )
-                    )
-                  OnSelect: |-
-                    =Set(SelectedItem, ThisItem); // 데이터 입력
-                    Set(ShowPopup, true);       // 팝업창 뜨기
-                    Set(editMode, false);
-                    Set(EscPressed, false); // Esc 초기화
-                  TemplateSize: =64
-                  Width: =288
-                  X: =2
-                  Y: =32
-                Children:
-                  - Container3_1:
-                      Control: GroupContainer@1.3.0
-                      Variant: ManualLayout
-                      Properties:
-                        Fill: =RGBA(183, 222, 175, 0.31)
-                        Height: =51
-                        Width: =285
-                        Y: =4
-                  - Title2_2:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Semibold
-                        Height: =22
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =Text(ThisItem.'업무_시작일자', "yyyy.mm.dd") & ""
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =87
-                        X: =8
-                        Y: =1
-                  - Subtitle2_2:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Normal
-                        Height: =31
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =ThisItem.업무제목
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =277
-                        X: =8
-                        Y: =25
-                  - Title2_8:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Semibold
-                        Height: =22
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =Text(ThisItem.'업무_종료일자', "yyyy.mm.dd") & ""
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =87
-                        X: =102
-                        Y: =1
-                  - Title2_9:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8
-                        FontWeight: =FontWeight.Semibold
-                        Height: =20
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: ="~"
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =20
-                        X: =87
-                        Y: =1
-      - Inprogress_con:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            BorderStyle: =BorderStyle.None
-            Height: =430
-            PaddingBottom: |+
-              =10
-            Width: =290
-            X: =702
-            Y: =191
-          Children:
-            - Container4_2:
-                Control: GroupContainer@1.3.0
-                Variant: ManualLayout
-                Properties:
-                  Fill: =RGBA(15, 84, 140, 1)
-                  Height: =31
-                  Width: =290
-                Children:
-                  - Label10_2:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Alignment: =Align.Center
-                        Color: =RGBA(255, 255, 255, 1)
-                        Font: =Font.Verdana
-                        FontSize: =12
-                        FontWeight: =FontWeight.Semibold
-                        Height: =31
-                        Text: ="진행중"
-                        Width: =92
-                        X: =96
-            - Gallery6_3:
-                Control: Gallery@2.15.0
-                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
-                Properties:
-                  BorderColor: =RGBA(153, 153, 153, 1)
-                  BorderStyle: =BorderStyle.None
-                  BorderThickness: =1
-                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                  FocusedBorderThickness: =2
-                  Height: =398
-                  Items: |-
-                    =With(
-                        {FilteredData: Filter(
-                            Task_DB, 
-                            작성자 = user_name.Text &&
-                            (FilterMode = "All" || (DateValue(업무_시작일자) <= Today() && DateValue(업무_종료일자) >= Today()))
-                        )},
-                        SortByColumns(
-                            Filter(FilteredData, 상태 = Label10_2.Text),
-                            "OData__xc5c5__xbb34___xc2dc__xc791__xc",
-                            SortOrder.Descending
-                        )
-                    )
-                  OnSelect: |-
-                    =Set(SelectedItem, ThisItem); // 데이터 입력
-                    Set(ShowPopup, true);       // 팝업창 뜨기
-                    Set(editMode, false);
-                    Set(EscPressed, false); // Esc 초기화
-                  TemplateSize: =59
-                  Width: =288
-                  X: =2
-                  Y: =32
-                Children:
-                  - Container3_2:
-                      Control: GroupContainer@1.3.0
-                      Variant: ManualLayout
-                      Properties:
-                        Fill: =RGBA(180, 214, 250, 0.28)
-                        Height: =51
-                        Width: =285
-                        Y: =4
-                  - Title2_3:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Semibold
-                        Height: =22
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =Text(ThisItem.'업무_시작일자', "yyyy.mm.dd") & ""
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =87
-                        X: =8
-                        Y: =1
-                  - Subtitle2_3:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Normal
-                        Height: =31
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =ThisItem.업무제목
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =280
-                        X: =8
-                        Y: =25
-                  - ButtonCanvas1_2:
-                      Control: Button@0.0.44
-                      Properties:
-                        BasePaletteColor: =RGBA(23, 93, 150, 1)
-                        Font: =Font.Verdana
-                        FontSize: =8
-                        Height: =18
-                        OnSelect: |+
-                          =Patch(
-                              Task_DB,
-                              ThisItem,
-                              { 상태: Switch(
-                                  ThisItem.상태,
-                                  "시작전", "진행중",
-                                  "진행중", "완료",
-                                  "완료", "완료"
-                              )}
-                          )
-                        Text: ="완료 →"
-                        Width: =62
-                        X: =223
-                        Y: =5
-                  - Title2_6:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Semibold
-                        Height: =22
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =Text(ThisItem.'업무_종료일자', "yyyy.mm.dd") & ""
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =87
-                        X: =102
-                        Y: =1
-                  - Title2_7:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8
-                        FontWeight: =FontWeight.Semibold
-                        Height: =20
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: ="~"
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =20
-                        X: =87
-                        Y: =1
-      - beforeTask_con:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            BorderStyle: =BorderStyle.None
-            Height: =430
-            PaddingBottom: |+
-              =10
-            Width: =290
-            X: =362
-            Y: =190
-          Children:
-            - Container4:
-                Control: GroupContainer@1.3.0
-                Variant: ManualLayout
-                Properties:
-                  Fill: =RGBA(153, 153, 153, 1)
-                  Height: =31
-                  Width: =290
-                Children:
-                  - Label10:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Alignment: =Align.Center
-                        Color: =RGBA(255, 255, 255, 1)
-                        Font: =Font.Verdana
-                        FontSize: =12
-                        FontWeight: =FontWeight.Semibold
-                        Height: =31
-                        Text: ="시작전"
-                        Width: =92
-                        X: =96
-            - Gallery6_1:
-                Control: Gallery@2.15.0
-                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
-                Properties:
-                  BorderColor: =RGBA(153, 153, 153, 1)
-                  BorderStyle: =BorderStyle.None
-                  BorderThickness: =1
-                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                  FocusedBorderThickness: =2
-                  Height: =398
-                  Items: |-
-                    =With(
-                        {FilteredData: Filter(
-                            Task_DB, 
-                            작성자 = user_name.Text &&
-                            (FilterMode = "All" || (DateValue(업무_시작일자) <= Today() && DateValue(업무_종료일자) >= Today()))
-                        )},
-                        SortByColumns(
-                            Filter(FilteredData, 상태 = Label10.Text),
-                            "OData__xc5c5__xbb34___xc2dc__xc791__xc",
-                            SortOrder.Descending
-                        )
-                    )
-                  OnSelect: |-
-                    =Set(SelectedItem, ThisItem); // 데이터 입력
-                    Set(ShowPopup, true);       // 팝업창 뜨기
-                    Set(EscPressed, false); // Esc 초기화
-                    //EditForm(Form1_1);
-                  TemplateSize: =59
-                  Width: =288
-                  X: =2
-                  Y: =32
-                Children:
-                  - Container3:
-                      Control: GroupContainer@1.3.0
-                      Variant: ManualLayout
-                      Properties:
-                        Fill: =RGBA(209, 209, 209, 0.31)
-                        Height: =51
-                        Width: =285
-                        Y: =4
-                  - Title2_1:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Semibold
-                        Height: =22
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & ""
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =87
-                        X: =8
-                        Y: =1
-                  - Subtitle2_1:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Normal
-                        Height: =31
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =ThisItem.업무제목
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =277
-                        X: =8
-                        Y: =25
-                  - ButtonCanvas1:
-                      Control: Button@0.0.44
-                      Properties:
-                        BasePaletteColor: =RGBA(61, 53, 45, 1)
-                        Font: =Font.Verdana
-                        FontSize: =8
-                        Height: =18
-                        OnSelect: |+
-                          =Patch(
-                              Task_DB,
-                              ThisItem,
-                              { 상태: Switch(
-                                  ThisItem.상태,
-                                  "시작전", "진행중",
-                                  "진행중", "완료",
-                                  "완료", "완료"
-                              )}
-                          )
-                        Text: ="진행중 →"
-                        Width: =62
-                        X: =223
-                        Y: =5
-                  - Title2_4:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8.5
-                        FontWeight: =FontWeight.Semibold
-                        Height: =22
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =87
-                        X: =102
-                        Y: =1
-                  - Title2_5:
-                      Control: FluentV8/Label@1.6.0
-                      Properties:
-                        Font: =Font.Verdana
-                        FontSize: =8
-                        FontWeight: =FontWeight.Semibold
-                        Height: =20
-                        OnSelect: =Select(Parent)
-                        TabIndex: =-1
-                        Text: ="~"
-                        VerticalAlignment: =VerticalAlign.Top
-                        Width: =10
-                        X: =87
-                        Y: =1
-      - Header_con:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            Fill: =RGBA(34, 35, 58, 1)
-            Height: =64
+            Fill: =RGBA(207, 202, 196, 0.2)
+            Height: =733
             Width: =1366
+            Y: =35
           Children:
-            - user_name:
-                Control: FluentV8/Label@1.6.0
+            - TextCanvas3:
+                Control: Text@0.0.50
                 Properties:
-                  Color: =RGBA(255, 255, 255, 1)
-                  FontSize: =8
-                  Height: =25
-                  Text: |+
-                    =If(
-                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
-                        Concatenate(
-                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
-                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
-                        ),
-                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
-                    )
-                  Width: =50
-                  X: =1310
-                  Y: =8
-            - Label8:
-                Control: FluentV8/Label@1.6.0
-                Properties:
-                  Color: =RGBA(244, 244, 243, 1)
                   Font: =Font.Verdana
-                  FontSize: =14
-                  FontWeight: =FontWeight.Bold
-                  Text: ="업무현황판"
-                  Width: =104
-                  X: =11
-                  Y: =1
-            - Container8:
+                  Height: =21
+                  Size: =15
+                  Text: ="프로젝트 목록"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  X: =12
+                  Y: =36
+            - TextCanvas3_1:
+                Control: Text@0.0.50
+                Properties:
+                  Font: =Font.Verdana
+                  Height: =21
+                  Size: =15
+                  Text: ="업무 목록"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  X: =292
+                  Y: =36
+      - Container9:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =637
+            Width: =340
+            X: =1010
+            Y: =100
+          Children:
+            - done_con:
                 Control: GroupContainer@1.3.0
                 Variant: ManualLayout
                 Properties:
-                  Fill: =RGBA(214, 221, 224, 0.44)
-                  Height: =28
-                  Width: =1366
-                  Y: =36
+                  BorderStyle: =BorderStyle.None
+                  Height: =615
+                  PaddingBottom: |+
+                    =10
+                  Width: =315
+                  X: =12
+                  Y: =12
                 Children:
-                  - ButtonCanvas3:
-                      Control: Button@0.0.44
+                  - Container4_1:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
                       Properties:
-                        BasePaletteColor: =If(currentView = "등록화면", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
-                        Font: =Font.Verdana
-                        FontSize: =10
-                        Height: =25
-                        OnSelect: |+
-                          =Set(currentView, "등록화면"); // '리스트'로 상태 업데이트
-                          Navigate(Daily_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
-                        Text: ="등록화면"
-                        Width: =80
-                        X: =1
-                        Y: =1
-                  - ButtonCanvas3_1:
-                      Control: Button@0.0.44
+                        Fill: =RGBA(45, 128, 40, 1)
+                        Height: =31
+                        Width: =315
+                      Children:
+                        - Label10_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Color: =RGBA(255, 255, 255, 1)
+                              Font: =Font.Verdana
+                              FontSize: =11
+                              FontWeight: =FontWeight.Semibold
+                              Height: =31
+                              Text: ="완료"
+                              Width: =92
+                              X: =96
+                  - Gallery6_2:
+                      Control: Gallery@2.15.0
+                      Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
                       Properties:
-                        BasePaletteColor: =If(currentView = "일정", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
-                        Font: =Font.Verdana
-                        FontSize: =10
-                        Height: =25
+                        BorderColor: =RGBA(153, 153, 153, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        FocusedBorderThickness: =2
+                        Height: =574
+                        Items: |-
+                          =With(
+                              {
+                                FilteredData: Filter(
+                                  Task_DB,
+                                  작성자 = name_label.Text
+                                  && (
+                                      FilterMode = "All"
+                                      || (
+                                          DateValue(업무_시작일자) <= Today()
+                                          && DateValue(업무_종료일자) >= Today()
+                                      )
+                                  )
+                                  // 바뀐 부분 ↓↓↓
+                                  && (
+                                    // 체크가 하나 이상 있어야 하고
+                                    !IsEmpty(colSelectedProjects)
+                                    // 그 프로젝트명이어야
+                                    && 프로젝트명 in colSelectedProjects.Value
+                                  )
+                                )
+                              },
+                              SortByColumns(
+                                Filter(FilteredData, 상태 = Label10_1.Text),
+                                "OData__xc5c5__xbb34___xc2dc__xc791__xc",
+                                SortOrder.Descending
+                              )
+                          )
                         OnSelect: |-
-                          =Set(currentView, "일정"); // '달력'으로 상태 업데이트
-                          Navigate(Cal_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
-                        Text: ="일정"
-                        Width: =80
-                        X: =85
-                        Y: =1
-                  - ButtonCanvas3_2:
-                      Control: Button@0.0.44
+                          =Set(SelectedItem, ThisItem); // 데이터 입력
+                          Set(ShowPopup, true);       // 팝업창 뜨기
+                          Set(editMode, false);
+                          Set(EscPressed, false); // Esc 초기화
+                        TemplateSize: =74
+                        Width: =313
+                        X: =2
+                        Y: =40
+                      Children:
+                        - Container3_1:
+                            Control: GroupContainer@1.3.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =RGBA(183, 222, 175, 0.31)
+                              Height: =63
+                              Width: =305
+                              Y: =4
+                        - Title2_18:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =22
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & ""
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =65
+                              X: =8
+                              Y: =45
+                        - Title2_19:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =22
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =65
+                              X: =90
+                              Y: =45
+                        - Title2_20:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =20
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: ="~"
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =10
+                              X: =76
+                              Y: =45
+                        - Subtitle2_5:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =9
+                              FontWeight: =FontWeight.Semibold
+                              Height: =23
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =ThisItem.업무제목
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =277
+                              X: =8
+                              Y: =22
+                        - Subtitle2_7:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =20
+                              Italic: =true
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =ThisItem.프로젝트명
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =200
+                              X: =8
+                              Y: =2
+      - ButtonCanvas2:
+          Control: Button@0.0.44
+          Properties:
+            BasePaletteColor: =If(FilterMode = "All", RGBA(150,153,255,1), RGBA(200,200,200,1))
+            Font: =Font.Verdana
+            FontSize: =11
+            Height: =30
+            OnSelect: |+
+              =Set(FilterMode, "All");
+            Text: ="전체"
+            Width: =75
+            X: =1186
+            Y: =62
+      - ButtonCanvas2_1:
+          Control: Button@0.0.44
+          Properties:
+            BasePaletteColor: =If(FilterMode = "InProgress", RGBA(150,153,255,1), RGBA(200,200,200,1))
+            Font: =Font.Verdana
+            FontSize: =11
+            Height: =30
+            OnSelect: =Set(FilterMode, "InProgress")
+            Text: ="현재 날짜"
+            Width: =75
+            X: =1283
+            Y: =63
+      - new_btn:
+          Control: Button@0.0.44
+          Properties:
+            Font: =Font.Verdana
+            FontSize: =11
+            Height: =28
+            OnSelect: |+
+              =Set(editMode, true);
+              NewForm(Form1_1);
+              Set(ShowPopup, true);
+            Text: ="+ 만들기"
+            Width: =82
+            X: =1082
+            Y: =63
+      - check_con:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =637
+            Width: =271
+            X: =8
+            Y: =100
+          Children:
+            - GalleryProjects(Vertical):
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Height: =541
+                  Items: |-
+                    =AddColumns(
+                        Distinct(Task_DB, 프로젝트명),
+                        프로젝트명,
+                        Value
+                    )
+                  Width: =Parent.Width
+                  Y: =41
+                Children:
+                  - Rectangle1:
+                      Control: Rectangle@2.3.0
                       Properties:
-                        BasePaletteColor: =If(currentView = "타임라인", RGBA(150, 153, 255, 1), RGBA(200, 200, 200, 1))
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DisabledFill: =RGBA(0,0,0,0)
+                        Fill: =RGBA(214, 221, 224, 0.24)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        Height: =44
+                        HoverFill: =RGBA(0,0,0,0)
+                        OnSelect: =Select(Parent)
+                        PressedFill: =RGBA(0,0,0,0)
+                        TabIndex: =0
+                        Width: =Parent.TemplateWidth
+                  - chkProject:
+                      Control: CheckBox@0.0.27
+                      Properties:
+                        Checked: =ThisItem.Value in colSelectedProjects.Value
                         Font: =Font.Verdana
                         FontSize: =10
-                        Height: =25
-                        OnSelect: |+
-                          =Set(currentView, "타임라인"); // '리스트'로 상태 업데이트
-                          Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
-                        Text: ="업무일지"
-                        Width: =80
-                        X: =170
-                        Y: =1
+                        Label: =ThisItem.Value
+                        OnCheck: |-
+                          =Collect(colSelectedProjects, { Value: ThisItem.Value })
+                        OnSelect: =
+                        OnUncheck: =RemoveIf(colSelectedProjects, Value = ThisItem.Value)
+                        Width: =260
+                        Y: =7
+            - CheckboxCanvas2_1:
+                Control: CheckBox@0.0.27
+                Properties:
+                  Font: =Font.Verdana
+                  FontSize: =9
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  Label: ="전체 선택/해제"
+                  OnCheck: |-
+                    =ClearCollect(
+                        colSelectedProjects,
+                        AddColumns(
+                            Distinct(Task_DB, 프로젝트명),
+                            프로젝트명,
+                            Value
+                        )
+                    );
+                  OnSelect: =
+                  OnUncheck: =Clear(colSelectedProjects);
+                  Width: =120
+                  Y: =8
       - OuterRactangle:
           Control: Rectangle@2.3.0
           Properties:
@@ -678,6 +335,469 @@ Screens:
             PressedFill: =RGBA(0, 0, 0, 0)
             Visible: =ShowPopup
             Width: =1369
+      - Header_con_3:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(34, 35, 58, 1)
+            Height: =35
+            Width: =1366
+          Children:
+            - name_label_1:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontSize: =8
+                  Height: =25
+                  Text: |+
+                    =If(
+                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
+                        Concatenate(
+                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
+                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
+                        ),
+                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
+                    )
+                  Width: =50
+                  X: =1310
+                  Y: =4
+            - Label8_3:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(244, 244, 243, 1)
+                  Font: =Font.Verdana
+                  FontSize: =14
+                  FontWeight: =FontWeight.Bold
+                  Text: ="업무현황판"
+                  Width: =104
+                  X: =11
+                  Y: =1
+            - ButtonCanvas3_9:
+                Control: Button@0.0.44
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무일지", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |+
+                    =Set(currentView, "업무일지"); // '리스트'로 상태 업데이트
+                    Navigate(Daily_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                  Text: ="업무일지"
+                  Width: =80
+                  X: =115
+                  Y: =5
+            - ButtonCanvas3_10:
+                Control: Button@0.0.44
+                Properties:
+                  BasePaletteColor: =If(currentView = "일정", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "일정"); // '달력'으로 상태 업데이트
+                    Navigate(Cal_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
+                  Text: ="일정"
+                  Visible: =false
+                  Width: =80
+                  X: =295
+                  Y: =5
+            - ButtonCanvas3_11:
+                Control: Button@0.0.44
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무현황", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |+
+                    =Set(currentView, "업무현황"); // '리스트'로 상태 업데이트
+                    Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                  Text: ="업무현황"
+                  Width: =80
+                  X: =200
+                  Y: =5
+      - Container8:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =637
+            Width: =340
+            X: =653
+            Y: =100
+          Children:
+            - Inprogress_con:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  BorderStyle: =BorderStyle.None
+                  Height: =615
+                  PaddingBottom: |+
+                    =10
+                  Width: =315
+                  X: =12
+                  Y: =12
+                Children:
+                  - Container4_2:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(15, 84, 140, 1)
+                        Height: =31
+                        Width: =315
+                      Children:
+                        - Label10_2:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Color: =RGBA(255, 255, 255, 1)
+                              Font: =Font.Verdana
+                              FontSize: =11
+                              FontWeight: =FontWeight.Semibold
+                              Height: =31
+                              Text: ="진행중"
+                              Width: =92
+                              X: =96
+                  - Gallery6_3:
+                      Control: Gallery@2.15.0
+                      Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                      Properties:
+                        BorderColor: =RGBA(153, 153, 153, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        FocusedBorderThickness: =2
+                        Height: =573
+                        Items: |-
+                          =With(
+                              {
+                                FilteredData: Filter(
+                                  Task_DB,
+                                  작성자 = name_label.Text
+                                  && (
+                                      FilterMode = "All"
+                                      || (
+                                          DateValue(업무_시작일자) <= Today()
+                                          && DateValue(업무_종료일자) >= Today()
+                                      )
+                                  )
+                                  // 바뀐 부분 ↓↓↓
+                                  && (
+                                    // 체크가 하나 이상 있어야 하고
+                                    !IsEmpty(colSelectedProjects)
+                                    // 그 프로젝트명이어야
+                                    && 프로젝트명 in colSelectedProjects.Value
+                                  )
+                                )
+                              },
+                              SortByColumns(
+                                Filter(FilteredData, 상태 = Label10_2.Text),
+                                "OData__xc5c5__xbb34___xc2dc__xc791__xc",
+                                SortOrder.Descending
+                              )
+                          )
+                        OnSelect: |-
+                          =Set(SelectedItem, ThisItem); // 데이터 입력
+                          Set(ShowPopup, true);       // 팝업창 뜨기
+                          Set(editMode, false);
+                          Set(EscPressed, false); // Esc 초기화
+                        TemplateSize: =72
+                        Width: =310
+                        X: =2
+                        Y: =39
+                      Children:
+                        - Container3_2:
+                            Control: GroupContainer@1.3.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =RGBA(180, 214, 250, 0.28)
+                              Height: |+
+                                =63
+                              Width: =305
+                              Y: =4
+                        - ButtonCanvas1_2:
+                            Control: Button@0.0.44
+                            Properties:
+                              BasePaletteColor: =RGBA(23, 93, 150, 1)
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              Height: =18
+                              OnSelect: |+
+                                =Patch(
+                                    Task_DB,
+                                    ThisItem,
+                                    { 상태: Switch(
+                                        ThisItem.상태,
+                                        "시작전", "진행중",
+                                        "진행중", "완료",
+                                        "완료", "완료"
+                                    )}
+                                )
+                              Text: ="완료 →"
+                              Width: =62
+                              X: =243
+                              Y: =5
+                        - Title2_15:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =22
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & ""
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =65
+                              X: =8
+                              Y: =45
+                        - Title2_16:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =22
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =65
+                              X: =90
+                              Y: =45
+                        - Title2_17:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =20
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: ="~"
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =10
+                              X: =76
+                              Y: =45
+                        - Subtitle2_6:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =20
+                              Italic: =true
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =ThisItem.프로젝트명
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =200
+                              X: =8
+                              Y: =2
+                        - Subtitle2_3:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =9
+                              FontWeight: =FontWeight.Semibold
+                              Height: =23
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =ThisItem.업무제목
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =277
+                              X: =8
+                              Y: =22
+      - Container7:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =637
+            Width: =340
+            X: =289
+            Y: =100
+          Children:
+            - beforeTask_con:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  BorderStyle: =BorderStyle.None
+                  Height: =615
+                  PaddingBottom: |+
+                    =10
+                  Width: =315
+                  X: =12
+                  Y: =12
+                Children:
+                  - Container4:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(153, 153, 153, 1)
+                        Height: =31
+                        Width: =315
+                      Children:
+                        - Label10:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Color: =RGBA(255, 255, 255, 1)
+                              Font: =Font.Verdana
+                              FontSize: =11
+                              FontWeight: =FontWeight.Semibold
+                              Height: =31
+                              Text: ="시작전"
+                              Width: =92
+                              X: =96
+                  - Gallery6_1:
+                      Control: Gallery@2.15.0
+                      Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                      Properties:
+                        BorderColor: =RGBA(153, 153, 153, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        FocusedBorderThickness: =2
+                        Items: |-
+                          =With(
+                              {
+                                FilteredData: Filter(
+                                  Task_DB,
+                                  작성자 = name_label.Text
+                                  && (
+                                      FilterMode = "All"
+                                      || (
+                                          DateValue(업무_시작일자) <= Today()
+                                          && DateValue(업무_종료일자) >= Today()
+                                      )
+                                  )
+                                  // 바뀐 부분 ↓↓↓
+                                  && (
+                                    // 체크가 하나 이상 있어야 하고
+                                    !IsEmpty(colSelectedProjects)
+                                    // 그 프로젝트명이어야
+                                    && 프로젝트명 in colSelectedProjects.Value
+                                  )
+                                )
+                              },
+                              SortByColumns(
+                                Filter(FilteredData, 상태 = Label10.Text),
+                                "OData__xc5c5__xbb34___xc2dc__xc791__xc",
+                                SortOrder.Descending
+                              )
+                          )
+                        OnSelect: |-
+                          =Set(SelectedItem, ThisItem); // 데이터 입력
+                          Set(ShowPopup, true);       // 팝업창 뜨기
+                          Set(EscPressed, false); // Esc 초기화
+                          //EditForm(Form1_1);
+                        TemplateSize: =73
+                        Width: =310
+                        Y: =39
+                      Children:
+                        - Container3:
+                            Control: GroupContainer@1.3.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =RGBA(209, 209, 209, 0.31)
+                              Height: =63
+                              Width: =305
+                              Y: =4
+                        - Title2_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =22
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & ""
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =65
+                              X: =8
+                              Y: =45
+                        - Subtitle2_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =9
+                              FontWeight: =FontWeight.Semibold
+                              Height: =23
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =ThisItem.업무제목
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =277
+                              X: =8
+                              Y: =22
+                        - ButtonCanvas1:
+                            Control: Button@0.0.44
+                            Properties:
+                              BasePaletteColor: =RGBA(61, 53, 45, 1)
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              Height: =18
+                              OnSelect: |+
+                                =Patch(
+                                    Task_DB,
+                                    ThisItem,
+                                    { 상태: Switch(
+                                        ThisItem.상태,
+                                        "시작전", "진행중",
+                                        "진행중", "완료",
+                                        "완료", "완료"
+                                    )}
+                                )
+                              Text: ="진행중 →"
+                              Width: =62
+                              X: =243
+                              Y: =5
+                        - Title2_4:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =22
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =65
+                              X: =90
+                              Y: =45
+                        - Title2_5:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =20
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: ="~"
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =10
+                              X: =76
+                              Y: =45
+                        - Subtitle2_4:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Font: =Font.Verdana
+                              FontSize: =8
+                              FontWeight: =FontWeight.Normal
+                              Height: =20
+                              Italic: =true
+                              OnSelect: =Select(Parent)
+                              TabIndex: =-1
+                              Text: =ThisItem.프로젝트명
+                              VerticalAlignment: =VerticalAlign.Top
+                              Width: =200
+                              X: =8
+                              Y: =2
       - inputTask_con:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -746,6 +866,1042 @@ Screens:
                   Width: =1005
                   X: =4
                   Y: =11
+                Children:
+                  - 업무_계정_DataCard1_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xad6c__xbd84_"
+                        Default: =ThisItem.업무_계정
+                        DisplayMode: |+
+                          =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무_계정)
+                        Height: =74
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 업무_계정)
+                        Required: =true
+                        Update: =계정_combo_3.Selected.Value
+                        Width: =249
+                        WidthFit: =false
+                        Y: =0
+                      Children:
+                        - DataCardKey1_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: ="업무_구분"
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =36
+                              Y: =10
+                        - ErrorMessage1_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =
+                        - StarVisible1_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              X: =12
+                              Y: =DataCardKey1_1.Y
+                        - 계정_combo_3:
+                            Control: ComboBox@0.0.49
+                            Properties:
+                              DefaultSelectedItems: |+
+                                =//{
+                                 //   Result: SelectedItem.업무_계정 //Value: SelectedItem.업무_계정
+                                //}
+                                [ ThisItem.업무_계정 ]
+
+                              Items: |-
+                                =//Choices([@Project_DB].'OData__xad6c__xbd84_')
+                                Distinct(Project_DB, 업무_계정)
+                              OnChange: =Reset(플젝_combo_3) // 소분류 초기화
+                              Width: =153
+                              X: =24
+                              Y: =38
+                  - PM_DataCard2_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="PM"
+                        Default: |-
+                          =LookUp(Project_DB,
+                          업무_계정 = 계정_combo_3.Selected.Value &&
+                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
+                          ).PM
+                        DisplayMode: =DisplayMode.View
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,PM)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, PM)
+                        Required: =false
+                        Update: =PM_text_1.Value
+                        Width: =450
+                        WidthFit: =false
+                        X: =2
+                        Y: =0
+                      Children:
+                        - DataCardKey40_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - PM_text_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              DisplayMode: =Parent.DisplayMode
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey40_1.Y + DataCardKey40_1.Height + 4
+                        - ErrorMessage40_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =PM_text_1.Y + PM_text_1.Height
+                        - StarVisible40_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey40_1.Y
+                  - 관련기종명_DataCard2_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xad00__xb828__xae30__xc885__xba"
+                        Default: |-
+                          =LookUp(Project_DB,
+                          업무_계정 = 계정_combo_3.Selected.Value &&
+                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
+                          ).관련기종명
+                        DisplayMode: =DisplayMode.View
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,관련기종명)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 관련기종명)
+                        Required: =false
+                        Update: =DataCardValue42_1.Value
+                        Width: =270
+                        WidthFit: =false
+                        X: =5
+                        Y: =0
+                      Children:
+                        - DataCardKey42_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue42_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              DisplayMode: =Parent.DisplayMode
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey42_1.Y + DataCardKey42_1.Height + 4
+                        - ErrorMessage42_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue42_1.Y + DataCardValue42_1.Height
+                        - StarVisible42_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey42_1.Y
+                  - 업무_시작일자_DataCard1_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreDateEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xc5c5__xbb34___xc2dc__xc791__xc"
+                        Default: =ThisItem.업무_시작일자
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무_시작일자)
+                        Height: =74
+                        Required: =true
+                        Update: =DataCardValue1_1.Value
+                        Width: =175
+                        WidthFit: =false
+                        X: =1
+                        Y: =1
+                      Children:
+                        - DataCardKey2_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =36
+                              Y: =10
+                        - DataCardValue1_1:
+                            Control: FluentV8/DatePicker@1.5.8
+                            Properties:
+                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
+                              DisplayMode: =Parent.DisplayMode
+                              FillColor: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              MaxDate: =Date(Year(Today())+100,1,1)
+                              MinDate: =Date(1900,1,1)
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey2_1.Y + DataCardKey2_1.Height + 4
+                        - ErrorMessage2_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue1_1.Y + DataCardValue1_1.Height
+                        - StarVisible2_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              X: =12
+                              Y: =DataCardKey2_1.Y
+                  - 업무_종료일자_DataCard1_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreDateEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xc5c5__xbb34___xc885__xb8cc__xc"
+                        Default: =ThisItem.업무_종료일자
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무_종료일자)
+                        Height: =74
+                        Required: =true
+                        Update: =DataCardValue2_1.Value
+                        Width: =175
+                        WidthFit: =false
+                        X: =2
+                        Y: =1
+                      Children:
+                        - DataCardKey3_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue2_1:
+                            Control: FluentV8/DatePicker@1.5.8
+                            Properties:
+                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
+                              DisplayMode: =Parent.DisplayMode
+                              FillColor: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              MaxDate: =Date(Year(Today())+100,1,1)
+                              MinDate: =Date(1900,1,1)
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey3_1.Y + DataCardKey3_1.Height + 4
+                        - ErrorMessage3_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue2_1.Y + DataCardValue2_1.Height
+                        - StarVisible3_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey3_1.Y
+                  - 관련ECN_DataCard2_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xad00__xb828_ECN"
+                        Default: =ThisItem.관련ECN
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,관련ECN)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 관련ECN)
+                        Required: =false
+                        Update: =DataCardValue41_1.Value
+                        Width: =180
+                        WidthFit: =false
+                        X: =3
+                        Y: =1
+                      Children:
+                        - DataCardKey41_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue41_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              DisplayMode: =Parent.DisplayMode
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey41_1.Y + DataCardKey41_1.Height + 4
+                        - ErrorMessage41_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue41_1.Y + DataCardValue41_1.Height
+                        - StarVisible41_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey41_1.Y
+                  - 프로젝트명_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xd504__xb85c__xc81d__xd2b8__xba"
+                        DisplayMode: |+
+                          =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,프로젝트명)
+                        Height: =74
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 프로젝트명)
+                        Required: =true
+                        Update: =플젝_combo_3.Selected.프로젝트명
+                        Width: =251
+                        WidthFit: =false
+                        X: =1
+                        Y: =0
+                      Children:
+                        - DataCardKey34_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - ErrorMessage34_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =
+                        - StarVisible34_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey34_1.Y
+                        - 플젝_combo_3:
+                            Control: ComboBox@0.0.49
+                            Properties:
+                              DefaultSelectedItems: |+
+                                =[ ThisItem ]
+                                //[SelectedItem.프로젝트명]
+                              Items: |-
+                                =Filter(
+                                    Project_DB,
+                                    업무_계정 = 계정_combo_3.Selected.Value
+                                ).프로젝트명
+                              OnChange: =
+                              Width: =216
+                              X: =24
+                              Y: =40
+                            Children:
+                              - OData__xd504__xb85c__xc81d__xd2b8__xba2_3:
+                                  Control: ComboBoxDataField@1.5.0
+                                  Variant: textualColumn
+                                  IsLocked: true
+                                  Properties:
+                                    FieldDisplayName: ="OData__xd504__xb85c__xc81d__xd2b8__xba"
+                                    FieldName: ="OData__xd504__xb85c__xc81d__xd2b8__xba"
+                                    FieldType: ="s"
+                                    Order: =1
+                  - 시작날짜_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreDateEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="field_2"
+                        Default: |-
+                          =LookUp(Project_DB,
+                          업무_계정 = 계정_combo_3.Selected.Value &&
+                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
+                          ).시작날짜
+                        DisplayMode: =DisplayMode.View
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,시작날짜)
+                        Height: =85
+                        Required: =true
+                        Update: =DataCardValue29_1.Value
+                        Width: =166
+                        WidthFit: =false
+                        X: =3
+                        Y: =0
+                      Children:
+                        - DataCardKey29_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =36
+                              Y: =10
+                        - DataCardValue29_1:
+                            Control: FluentV8/DatePicker@1.5.8
+                            Properties:
+                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
+                              DisplayMode: =Parent.DisplayMode
+                              MaxDate: =Date(Year(Today())+100,1,1)
+                              MinDate: =Date(1900,1,1)
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey29_1.Y + DataCardKey29_1.Height + 4
+                        - ErrorMessage29_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue29_1.Y + DataCardValue29_1.Height
+                        - StarVisible29_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              X: =12
+                              Y: =DataCardKey29_1.Y
+                  - 종료날짜_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreDateEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="field_3"
+                        Default: |-
+                          =LookUp(Project_DB,
+                          업무_계정 = 계정_combo_3.Selected.Value &&
+                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
+                          ).종료날짜
+                        DisplayMode: =DisplayMode.View
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,종료날짜)
+                        Height: =74
+                        Required: =true
+                        Update: =DataCardValue30_1.Value
+                        Width: =166
+                        WidthFit: =false
+                        X: =4
+                        Y: =0
+                      Children:
+                        - DataCardKey30_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue30_1:
+                            Control: FluentV8/DatePicker@1.5.8
+                            Properties:
+                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
+                              DisplayMode: =Parent.DisplayMode
+                              MaxDate: =Date(Year(Today())+100,1,1)
+                              MinDate: =Date(1900,1,1)
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey30_1.Y + DataCardKey30_1.Height + 4
+                        - ErrorMessage30_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue30_1.Y + DataCardValue30_1.Height
+                        - StarVisible30_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey30_1.Y
+                  - 업무제목_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="field_5"
+                        Default: =ThisItem.업무제목
+                        DisplayMode: |+
+                          =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무제목)
+                        Height: =100
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 업무제목)
+                        Required: =true
+                        Update: =DataCardValue38_1.Value
+                        Width: =996
+                        WidthFit: =false
+                        Y: =1
+                      Children:
+                        - DataCardKey38_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =36
+                              Y: =30
+                        - DataCardValue38_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              DisplayMode: =Parent.DisplayMode
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =64
+                        - ErrorMessage38_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue38_1.Y + DataCardValue38_1.Height
+                        - StarVisible38_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              X: =12
+                              Y: =DataCardKey38_1.Y
+                  - 업무요청자_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="field_4"
+                        Default: =ThisItem.업무요청자
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무요청자)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 업무요청자)
+                        Required: =false
+                        Update: =DataCardValue31_1.Value
+                        Width: =180
+                        WidthFit: =false
+                        X: =4
+                        Y: =1
+                      Children:
+                        - DataCardKey31_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue31_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              DisplayMode: =Parent.DisplayMode
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey31_1.Y + DataCardKey31_1.Height + 4
+                        - ErrorMessage31_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue31_1.Y + DataCardValue31_1.Height
+                        - StarVisible31_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey31_1.Y
+                  - 상태_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="field_7"
+                        Default: =ThisItem.상태
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,상태)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 상태)
+                        Required: =true
+                        Update: =상태_combo_1.Selected.Value
+                        Width: =150
+                        WidthFit: =false
+                        X: =5
+                        Y: =1
+                      Children:
+                        - DataCardKey32_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - ErrorMessage32_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =
+                        - StarVisible32_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey32_1.Y
+                        - 상태_combo_1:
+                            Control: ComboBox@0.0.49
+                            Properties:
+                              Appearance: ='ComboboxCanvas.Appearance'.FilledDarker
+                              BasePaletteColor: =RGBA(217, 178, 178, 1)
+                              DefaultSelectedItems: |-
+                                ={
+                                    Value: SelectedItem.상태
+                                }
+                              Fill: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(230, 230, 230, 1)   // 편집 불가(연회색)
+                                )
+                              Items: |-
+                                =//Choices([@Project_DB].'OData__xad6c__xbd84_')
+                                //Distinct(Project_DB, 상태)
+                                ["시작전","진행중","완료"]
+                              OnChange: |+
+                                =//false
+                              Width: =113
+                              X: =24
+                              Y: =40
+                  - 상세 업무내용_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="field_6"
+                        Default: =ThisItem.상세_업무내용
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,상세_업무내용)
+                        Height: =188
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 상세_업무내용)
+                        Required: =true
+                        Update: =DataCardValue33_1.Value
+                        Width: =944
+                        WidthFit: =false
+                        X: =1
+                        Y: =3
+                      Children:
+                        - DataCardKey33_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: |+
+                                =100
+                              X: =36
+                              Y: =10
+                        - DataCardValue33_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              DisplayMode: =Parent.DisplayMode
+                              Height: =148
+                              Mode: ='TextBox.Mode'.Multiline
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey33_1.Y + DataCardKey33_1.Height + 4
+                        - ErrorMessage33_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue33_1.Y + DataCardValue33_1.Height
+                        - StarVisible33_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              X: =12
+                              Y: =DataCardKey33_1.Y
+                  - 비고_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="field_8"
+                        Default: =ThisItem.비고
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,비고)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 비고)
+                        Required: =false
+                        Update: =DataCardValue36_1.Value
+                        Width: =251
+                        Y: =4
+                      Children:
+                        - DataCardKey36_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: |+
+                                =100
+                              X: =28
+                              Y: =10
+                        - DataCardValue36_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              DisplayMode: =Parent.DisplayMode
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey36_1.Y + DataCardKey36_1.Height + 4
+                        - ErrorMessage36_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue36_1.Y + DataCardValue36_1.Height
+                        - StarVisible36_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey36_1.Y
+                  - 작성자_DataCard3_1:
+                      Control: TypedDataCard@1.0.6
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xc791__xc131__xc790_"
+                        Default: =ThisItem.작성자
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,작성자)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 작성자)
+                        Required: =true
+                        Update: =DataCardValue35_1.Value
+                        Visible: =false
+                        Width: =200
+                        WidthFit: =false
+                        Y: =5
+                      Children:
+                        - DataCardKey35_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue35_1:
+                            Control: FluentV8/TextBox@1.7.0
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              DisplayMode: =Parent.DisplayMode
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: |+
+                                =name_label_1.Text
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey35_1.Y + DataCardKey35_1.Height + 4
+                        - ErrorMessage35_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue35_1.Y + DataCardValue35_1.Height
+                        - StarVisible35_1:
+                            Control: FluentV8/Label@1.8.6
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey35_1.Y
             - Icon1:
                 Control: Classic/Icon@2.5.0
                 Properties:
@@ -802,7 +1958,7 @@ Screens:
                 Control: Button@0.0.44
                 Properties:
                   OnSelect: =Set(editMode, true);
-                  Text: ="모두 편집"
+                  Text: ="편집"
                   Visible: =If(Form1_1.Mode = FormMode.New, false, true)
                   X: =353
                   Y: =624
