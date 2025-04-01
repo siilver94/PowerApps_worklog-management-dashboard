@@ -15,6 +15,124 @@ Screens:
         );
         // 그리고 chkSelectAll 의 Default = true 로 표시
     Children:
+      - Container1:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(207, 202, 196, 0.2)
+            Height: =733
+            Width: =1366
+            Y: =35
+          Children:
+            - TextCanvas3:
+                Control: Text@0.0.50
+                Properties:
+                  BorderColor: =RGBA(53, 61, 63, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =0.5
+                  Fill: =RGBA(255, 255, 255, 1)
+                  Font: =Font.Verdana
+                  Height: =28
+                  Text: ="        프로젝트 목록"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =145
+                  X: =8
+                  Y: =32
+            - TextCanvas3_1:
+                Control: Text@0.0.50
+                Properties:
+                  BorderColor: =RGBA(53, 61, 63, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =0.5
+                  Fill: =RGBA(255, 255, 255, 1)
+                  Font: =Font.Verdana
+                  Height: =28
+                  Text: ="        업무 목록"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =120
+                  X: =293
+                  Y: =32
+            - Icon3_1:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(13, 50, 61, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =24
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.OptionsList
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =24
+                  X: =301
+                  Y: =34
+      - Container11:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =41
+            Width: =287
+            X: =1068
+            Y: =52
+          Children:
+            - ButtonCanvas2:
+                Control: Button@0.0.44
+                Properties:
+                  BasePaletteColor: =If(FilterMode = "All", RGBA(141,229,250,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  FontWeight: =FontWeight.Semibold
+                  Height: =24
+                  OnSelect: |+
+                    =Set(FilterMode, "All");
+                  Text: ="전체"
+                  Width: =75
+                  X: =120
+                  Y: =9
+            - ButtonCanvas2_1:
+                Control: Button@0.0.44
+                Properties:
+                  BasePaletteColor: =If(FilterMode = "InProgress", RGBA(141,229,250,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =24
+                  OnSelect: =Set(FilterMode, "InProgress")
+                  Text: ="현재 날짜"
+                  Width: =75
+                  X: =200
+                  Y: =9
+            - new_btn:
+                Control: Button@0.0.44
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =0.5
+                  Font: =Font.Verdana
+                  FontSize: =11
+                  Height: =24
+                  Icon: ="Add"
+                  Layout: ='ButtonCanvas.Layout'.IconBefore
+                  OnSelect: |+
+                    =Set(editMode, true);
+                    NewForm(Form1_1);
+                    Set(ShowPopup, true);
+                  Text: ="업무등록"
+                  Width: =95
+                  X: =8
+                  Y: =9
       - Header_con_3:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -95,35 +213,29 @@ Screens:
                   Width: =80
                   X: =200
                   Y: =5
-      - Container1:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
+      - Icon4:
+          Control: Classic/Icon@2.5.0
           Properties:
-            Fill: =RGBA(207, 202, 196, 0.2)
-            Height: =733
-            Width: =1366
-            Y: =35
-          Children:
-            - TextCanvas3:
-                Control: Text@0.0.50
-                Properties:
-                  Font: =Font.Verdana
-                  Height: =21
-                  Size: =15
-                  Text: ="프로젝트 목록"
-                  Weight: ='TextCanvas.Weight'.Semibold
-                  X: =12
-                  Y: =36
-            - TextCanvas3_1:
-                Control: Text@0.0.50
-                Properties:
-                  Font: =Font.Verdana
-                  Height: =21
-                  Size: =15
-                  Text: ="업무 목록"
-                  Weight: ='TextCanvas.Weight'.Semibold
-                  X: =292
-                  Y: =36
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(243, 242, 241, 1)
+            DisabledColor: =RGBA(220, 220, 220, 1)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            Height: =25
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Icon: =Icon.Person
+            PaddingBottom: =3
+            PaddingLeft: =3
+            PaddingRight: =3
+            PaddingTop: =3
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Width: =25
+            X: =1283
+            Y: =4
       - Container9:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -131,7 +243,7 @@ Screens:
             Fill: =RGBA(255, 255, 255, 1)
             Height: =637
             Width: =340
-            X: =1010
+            X: =1014
             Y: =100
           Children:
             - done_con:
@@ -164,8 +276,8 @@ Screens:
                               FontWeight: =FontWeight.Semibold
                               Height: =31
                               Text: ="완료"
-                              Width: =92
-                              X: =96
+                              Width: =298
+                              X: =8
                   - Gallery6_2:
                       Control: Gallery@2.15.0
                       Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
@@ -232,9 +344,9 @@ Screens:
                               Height: =22
                               OnSelect: =Select(Parent)
                               TabIndex: =-1
-                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & ""
+                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & " ~"
                               VerticalAlignment: =VerticalAlign.Top
-                              Width: =65
+                              Width: =75
                               X: =8
                               Y: =45
                         - Title2_19:
@@ -249,27 +361,13 @@ Screens:
                               Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
                               VerticalAlignment: =VerticalAlign.Top
                               Width: =65
-                              X: =90
-                              Y: =45
-                        - Title2_20:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Font: =Font.Verdana
-                              FontSize: =8
-                              FontWeight: =FontWeight.Normal
-                              Height: =20
-                              OnSelect: =Select(Parent)
-                              TabIndex: =-1
-                              Text: ="~"
-                              VerticalAlignment: =VerticalAlign.Top
-                              Width: =10
-                              X: =76
+                              X: =86
                               Y: =45
                         - Subtitle2_5:
                             Control: FluentV8/Label@1.8.6
                             Properties:
                               Font: =Font.Verdana
-                              FontSize: =9
+                              FontSize: =8.2
                               FontWeight: =FontWeight.Semibold
                               Height: =23
                               OnSelect: =Select(Parent)
@@ -278,7 +376,7 @@ Screens:
                               VerticalAlignment: =VerticalAlign.Top
                               Width: =277
                               X: =8
-                              Y: =22
+                              Y: =23
                         - Subtitle2_7:
                             Control: FluentV8/Label@1.8.6
                             Properties:
@@ -294,45 +392,6 @@ Screens:
                               Width: =200
                               X: =8
                               Y: =2
-      - ButtonCanvas2:
-          Control: Button@0.0.44
-          Properties:
-            BasePaletteColor: =If(FilterMode = "All", RGBA(150,153,255,1), RGBA(200,200,200,1))
-            Font: =Font.Verdana
-            FontSize: =11
-            Height: =30
-            OnSelect: |+
-              =Set(FilterMode, "All");
-            Text: ="전체"
-            Width: =75
-            X: =1186
-            Y: =62
-      - ButtonCanvas2_1:
-          Control: Button@0.0.44
-          Properties:
-            BasePaletteColor: =If(FilterMode = "InProgress", RGBA(150,153,255,1), RGBA(200,200,200,1))
-            Font: =Font.Verdana
-            FontSize: =11
-            Height: =30
-            OnSelect: =Set(FilterMode, "InProgress")
-            Text: ="현재 날짜"
-            Width: =75
-            X: =1283
-            Y: =63
-      - new_btn:
-          Control: Button@0.0.44
-          Properties:
-            Font: =Font.Verdana
-            FontSize: =11
-            Height: =28
-            OnSelect: |+
-              =Set(editMode, true);
-              NewForm(Form1_1);
-              Set(ShowPopup, true);
-            Text: ="+ 만들기"
-            Width: =82
-            X: =1082
-            Y: =63
       - check_con:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -373,12 +432,13 @@ Screens:
                         DisabledFill: =RGBA(0,0,0,0)
                         Fill: =RGBA(214, 221, 224, 0.24)
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                        Height: =44
+                        Height: =43
                         HoverFill: =RGBA(0,0,0,0)
                         OnSelect: =Select(Parent)
                         PressedFill: =RGBA(0,0,0,0)
                         TabIndex: =0
-                        Width: =Parent.TemplateWidth
+                        Width: =260
+                        X: =4
                   - chkProject:
                       Control: CheckBox@0.0.27
                       Properties:
@@ -391,6 +451,7 @@ Screens:
                         OnSelect: =
                         OnUncheck: =RemoveIf(colSelectedProjects, Value = ThisItem.Value)
                         Width: =260
+                        X: =4
                         Y: =7
             - chkSelectAll:
                 Control: CheckBox@0.0.27
@@ -413,6 +474,7 @@ Screens:
                   OnSelect: =
                   OnUncheck: =Clear(colSelectedProjects);
                   Width: =120
+                  X: =4
                   Y: =8
       - OuterRactangle:
           Control: Rectangle@2.3.0
@@ -423,7 +485,7 @@ Screens:
             DisabledFill: =RGBA(0, 0, 0, 0)
             Fill: =RGBA(0, 0, 0, 0.5)
             FocusedBorderColor: =RGBA(98, 100, 167, 1)
-            Height: =768
+            Height: =770
             HoverFill: =
             OnSelect: |-
               =Set(ShowPopup, false);
@@ -433,6 +495,7 @@ Screens:
             PressedFill: =RGBA(0, 0, 0, 0)
             Visible: =ShowPopup
             Width: =1369
+            X: =-1
       - Container8:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -440,7 +503,7 @@ Screens:
             Fill: =RGBA(255, 255, 255, 1)
             Height: =637
             Width: =340
-            X: =653
+            X: =657
             Y: =100
           Children:
             - Inprogress_con:
@@ -473,8 +536,8 @@ Screens:
                               FontWeight: =FontWeight.Semibold
                               Height: =31
                               Text: ="진행중"
-                              Width: =92
-                              X: =96
+                              Width: =297
+                              X: =8
                   - Gallery6_3:
                       Control: Gallery@2.15.0
                       Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
@@ -552,8 +615,8 @@ Screens:
                                     )}
                                 )
                               Text: ="완료 →"
-                              Width: =62
-                              X: =243
+                              Width: =61
+                              X: =244
                               Y: =5
                         - Title2_15:
                             Control: FluentV8/Label@1.8.6
@@ -564,9 +627,9 @@ Screens:
                               Height: =22
                               OnSelect: =Select(Parent)
                               TabIndex: =-1
-                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & ""
+                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & " ~"
                               VerticalAlignment: =VerticalAlign.Top
-                              Width: =65
+                              Width: =75
                               X: =8
                               Y: =45
                         - Title2_16:
@@ -581,21 +644,7 @@ Screens:
                               Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
                               VerticalAlignment: =VerticalAlign.Top
                               Width: =65
-                              X: =90
-                              Y: =45
-                        - Title2_17:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Font: =Font.Verdana
-                              FontSize: =8
-                              FontWeight: =FontWeight.Normal
-                              Height: =20
-                              OnSelect: =Select(Parent)
-                              TabIndex: =-1
-                              Text: ="~"
-                              VerticalAlignment: =VerticalAlign.Top
-                              Width: =10
-                              X: =76
+                              X: =86
                               Y: =45
                         - Subtitle2_6:
                             Control: FluentV8/Label@1.8.6
@@ -616,7 +665,7 @@ Screens:
                             Control: FluentV8/Label@1.8.6
                             Properties:
                               Font: =Font.Verdana
-                              FontSize: =9
+                              FontSize: =8.2
                               FontWeight: =FontWeight.Semibold
                               Height: =23
                               OnSelect: =Select(Parent)
@@ -625,7 +674,7 @@ Screens:
                               VerticalAlignment: =VerticalAlign.Top
                               Width: =277
                               X: =8
-                              Y: =22
+                              Y: =23
       - Container7:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -633,7 +682,7 @@ Screens:
             Fill: =RGBA(255, 255, 255, 1)
             Height: =637
             Width: =340
-            X: =289
+            X: =293
             Y: =100
           Children:
             - beforeTask_con:
@@ -666,8 +715,8 @@ Screens:
                               FontWeight: =FontWeight.Semibold
                               Height: =31
                               Text: ="시작전"
-                              Width: =92
-                              X: =96
+                              Width: =302
+                              X: =8
                   - Gallery6_1:
                       Control: Gallery@2.15.0
                       Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
@@ -722,6 +771,7 @@ Screens:
                               Fill: =RGBA(209, 209, 209, 0.31)
                               Height: =63
                               Width: =305
+                              X: =2
                               Y: =4
                         - Title2_1:
                             Control: FluentV8/Label@1.8.6
@@ -732,16 +782,16 @@ Screens:
                               Height: =22
                               OnSelect: =Select(Parent)
                               TabIndex: =-1
-                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & ""
+                              Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & " ~"
                               VerticalAlignment: =VerticalAlign.Top
-                              Width: =65
+                              Width: =75
                               X: =8
                               Y: =45
                         - Subtitle2_1:
                             Control: FluentV8/Label@1.8.6
                             Properties:
                               Font: =Font.Verdana
-                              FontSize: =9
+                              FontSize: =8.2
                               FontWeight: =FontWeight.Semibold
                               Height: =23
                               OnSelect: =Select(Parent)
@@ -750,7 +800,7 @@ Screens:
                               VerticalAlignment: =VerticalAlign.Top
                               Width: =277
                               X: =8
-                              Y: =22
+                              Y: =23
                         - ButtonCanvas1:
                             Control: Button@0.0.44
                             Properties:
@@ -770,8 +820,8 @@ Screens:
                                     )}
                                 )
                               Text: ="진행중 →"
-                              Width: =62
-                              X: =243
+                              Width: =61
+                              X: =246
                               Y: =5
                         - Title2_4:
                             Control: FluentV8/Label@1.8.6
@@ -785,21 +835,7 @@ Screens:
                               Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
                               VerticalAlignment: =VerticalAlign.Top
                               Width: =65
-                              X: =90
-                              Y: =45
-                        - Title2_5:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Font: =Font.Verdana
-                              FontSize: =8
-                              FontWeight: =FontWeight.Normal
-                              Height: =20
-                              OnSelect: =Select(Parent)
-                              TabIndex: =-1
-                              Text: ="~"
-                              VerticalAlignment: =VerticalAlign.Top
-                              Width: =10
-                              X: =76
+                              X: =86
                               Y: =45
                         - Subtitle2_4:
                             Control: FluentV8/Label@1.8.6
@@ -831,10 +867,10 @@ Screens:
                 Control: GroupContainer@1.3.0
                 Variant: ManualLayout
                 Properties:
-                  Fill: =RGBA(174, 208, 221, 0.07)
-                  Height: =443
+                  Fill: =RGBA(174, 208, 221, 0.1)
+                  Height: =450
                   Width: =1019
-                  Y: =169
+                  Y: =173
                 Children:
                   - TextCanvas3_3:
                       Control: Text@0.0.50
@@ -851,7 +887,7 @@ Screens:
                 Control: GroupContainer@1.3.0
                 Variant: ManualLayout
                 Properties:
-                  Fill: =RGBA(180, 214, 250, 0.04)
+                  Fill: =RGBA(174, 208, 221, 0.1)
                   Height: =165
                   Width: =1019
                 Children:
@@ -899,7 +935,7 @@ Screens:
                         MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 업무_계정)
                         Required: =true
                         Update: =계정_combo_3.Selected.Value
-                        Width: =249
+                        Width: =180
                         WidthFit: =false
                         Y: =0
                       Children:
@@ -909,7 +945,7 @@ Screens:
                               AutoHeight: =true
                               FontSize: =9
                               Height: =22
-                              Text: ="업무_구분"
+                              Text: ="업무 구분"
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: =Parent.Width - 48
@@ -947,6 +983,8 @@ Screens:
                                 //}
                                 [ ThisItem.업무_계정 ]
 
+                              Font: =Font.Verdana
+                              FontSize: =13
                               Items: |-
                                 =//Choices([@Project_DB].'OData__xad6c__xbd84_')
                                 Distinct(Project_DB, 업무_계정)
@@ -984,18 +1022,23 @@ Screens:
                               Text: =Parent.DisplayName
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
-                              Width: =Parent.Width - 48
-                              X: =24
+                              Width: |+
+                                =Parent.Width - 150
+                              X: =32
                               Y: =10
                         - PM_text_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: =RGBA(245, 245, 245, 1)
                               DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =10
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
-                              Width: =Parent.Width - 48
+                              Width: |+
+                                =150
                               X: =24
                               Y: =DataCardKey40_1.Y + DataCardKey40_1.Height + 4
                         - ErrorMessage40_1:
@@ -1047,21 +1090,26 @@ Screens:
                               AutoHeight: =true
                               FontSize: =9
                               Height: =22
-                              Text: =Parent.DisplayName
+                              Text: |+
+                                ="관련 기종명"
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: =Parent.Width - 48
-                              X: =24
+                              X: =28
                               Y: =10
                         - DataCardValue42_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: =RGBA(245, 245, 245, 1)
                               DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =10
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
-                              Width: =Parent.Width - 48
+                              Width: |+
+                                =150
                               X: =24
                               Y: =DataCardKey42_1.Y + DataCardKey42_1.Height + 4
                         - ErrorMessage42_1:
@@ -1109,14 +1157,15 @@ Screens:
                               AutoHeight: =true
                               FontSize: =9
                               Height: =22
-                              Text: =Parent.DisplayName
+                              Text: |+
+                                ="업무 시작일자"
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: =Parent.Width - 48
                               X: =36
                               Y: =10
                         - DataCardValue1_1:
-                            Control: FluentV8/DatePicker@1.5.8
+                            Control: FluentV8/DatePicker@1.5.9
                             Properties:
                               AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
                               DisplayMode: =Parent.DisplayMode
@@ -1126,6 +1175,8 @@ Screens:
                                     RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
+                              Font: =Font.Verdana
+                              FontSize: =9
                               MaxDate: =Date(Year(Today())+100,1,1)
                               MinDate: =Date(1900,1,1)
                               Tooltip: =Parent.DisplayName
@@ -1179,14 +1230,14 @@ Screens:
                               AutoHeight: =true
                               FontSize: =9
                               Height: =22
-                              Text: =Parent.DisplayName
+                              Text: ="업무 종료일자"
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: =Parent.Width - 48
                               X: =24
                               Y: =10
                         - DataCardValue2_1:
-                            Control: FluentV8/DatePicker@1.5.8
+                            Control: FluentV8/DatePicker@1.5.9
                             Properties:
                               AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
                               DisplayMode: =Parent.DisplayMode
@@ -1196,6 +1247,8 @@ Screens:
                                     RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
+                              Font: =Font.Verdana
+                              FontSize: =9
                               MaxDate: =Date(Year(Today())+100,1,1)
                               MinDate: =Date(1900,1,1)
                               Tooltip: =Parent.DisplayName
@@ -1255,7 +1308,7 @@ Screens:
                               X: =24
                               Y: =10
                         - DataCardValue41_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1265,6 +1318,8 @@ Screens:
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
                               DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =9.5
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
@@ -1321,7 +1376,7 @@ Screens:
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: =Parent.Width - 48
-                              X: =24
+                              X: =32
                               Y: =10
                         - ErrorMessage34_1:
                             Control: FluentV8/Label@1.8.6
@@ -1344,6 +1399,7 @@ Screens:
                               Text: ="*"
                               Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                               Width: =30
+                              X: =8
                               Y: =DataCardKey34_1.Y
                         - 플젝_combo_3:
                             Control: ComboBox@0.0.49
@@ -1351,6 +1407,9 @@ Screens:
                               DefaultSelectedItems: |+
                                 =[ ThisItem ]
                                 //[SelectedItem.프로젝트명]
+                              Font: =Font.Verdana
+                              FontSize: =13
+                              FontWeight: =FontWeight.Normal
                               Items: |-
                                 =Filter(
                                     Project_DB,
@@ -1386,7 +1445,7 @@ Screens:
                         Height: =85
                         Required: =true
                         Update: =DataCardValue29_1.Value
-                        Width: =166
+                        Width: =180
                         WidthFit: =false
                         X: =3
                         Y: =0
@@ -1404,15 +1463,18 @@ Screens:
                               X: =36
                               Y: =10
                         - DataCardValue29_1:
-                            Control: FluentV8/DatePicker@1.5.8
+                            Control: FluentV8/DatePicker@1.5.9
                             Properties:
                               AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
                               DisplayMode: =Parent.DisplayMode
+                              FillColor: =RGBA(245, 245, 245, 1)
+                              Font: =Font.Verdana
+                              FontSize: =9
                               MaxDate: =Date(Year(Today())+100,1,1)
                               MinDate: =Date(1900,1,1)
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
-                              Width: =Parent.Width - 48
+                              Width: =140
                               X: =24
                               Y: =DataCardKey29_1.Y + DataCardKey29_1.Height + 4
                         - ErrorMessage29_1:
@@ -1454,7 +1516,7 @@ Screens:
                         Height: =74
                         Required: =true
                         Update: =DataCardValue30_1.Value
-                        Width: =166
+                        Width: =250
                         WidthFit: =false
                         X: =4
                         Y: =0
@@ -1469,18 +1531,21 @@ Screens:
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: =Parent.Width - 48
-                              X: =24
+                              X: =32
                               Y: =10
                         - DataCardValue30_1:
-                            Control: FluentV8/DatePicker@1.5.8
+                            Control: FluentV8/DatePicker@1.5.9
                             Properties:
                               AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
                               DisplayMode: =Parent.DisplayMode
+                              FillColor: =RGBA(245, 245, 245, 1)
+                              Font: =Font.Verdana
+                              FontSize: =9
                               MaxDate: =Date(Year(Today())+100,1,1)
                               MinDate: =Date(1900,1,1)
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
-                              Width: =Parent.Width - 48
+                              Width: =140
                               X: =24
                               Y: =DataCardKey30_1.Y + DataCardKey30_1.Height + 4
                         - ErrorMessage30_1:
@@ -1529,14 +1594,14 @@ Screens:
                               AutoHeight: =true
                               FontSize: =9
                               Height: =22
-                              Text: =Parent.DisplayName
+                              Text: ="업무 제목"
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: =Parent.Width - 48
                               X: =36
                               Y: =30
                         - DataCardValue38_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1546,10 +1611,12 @@ Screens:
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
                               DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =9.5
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
-                              Width: =Parent.Width - 48
+                              Width: =896
                               X: =24
                               Y: =64
                         - ErrorMessage38_1:
@@ -1605,7 +1672,7 @@ Screens:
                               X: =24
                               Y: =10
                         - DataCardValue31_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1615,6 +1682,8 @@ Screens:
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
                               DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =9.5
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
@@ -1709,6 +1778,8 @@ Screens:
                                     RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
                                     RGBA(230, 230, 230, 1)   // 편집 불가(연회색)
                                 )
+                              Font: =Font.Verdana
+                              FontSize: =13
                               Items: |-
                                 =//Choices([@Project_DB].'OData__xad6c__xbd84_')
                                 //Distinct(Project_DB, 상태)
@@ -1742,7 +1813,7 @@ Screens:
                               AutoHeight: =true
                               FontSize: =9
                               Height: =22
-                              Text: =Parent.DisplayName
+                              Text: ="상세 업무내용"
                               Tooltip: =Parent.DisplayName
                               VerticalAlignment: =VerticalAlign.Bottom
                               Width: |+
@@ -1750,7 +1821,7 @@ Screens:
                               X: =36
                               Y: =10
                         - DataCardValue33_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1760,12 +1831,14 @@ Screens:
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
                               DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =9.5
                               Height: =148
                               Mode: ='TextBox.Mode'.Multiline
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
-                              Width: =Parent.Width - 48
+                              Width: =896
                               X: =24
                               Y: =DataCardKey33_1.Y + DataCardKey33_1.Height + 4
                         - ErrorMessage33_1:
@@ -1820,7 +1893,7 @@ Screens:
                               X: =28
                               Y: =10
                         - DataCardValue36_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1830,10 +1903,14 @@ Screens:
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
                               DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =9.5
+                              Mode: ='TextBox.Mode'.Multiline
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
-                              Width: =Parent.Width - 48
+                              Width: |+
+                                =896
                               X: =24
                               Y: =DataCardKey36_1.Y + DataCardKey36_1.Height + 4
                         - ErrorMessage36_1:
@@ -1887,7 +1964,7 @@ Screens:
                               X: =24
                               Y: =10
                         - DataCardValue35_1:
-                            Control: FluentV8/TextBox@1.7.0
+                            Control: FluentV8/TextBox@1.7.1
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               DisplayMode: =Parent.DisplayMode
@@ -1924,10 +2001,11 @@ Screens:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   BorderColor: =RGBA(0, 0, 0, 0)
-                  Color: =RGBA(98, 100, 167, 1)
+                  Color: =RGBA(106, 122, 127, 1)
                   DisabledBorderColor: =RGBA(243, 242, 241, 1)
                   DisabledColor: =RGBA(220, 220, 220, 1)
                   DisabledFill: =RGBA(0, 0, 0, 0)
+                  FocusedBorderThickness: =1
                   Height: =32
                   HoverBorderColor: =RGBA(0, 0, 0, 0)
                   HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
@@ -1946,37 +2024,89 @@ Screens:
                   PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
                   PressedFill: =RGBA(0, 0, 0, 0)
                   Width: =32
-                  X: =968
+                  X: =977
                   Y: =11
             - send_btn:
                 Control: Button@0.0.44
                 Properties:
-                  BasePaletteColor: =RGBA(141, 229, 250, 1)
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Font: =Font.Verdana
+                  FontSize: =12
+                  FontWeight: =FontWeight.Semibold
+                  Height: =25
+                  Icon: ="Send"
                   OnSelect: |-
                     =SubmitForm(Form1_1);
                     Set(ShowPopup, false);
                     Set(editMode, false);
-                    Notify("업무 현황이 등록/수정 되었습니다.",NotificationType.Success);
-                  Text: ="전송"
+                    Notify("업무 현황이 저장되었습니다.",NotificationType.Success);
+                  Text: ="저장"
                   Visible: |+
                     =editMode
-                  X: =740
-                  Y: =624
+                  Width: =78
+                  X: =752
+                  Y: =632
             - cancle_btn:
                 Control: Button@0.0.44
                 Properties:
-                  BasePaletteColor: =RGBA(141, 229, 250, 1)
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Font: =Font.Verdana
+                  FontSize: =12
+                  FontWeight: =FontWeight.Semibold
+                  Height: =25
+                  Icon: ="Dismiss"
                   OnSelect: |+
                     =Set(editMode,false)
                   Text: ="취소"
                   Visible: =editMode && If(Form1_1.Mode = FormMode.New, false, true)
-                  X: =860
-                  Y: =624
+                  Width: =78
+                  X: =848
+                  Y: =632
             - Edit_btn:
                 Control: Button@0.0.44
                 Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Font: =Font.Verdana
+                  FontSize: =12
+                  Height: =25
+                  Icon: ="Edit"
                   OnSelect: =Set(editMode, true);
                   Text: ="편집"
-                  Visible: =If(Form1_1.Mode = FormMode.New, false, true)
-                  X: =353
-                  Y: =624
+                  Visible: |-
+                    =If(Form1_1.Mode = FormMode.New, false, true) &&
+                    !editMode
+                  Width: =85
+                  X: =841
+                  Y: =632
+      - Icon3:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =RGBA(13, 50, 61, 1)
+            DisabledBorderColor: =RGBA(243, 242, 241, 1)
+            DisabledColor: =RGBA(220, 220, 220, 1)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            Height: =24
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Icon: =Icon.OptionsList
+            PaddingBottom: =3
+            PaddingLeft: =3
+            PaddingRight: =3
+            PaddingTop: =3
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Width: =24
+            X: =16
+            Y: =69
