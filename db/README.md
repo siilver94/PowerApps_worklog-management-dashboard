@@ -1,9 +1,9 @@
-# 📂 DB Schema Repository
+#  DB Schema Repository
 
 이 저장소는 당사 프로젝트에서 사용된 주요 데이터베이스 테이블의 구조를 문서화하기 위한 공간입니다.  
 실제 데이터는 회사 보안 정책상 포함되어 있지 않으며, 테이블 구조만을 공유합니다.
 
-## 📌 Overview
+##  Overview
 
 | Table Name     | Description                                 |
 |----------------|---------------------------------------------|
@@ -14,9 +14,9 @@
 
 ---
 
-## 📊 Table Schemas
+##  Table Schemas
 
-### 🔹 UserInfo_DB
+### UserInfo_DB
 
 | Column Name        | Type      | Description         |
 |--------------------|-----------|---------------------|
@@ -40,7 +40,7 @@
 
 ---
 
-### 🔹 Daily_DB
+###  Daily_DB
 
 | Column Name      | Type      | Description         |
 |------------------|-----------|---------------------|
@@ -59,7 +59,7 @@
 
 ---
 
-### 🔹 Project_DB
+###  Project_DB
 
 | Column Name      | Type      | Description            |
 |------------------|-----------|------------------------|
@@ -82,7 +82,7 @@
 
 ---
 
-### 🔹 Task_DB
+###  Task_DB
 
 | Column Name      | Type      | Description         |
 |------------------|-----------|---------------------|
@@ -105,7 +105,7 @@
 
 ---
 
-## 🔐 Note
+##  Note
 
 - 모든 테이블에는 민감한 데이터가 제거되어 있으며, 테스트 및 문서화 용도로만 사용됩니다.
 - 구조는 변경될 수 있으며, 협업 시에는 버전 관리를 통해 관리됩니다.
