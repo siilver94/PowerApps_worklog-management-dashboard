@@ -3,7 +3,7 @@ Screens:
     Properties:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
-      OnVisible: "=Set(loadingSpinner, true);\r\nSet(varSelectedDate, Today());\r\n\r\n// ① Refresh()해서 최신 데이터 확보\r\nRefresh(Task_DB);\r\nRefresh(Daily_DB);\r\n\r\nClearCollect(\r\n    colDailyTasks,\r\n    If(\r\n        !IsBlank(\r\n            LookUp(Daily_DB, 작성일자 = varSelectedDate && 작성자 = name_label.Text)\r\n        ),\r\n        AddColumns(\r\n            Filter(\r\n                Daily_DB,\r\n                작성일자 = varSelectedDate && 작성자 = name_label.Text\r\n            ),\r\n            c업무_계정,ThisRecord.업무_계정,\r\n            c프로젝트명,ThisRecord.프로젝트명,\r\n            c업무제목,ThisRecord.업무제목,\r\n            c상태,ThisRecord.상태,\r\n            c업무_시작일자,ThisRecord.업무_시작일자,\r\n            c업무_종료일자,ThisRecord.업무_종료일자,\r\n            c상세_업무내용,ThisRecord.상세_업무내용,\r\n            //c작업시간,ThisRecord.작업시간,\r\n           // c작업내용,ThisRecord.작업내용,\r\n\r\n            HasDaily, true,\r\n            c작성일자, varSelectedDate\r\n        ),\r\n        AddColumns(\r\n            Filter(\r\n                Task_DB,\r\n                업무_시작일자 <= varSelectedDate &&\r\n                업무_종료일자 >= varSelectedDate &&\r\n                작성자 = name_label.Text\r\n            ),\r\n            \r\n            작업시간, 0,\r\n            작업내용, \"\",\r\n            HasDaily, false,\r\n            c작성일자, varSelectedDate\r\n        )\r\n    )\r\n);\r\n\r\nSet(loadingSpinner, false);\r\n\r\n\r\n\r\n//--- 30년 01월 01일까지 공휴일//\r\n\r\nClearCollect(\r\n    colKoreaHolidays,\r\n\r\n    // ===== 2025년 =====\r\n    // 설날 (음력 1/1 → 추정 2025-01-29 본행사)\r\n    {HolidayDate: Date(2025,1,28)}, // 설 전날\r\n    {HolidayDate: Date(2025,1,29)}, // 설 당일\r\n    {HolidayDate: Date(2025,1,30)}, // 설 다음날\r\n\r\n    // 3.1절\r\n    {HolidayDate: Date(2025,3,1)},\r\n    // 어린이날 (5/5), 예시: (5/6) 추가 가능 (사용자 예시)\r\n    {HolidayDate: Date(2025,5,1)},\r\n    {HolidayDate: Date(2025,5,5)},\r\n    {HolidayDate: Date(2025,5,6)},\r\n    // 부처님오신날(음력 4/8 → 양력 2025-5-6 추정) \r\n    // 주의: 5/5~5/6와 겹칠 가능성 높음 -> 정확 발표 참고\r\n    \r\n\r\n    // 현충일\r\n    {HolidayDate: Date(2025,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2025,8,15)},\r\n    // 추석(음력 8/15 → 추정 2025-10-5 당일)\r\n    {HolidayDate: Date(2025,10,3)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,4)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,5)}, // 추석 당일\r\n    {HolidayDate: Date(2025,10,6)}, // 추석 다음날\r\n{HolidayDate: Date(2025,10,7)},\r\n{HolidayDate: Date(2025,10,8)},\r\n\r\n   \r\n    {HolidayDate: Date(2025,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2025,12,25)},\r\n\r\n    // ===== 2026년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2026,1,1)},\r\n    // 설날 (음력 1/1 → 추정 2026-02-17)\r\n    {HolidayDate: Date(2026,2,16)},\r\n    {HolidayDate: Date(2026,2,17)},\r\n    {HolidayDate: Date(2026,2,18)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2026,3,1)},\r\n    {HolidayDate: Date(2026,3,2)},\r\n    // 어린이날\r\n\r\n    {HolidayDate: Date(2026,5,1)},\r\n    {HolidayDate: Date(2026,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2026-5-25 정도)\r\n    {HolidayDate: Date(2026,5,25)},\r\n    // 현충일\r\n    {HolidayDate: Date(2026,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2026,8,15)},\r\n    // 추석 (음력 8/15 → 추정 2026-9-25)\r\n    {HolidayDate: Date(2026,9,24)},\r\n    {HolidayDate: Date(2026,9,25)},\r\n    {HolidayDate: Date(2026,9,26)},\r\n    // 개천절\r\n    {HolidayDate: Date(2026,10,3)},\r\n    // 한글날\r\n    {HolidayDate: Date(2026,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2026,12,25)},\r\n\r\n    // ===== 2027년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2027,1,1)},\r\n    // 설날(추정 2027-2-6)\r\n   \r\n    {HolidayDate: Date(2027,2,6)},\r\n    {HolidayDate: Date(2027,2,7)},\r\n    {HolidayDate: Date(2027,2,8)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2027,3,1)},\r\n    // 어린이날\r\n    {HolidayDate: Date(2027,5,1)},\r\n    {HolidayDate: Date(2027,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2027-5-14)\r\n    {HolidayDate: Date(2027,5,13)},\r\n    // 현충일\r\n    {HolidayDate: Date(2027,6,7)},\r\n    // 광복절\r\n    {HolidayDate: Date(2027,8,16)},\r\n    // 추석(추정 2027-9-15)\r\n    {HolidayDate: Date(2027,9,14)},\r\n    {HolidayDate: Date(2027,9,15)},\r\n    {HolidayDate: Date(2027,9,16)},\r\n    // 개천절\r\n    {HolidayDate: Date(2027,10,4)},\r\n    // 한글날\r\n    {HolidayDate: Date(2027,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2027,12,25)},\r\n    {HolidayDate: Date(2027,12,27)},\r\n\r\n    // ===== 2028년 =====\r\n    {HolidayDate: Date(2028,1,1)},\r\n    // 설날(추정 2028-1-26)\r\n \r\n    {HolidayDate: Date(2028,1,26)},\r\n    {HolidayDate: Date(2028,1,27)},\r\n    {HolidayDate: Date(2028,1,28)},\r\n    {HolidayDate: Date(2028,3,1)},\r\n    {HolidayDate: Date(2028,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2028-5-2)\r\n    {HolidayDate: Date(2028,5,1)},\r\n    {HolidayDate: Date(2028,5,2)},\r\n    {HolidayDate: Date(2028,6,6)},\r\n    {HolidayDate: Date(2028,8,15)},\r\n    // 추석(추정 2028-10-4)\r\n    {HolidayDate: Date(2028,10,2)},\r\n    {HolidayDate: Date(2028,10,3)},\r\n    {HolidayDate: Date(2028,10,4)},\r\n    {HolidayDate: Date(2028,10,5)},\r\n\r\n    {HolidayDate: Date(2028,10,9)}, // 한글날\r\n    {HolidayDate: Date(2028,12,25)},// 성탄절\r\n\r\n    // ===== 2029년 =====\r\n    {HolidayDate: Date(2029,1,1)},\r\n    // 설날(추정 2029-2-13)\r\n    {HolidayDate: Date(2029,2,12)},\r\n    {HolidayDate: Date(2029,2,13)},\r\n    {HolidayDate: Date(2029,2,14)},\r\n    {HolidayDate: Date(2029,3,1)},\r\n    {HolidayDate: Date(2029,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2029-5-21)\r\n    {HolidayDate: Date(2029,5,21)},\r\n    {HolidayDate: Date(2029,6,6)},\r\n    {HolidayDate: Date(2029,8,15)},\r\n    // 추석(추정 2029-9-24)\r\n    {HolidayDate: Date(2029,9,21)},\r\n    {HolidayDate: Date(2029,9,22)},\r\n    {HolidayDate: Date(2029,9,24)},\r\n    \r\n    {HolidayDate: Date(2029,10,3)},\r\n    {HolidayDate: Date(2029,10,9)},\r\n    {HolidayDate: Date(2029,12,25)},\r\n\r\n    // ===== 2030년 =====\r\n    {HolidayDate: Date(2030,1,1)}\r\n);\r\n"
+      OnVisible: "=//--- 30년 01월 01일까지 공휴일//\r\n\r\nClearCollect(\r\n    colKoreaHolidays,\r\n\r\n    // ===== 2025년 =====\r\n    // 설날 (음력 1/1 → 추정 2025-01-29 본행사)\r\n    {HolidayDate: Date(2025,1,28)}, // 설 전날\r\n    {HolidayDate: Date(2025,1,29)}, // 설 당일\r\n    {HolidayDate: Date(2025,1,30)}, // 설 다음날\r\n\r\n    // 3.1절\r\n    {HolidayDate: Date(2025,3,1)},\r\n    // 어린이날 (5/5), 예시: (5/6) 추가 가능 (사용자 예시)\r\n    {HolidayDate: Date(2025,5,1)},\r\n    {HolidayDate: Date(2025,5,5)},\r\n    {HolidayDate: Date(2025,5,6)},\r\n    // 부처님오신날(음력 4/8 → 양력 2025-5-6 추정) \r\n    // 주의: 5/5~5/6와 겹칠 가능성 높음 -> 정확 발표 참고\r\n    \r\n\r\n    // 현충일\r\n    {HolidayDate: Date(2025,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2025,8,15)},\r\n    // 추석(음력 8/15 → 추정 2025-10-5 당일)\r\n    {HolidayDate: Date(2025,10,3)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,4)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,5)}, // 추석 당일\r\n    {HolidayDate: Date(2025,10,6)}, // 추석 다음날\r\n{HolidayDate: Date(2025,10,7)},\r\n{HolidayDate: Date(2025,10,8)},\r\n\r\n   \r\n    {HolidayDate: Date(2025,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2025,12,25)},\r\n\r\n    // ===== 2026년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2026,1,1)},\r\n    // 설날 (음력 1/1 → 추정 2026-02-17)\r\n    {HolidayDate: Date(2026,2,16)},\r\n    {HolidayDate: Date(2026,2,17)},\r\n    {HolidayDate: Date(2026,2,18)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2026,3,1)},\r\n    {HolidayDate: Date(2026,3,2)},\r\n    // 어린이날\r\n\r\n    {HolidayDate: Date(2026,5,1)},\r\n    {HolidayDate: Date(2026,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2026-5-25 정도)\r\n    {HolidayDate: Date(2026,5,25)},\r\n    // 현충일\r\n    {HolidayDate: Date(2026,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2026,8,15)},\r\n    // 추석 (음력 8/15 → 추정 2026-9-25)\r\n    {HolidayDate: Date(2026,9,24)},\r\n    {HolidayDate: Date(2026,9,25)},\r\n    {HolidayDate: Date(2026,9,26)},\r\n    // 개천절\r\n    {HolidayDate: Date(2026,10,3)},\r\n    // 한글날\r\n    {HolidayDate: Date(2026,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2026,12,25)},\r\n\r\n    // ===== 2027년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2027,1,1)},\r\n    // 설날(추정 2027-2-6)\r\n   \r\n    {HolidayDate: Date(2027,2,6)},\r\n    {HolidayDate: Date(2027,2,7)},\r\n    {HolidayDate: Date(2027,2,8)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2027,3,1)},\r\n    // 어린이날\r\n    {HolidayDate: Date(2027,5,1)},\r\n    {HolidayDate: Date(2027,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2027-5-14)\r\n    {HolidayDate: Date(2027,5,13)},\r\n    // 현충일\r\n    {HolidayDate: Date(2027,6,7)},\r\n    // 광복절\r\n    {HolidayDate: Date(2027,8,16)},\r\n    // 추석(추정 2027-9-15)\r\n    {HolidayDate: Date(2027,9,14)},\r\n    {HolidayDate: Date(2027,9,15)},\r\n    {HolidayDate: Date(2027,9,16)},\r\n    // 개천절\r\n    {HolidayDate: Date(2027,10,4)},\r\n    // 한글날\r\n    {HolidayDate: Date(2027,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2027,12,25)},\r\n    {HolidayDate: Date(2027,12,27)},\r\n\r\n    // ===== 2028년 =====\r\n    {HolidayDate: Date(2028,1,1)},\r\n    // 설날(추정 2028-1-26)\r\n \r\n    {HolidayDate: Date(2028,1,26)},\r\n    {HolidayDate: Date(2028,1,27)},\r\n    {HolidayDate: Date(2028,1,28)},\r\n    {HolidayDate: Date(2028,3,1)},\r\n    {HolidayDate: Date(2028,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2028-5-2)\r\n    {HolidayDate: Date(2028,5,1)},\r\n    {HolidayDate: Date(2028,5,2)},\r\n    {HolidayDate: Date(2028,6,6)},\r\n    {HolidayDate: Date(2028,8,15)},\r\n    // 추석(추정 2028-10-4)\r\n    {HolidayDate: Date(2028,10,2)},\r\n    {HolidayDate: Date(2028,10,3)},\r\n    {HolidayDate: Date(2028,10,4)},\r\n    {HolidayDate: Date(2028,10,5)},\r\n\r\n    {HolidayDate: Date(2028,10,9)}, // 한글날\r\n    {HolidayDate: Date(2028,12,25)},// 성탄절\r\n\r\n    // ===== 2029년 =====\r\n    {HolidayDate: Date(2029,1,1)},\r\n    // 설날(추정 2029-2-13)\r\n    {HolidayDate: Date(2029,2,12)},\r\n    {HolidayDate: Date(2029,2,13)},\r\n    {HolidayDate: Date(2029,2,14)},\r\n    {HolidayDate: Date(2029,3,1)},\r\n    {HolidayDate: Date(2029,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2029-5-21)\r\n    {HolidayDate: Date(2029,5,21)},\r\n    {HolidayDate: Date(2029,6,6)},\r\n    {HolidayDate: Date(2029,8,15)},\r\n    // 추석(추정 2029-9-24)\r\n    {HolidayDate: Date(2029,9,21)},\r\n    {HolidayDate: Date(2029,9,22)},\r\n    {HolidayDate: Date(2029,9,24)},\r\n    \r\n    {HolidayDate: Date(2029,10,3)},\r\n    {HolidayDate: Date(2029,10,9)},\r\n    {HolidayDate: Date(2029,12,25)},\r\n\r\n    // ===== 2030년 =====\r\n    {HolidayDate: Date(2030,1,1)}\r\n);\r\n"
     Children:
       - Container1_1:
           Control: GroupContainer@1.3.0
@@ -207,11 +207,12 @@ Screens:
                         PaddingBottom: |+
                           =
                         Value: |-
-                          =If(
-                            Not IsBlank(ThisItem.c상세_업무내용) && ThisItem.c상세_업무내용<>"",
-                            ThisItem.c상세_업무내용,
-                            ThisItem.field_6
-                          )
+                          =//If(
+                          // Not IsBlank(ThisItem.c상세_업무내용) && ThisItem.c상세_업무내용<>"",
+                           // ThisItem.c상세_업무내용,
+                           // ThisItem.field_6
+                          //)
+                          ThisItem.c상세_업무내용
                         Width: =275
                         X: =244
                         Y: =35
@@ -268,16 +269,7 @@ Screens:
                         OnSelect: =Select(Parent)
                         Placeholder: ="작업 내용을 입력해주세요"
                         Value: |+
-                          =//ThisItem.OData__xc791__xc5c5__xb0b4__xc6a9_
-                          //ThisItem.작업내용
-
-                          If(
-                              Not IsBlank(ThisItem.c작업내용) && ThisItem.c작업내용 <> "",
-                              // 이미 작성된 값(Daily_DB)
-                              ThisItem.c작업내용,
-                              // 새로 불러온 Task_DB 데이터 (or 기본값)
-                              ThisItem.OData__xc791__xc5c5__xb0b4__xc6a9_
-                          )
+                          =ThisItem.작업내용
                         Width: =365
                         X: =549
                         Y: =66
@@ -316,7 +308,8 @@ Screens:
                         FontSize: =7.5
                         Height: =20
                         OnSelect: |+
-                          =Remove(colDailyTasks, ThisItem)
+                          =Remove(colDailyTasks, ThisItem);
+
                         Text: ="- 제거"
                         Width: =52
                         X: =868
@@ -341,15 +334,12 @@ Screens:
                         OnSelect: =Select(Parent)
                         Placeholder: ="0"
                         Value: |-
-                          =//ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
-
-                          If(
-                              Not IsBlank(ThisItem.작업시간),
-                              // 이미 작성된 값(Daily_DB)
-                              ThisItem.작업시간,
-                              // 새로 불러온 Task_DB 데이터 (or 기본값)
-                              ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
-                          )
+                          =//If(
+                           //   Not IsBlank(ThisItem.작업시간),
+                           //   ThisItem.작업시간,
+                          //    ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                          //)
+                          ThisItem.작업시간
                         Width: =36
                         X: =598
                         Y: =10
@@ -364,11 +354,12 @@ Screens:
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         Value: |-
-                          =If(
-                            Not IsBlank(ThisItem.c업무_계정) && ThisItem.c업무_계정<>"",
-                            ThisItem.c업무_계정,
-                            ThisItem.OData__xad6c__xbd84_
-                          )
+                          =//If(
+                           // Not IsBlank(ThisItem.c업무_계정) && ThisItem.c업무_계정<>"",
+                           // ThisItem.c업무_계정,
+                           // ThisItem.OData__xad6c__xbd84_
+                          //)
+                          ThisItem.c업무_계정
                         Width: =155
                         X: =70
                         Y: =4
@@ -384,11 +375,12 @@ Screens:
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         Value: |-
-                          =If(
-                            Not IsBlank(ThisItem.c프로젝트명) && ThisItem.c프로젝트명<>"",
-                            ThisItem.c프로젝트명,
-                            ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba
-                          )
+                          =//If(
+                          //  Not IsBlank(ThisItem.c프로젝트명) && ThisItem.c프로젝트명<>"",
+                          //  ThisItem.c프로젝트명,
+                          //  ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba
+                          //
+                          ThisItem.c프로젝트명
                         Width: =155
                         X: =70
                         Y: =35
@@ -404,11 +396,12 @@ Screens:
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         Value: |-
-                          =If(
-                            Not IsBlank(ThisItem.c업무제목) && ThisItem.c업무제목<>"",
-                            ThisItem.c업무제목,
-                            ThisItem.field_5
-                          )
+                          =//If(
+                          //  Not IsBlank(ThisItem.c업무제목) && ThisItem.c업무제목<>"",
+                          //  ThisItem.c업무제목,
+                          //  ThisItem.field_5
+                          //)
+                          ThisItem.c업무제목
                         Width: =155
                         X: =70
                         Y: =66
@@ -423,11 +416,12 @@ Screens:
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         Value: |-
-                          =If(
-                            Not IsBlank(ThisItem.c업무_시작일자),
-                            ThisItem.c업무_시작일자,
-                            ThisItem.OData__xc5c5__xbb34___xc2dc__xc791__xc
-                          )
+                          =//If(
+                          //  Not IsBlank(ThisItem.c업무_시작일자),
+                          //  ThisItem.c업무_시작일자,
+                          //  ThisItem.OData__xc5c5__xbb34___xc2dc__xc791__xc
+                          //)
+                          ThisItem.c업무_시작일자
                         Width: =155
                         X: =70
                         Y: =109
@@ -442,11 +436,12 @@ Screens:
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         Value: |-
-                          =If(
-                            Not IsBlank(ThisItem.c업무_종료일자),
-                            ThisItem.c업무_종료일자,
-                            ThisItem.OData__xc5c5__xbb34___xc885__xb8cc__xc
-                          )
+                          =//If(
+                          //  Not IsBlank(ThisItem.c업무_종료일자),
+                          //  ThisItem.c업무_종료일자,
+                          //  ThisItem.OData__xc5c5__xbb34___xc885__xb8cc__xc
+                          //)
+                          ThisItem.c업무_종료일자
                         Width: =155
                         X: =70
                         Y: =140
@@ -461,11 +456,12 @@ Screens:
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         Value: |-
-                          =If(
-                            Not IsBlank(ThisItem.c상태) && ThisItem.c상태<>"",
-                            ThisItem.c상태,
-                            ThisItem.field_7
-                          )
+                          =//If(
+                          //  Not IsBlank(ThisItem.c상태) && ThisItem.c상태<>"",
+                          //  ThisItem.c상태,
+                           // ThisItem.field_7
+                          //)
+                          ThisItem.c상태
                         Width: =155
                         X: =70
                         Y: =169
@@ -628,7 +624,7 @@ Screens:
                         Font: =Font.Verdana
                         FontSize: =7.5
                         Height: =20
-                        OnSelect: "=If(\r\n    // 1) 이미 colDailyTasks에 \"이 업무(ID)\"가 있는지?\r\n    Not IsBlank(LookUp(colDailyTasks, ID = ThisItem.ID)),\r\n    // 2) 있으면 알림\r\n    Notify(\"이미 해당 업무가 지정되었습니다.\", NotificationType.Warning),\r\n    // 3) 없으면 Collect\r\nCollect(\r\n    colDailyTasks,\r\n    {\r\n       // Task_DB의 주요 필드를 그대로 복사   \r\n       ID: ThisItem.ID, \r\n       업무_계정: ThisItem.업무_계정,\r\n       프로젝트명: ThisItem.프로젝트명, \r\n       상태: ThisItem.상태,\r\n       업무제목: ThisItem.업무제목,\r\n       상세_업무내용: ThisItem.상세_업무내용,\r\n       업무_시작일자: ThisItem.업무_시작일자,\r\n       업무_종료일자: ThisItem.업무_종료일자,    \r\n       \r\n       // 일지 작성용 필드: 빈 값으로 초기화\r\n       작업내용: \"\",\r\n       작업시간: 0\r\n       // 작성일자(Today())는 저장 시점에 지정해줄 수도 있음\r\n    }\r\n    )\r\n);"
+                        OnSelect: "=If(\r\n    Not IsBlank(LookUp(colDailyTasks, ID = ThisItem.ID)),\r\n    Notify(\"이미 해당 업무가 지정되었습니다.\", NotificationType.Warning),\r\n    \r\n    With(\r\n        {\r\n            taskRec: First(Filter(Task_DB, ID = ThisItem.ID)),\r\n            dailyRec: First(Filter(Daily_DB, ID = ThisItem.ID, 작성자 = name_label.Text))\r\n        },\r\n        Collect(\r\n            colDailyTasks,\r\n            If(\r\n                Not IsBlank(dailyRec),\r\n                // [A] 이미 Daily_DB 레코드가 존재하는 경우\r\n                {\r\n                    // => colDailyTasks에 ID= dailyRec.ID (기존 Daily_DB 식별자)\r\n                    ID: dailyRec.ID, \r\n                    HasDaily: true,\r\n\r\n                    c업무_계정: taskRec.업무_계정,\r\n                    c프로젝트명: taskRec.프로젝트명,\r\n                    c업무제목: taskRec.업무제목,\r\n                    c업무_시작일자: taskRec.업무_시작일자,\r\n                    c업무_종료일자: taskRec.업무_종료일자,\r\n                    c상태: taskRec.상태,\r\n                    c상세_업무내용: taskRec.상세_업무내용,\r\n\r\n                    작업내용: dailyRec.작업내용,\r\n                    작업시간: dailyRec.작업시간\r\n                },\r\n                // [B] Daily_DB 기록이 없는 경우 => 새 항목\r\n                {\r\n                    // => colDailyTasks에 ID= Blank() (아직 Daily_DB 상 레코드가 없으므로)\r\n                    ID: Blank(),\r\n                    HasDaily: false,\r\n\r\n                    c업무_계정: taskRec.업무_계정,\r\n                    c프로젝트명: taskRec.프로젝트명,\r\n                    c업무제목: taskRec.업무제목,\r\n                    c업무_시작일자: taskRec.업무_시작일자,\r\n                    c업무_종료일자: taskRec.업무_종료일자,\r\n                    c상태: taskRec.상태,\r\n                    c상세_업무내용: taskRec.상세_업무내용,\r\n\r\n                    작업내용: \"\",\r\n                    작업시간: 0\r\n                }\r\n            )\r\n        )\r\n    )\r\n);\r\n"
                         Text: ="+ 추가"
                         Width: =52
                         X: =317
@@ -890,50 +886,7 @@ Screens:
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
                         Height: =28.8
                         HoverFill: =ColorValue("#FD625E10")
-                        OnSelect: |-
-                          =If(
-                              ThisItem.HasDaily,
-                              ClearCollect(
-                                  colDailyTasks,
-                                  AddColumns(
-                                      Filter(
-                                          Daily_DB, 
-                                          작성일자 = ThisItem.Value 
-                                          && 작성자 = name_label.Text
-                                      ),            
-                                      c업무_계정, ThisRecord.업무_계정,
-                                      c프로젝트명, ThisRecord.프로젝트명,
-                                      c업무제목, ThisRecord.업무제목,  // 혹은 Task_DB에서 가져오기
-                                      c업무_시작일자, ThisRecord.업무_시작일자,
-                                      c업무_종료일자, ThisRecord.업무_종료일자,
-                                      c상태, ThisRecord.상태,
-                                      c상세_업무내용, ThisRecord.상세_업무내용,
-
-                                      c작업시간, ThisRecord.작업시간, 
-                                      c작업내용, ThisRecord.작업내용,
-                                      HasDaily, true,                // ① 이미 작성된 날 표시
-                                      c작성일자, ThisRecord.작성일자 // or ThisItem.Value
-                                  )
-                              ),
-                              // 새로 작성할 날 → Task_DB + 기본값
-                              ClearCollect(
-                                  colDailyTasks,
-                                  AddColumns(
-                                      Filter(
-                                              Task_DB,
-                                              업무_시작일자 <= ThisItem.Value &&
-                                              업무_종료일자 >= ThisItem.Value &&
-                                              작성자 = name_label.Text
-                                          ),
-                                      c업무_계정, ThisRecord.업무_계정,  
-                                      HasDaily, false,  
-                                      c작성일자, ThisItem.Value, 
-                                      작업시간, 0,
-                                      작업내용, ""
-                                  )
-                              )
-                          );
-                          Set(varSelectedDate, ThisItem.Value);
+                        OnSelect: "=// 달력 OnSelect\r\nClear(colDailyTasks);\r\n\r\n// 1) 해당 날짜의 Daily_DB 레코드\r\nClearCollect(\r\n    colDaily_DayRecords,\r\n    AddColumns(\r\n    Filter(\r\n        Daily_DB,\r\n        작성일자 = ThisItem.Value && 작성자 = name_label.Text\r\n    ),\r\n   \r\n    c업무_계정, ThisRecord.업무_계정,\r\n    c프로젝트명, ThisRecord.프로젝트명,\r\n    c업무제목, ThisRecord.업무제목,  // 혹은 Task_DB에서 가져오기\r\n    c업무_시작일자, ThisRecord.업무_시작일자,\r\n    c업무_종료일자, ThisRecord.업무_종료일자,\r\n    c상태, ThisRecord.상태,\r\n    c상세_업무내용, ThisRecord.상세_업무내용\r\n    )\r\n\r\n);\r\n\r\n// 2) Daily_DB가 전혀 없으면 => colDailyTasks 비우기\r\nIf(\r\n    CountRows(colDaily_DayRecords) > 0,\r\n    // 이미 작성된 데이터가 있으면\r\n    ClearCollect(colDailyTasks, colDaily_DayRecords),\r\n    // 하나도 없으면 빈 리스트\r\n    Clear(colDailyTasks)\r\n);\r\n\r\n// 날짜 변수\r\nSet(varSelectedDate, ThisItem.Value);"
                         PressedFill: =ColorValue("#FD625E30")
                         Width: =46
                         X: =3
@@ -1119,7 +1072,7 @@ Screens:
                   Height: =25
                   Icon: ="Send"
                   IconStyle: ='ButtonCanvas.IconStyle'.Filled
-                  OnSelect: "=ForAll(\r\n    Daily_Gallery.AllItems,\r\n    Patch(\r\n        colDailyTasks,\r\n        ThisRecord, // 갤러리의 현재 row (colDailyTasks record)\r\n        {\r\n          작업내용 :txtWorkContent.Value,\r\n          작업시간: Value(txtWorkHour.Value),\r\n          \r\n          c상태 : field_7,\r\n          c업무_계정 : OData__xad6c__xbd84_,\r\n          c프로젝트명 : OData__xd504__xb85c__xc81d__xd2b8__xba, // 추가\r\n          c업무_시작일자: OData__xc5c5__xbb34___xc2dc__xc791__xc,\r\n          c업무_종료일자 :OData__xc5c5__xbb34___xc885__xb8cc__xc,\r\n          c업무제목 :field_5,\r\n          c상세_업무내용 : field_6\r\n\r\n        }\r\n    )\r\n);\r\nForAll(\r\n    colDailyTasks,\r\n    If(\r\n        // 이미 작성된 날 → Update\r\n        ThisRecord.HasDaily,\r\n\r\n        Patch(\r\n            Daily_DB,\r\n                {ID: ThisRecord.ID,\r\n                작업내용: ThisRecord.작업내용,\r\n                작업시간: ThisRecord.작업시간\r\n            }\r\n        ),\r\n\r\n        // 새 날 → Insert\r\n        Patch(\r\n            Daily_DB,\r\n            Defaults(Daily_DB),\r\n            {\r\n              작성자: name_label.Text,   // 작성자 레이블에 표시된 값\r\n            상태: ThisRecord.c상태,\r\n            업무_시작일자: ThisRecord.c업무_시작일자,\r\n            업무_종료일자: ThisRecord.c업무_종료일자,\r\n            업무_계정: ThisRecord.c업무_계정,\r\n            프로젝트명: ThisRecord.c프로젝트명,\r\n            업무제목: ThisRecord.c업무제목,\r\n            상세_업무내용: ThisRecord.c상세_업무내용,\r\n            팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀,\r\n            작업내용: ThisRecord.작업내용,\r\n            작업시간: ThisRecord.작업시간,           \r\n            작성일자 : varSelectedDate\r\n\r\n            }\r\n        )\r\n    )\r\n);\r\n\r\nNotify(\"일일업무가 저장되었습니다.\", NotificationType.Success);\r\nSet(varEditMode, false);\r\n"
+                  OnSelect: "=// 1) 갤러리(Daily_Gallery) -> colDailyTasks (작업시간/내용 반영)\r\nForAll(\r\n    Daily_Gallery.AllItems,\r\n    Patch(\r\n        colDailyTasks,\r\n        ThisRecord,\r\n        {\r\n            작업시간: Value(txtWorkHour.Value),\r\n            작업내용: txtWorkContent.Value\r\n        }\r\n    )\r\n);\r\n\r\n// 2) colDailyTasks -> Daily_DB\r\nForAll(\r\n    colDailyTasks,\r\n    With(\r\n        {\r\n            existingRec: LookUp(\r\n                Daily_DB,\r\n                프로젝트명 = c프로젝트명 &&\r\n                작성일자 = varSelectedDate &&\r\n               작성자 = name_label.Text &&\r\n                업무제목 = c업무제목 &&\r\n                상세_업무내용 = c상세_업무내용\r\n                \r\n            )\r\n        },\r\n        If(\r\n            // 이미 존재 => Update\r\n            Not IsBlank(existingRec),\r\n            Patch(\r\n                Daily_DB,\r\n                existingRec, // 바로 레코드 참조\r\n                {\r\n                    작업내용: 작업내용,\r\n                    작업시간: 작업시간\r\n                    // 필요하면 '상태' 등도 업데이트\r\n                }\r\n            ),\r\n            // 새 항목 => Insert\r\n            Patch(\r\n                Daily_DB,\r\n                Defaults(Daily_DB),\r\n                {\r\n                    작성자: name_label.Text,\r\n                    프로젝트명: c프로젝트명,\r\n                    업무_계정: c업무_계정,\r\n                    업무_시작일자: c업무_시작일자,\r\n                    업무_종료일자: c업무_종료일자,\r\n                    업무제목: c업무제목,\r\n                    상세_업무내용: c상세_업무내용,\r\n                    상태: c상태,\r\n\r\n                    작업내용: 작업내용,\r\n                    작업시간: 작업시간,\r\n                    작성일자: varSelectedDate,\r\n                    팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                }\r\n            )\r\n        )\r\n    )\r\n);\r\n\r\nNotify(\"저장 완료!\", NotificationType.Success);\r\nSet(varEditMode, false);"
                   Text: ="저장"
                   Visible: |+
                     =varEditMode
