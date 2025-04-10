@@ -1,6 +1,6 @@
 # worklog-management-dashboard
 
-**worklog-management-dashboard(이하 업무현황판)**는 연구소 내 프로젝트 및 업무 일지를 효율적으로 관리하기 위한 Power Apps & SharePoint 기반의 애플리케이션입니다.
+**worklog-management-dashboard(이하 업무현황판)** 는 연구소 내 프로젝트 및 업무 일지를 효율적으로 관리하기 위한 Power Apps & SharePoint 기반의 애플리케이션입니다.
 프로젝트 현황(Task)과 연구원들의 일일 업무일지(Daily Logs)를 연결하여, 보다 체계적으로 업무 시간을 기록하고 진행 상황을 추적할 수 있습니다.
 
 ## 개요 (Overview)
