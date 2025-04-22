@@ -732,7 +732,7 @@ Screens:
                               {
                                 FilteredData: Filter(
                                   Task_DB,
-                                  작성자 = name_label.Text
+                                  작성자 = name_label_1.Text
                                   && (
                                       FilterMode = "All"
                                       || (
@@ -755,6 +755,7 @@ Screens:
                                 SortOrder.Descending
                               )
                           )
+                        NavigationStep: =0
                         OnSelect: |-
                           =Set(SelectedItem, ThisItem); // 데이터 입력
                           Set(ShowPopup, true);       // 팝업창 뜨기
@@ -906,23 +907,33 @@ Screens:
                         Weight: ='TextCanvas.Weight'.Semibold
                         Width: =80
             - Form1_1:
-                Control: Form@2.4.2
+                Control: Form@2.4.3
                 Variant: Classic
                 Layout: Vertical
                 Properties:
                   BorderColor: =RGBA(243, 242, 241, 1)
                   DataSource: =Task_DB
                   DefaultMode: =//If( newMode, FormMode.New,    editMode, FormMode.Edit,    FormMode.View)
-                  Height: =613
+                  Height: =612
                   Item: |-
                     =SelectedItem
                     //CurrentItem
+                  NumberOfColumns: =4
+                  OnFailure: =
+                  OnSuccess: |+
+                    =//false
+                    Set(ShowPopup, false);
+                    Set(editMode, false);
+
+                    Set(varToastMessage, "업무 현황이 저장되었습니다.");
+                    Set(varShowToast, true);
+                  SnapToColumns: =false
                   Width: =1005
                   X: =4
                   Y: =11
                 Children:
                   - 업무_계정_DataCard1_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -937,10 +948,12 @@ Screens:
                         Update: =계정_combo_3.Selected.Value
                         Width: =180
                         WidthFit: =false
+                        X: =0
                         Y: =0
                       Children:
                         - DataCardKey1_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -953,6 +966,7 @@ Screens:
                               Y: =10
                         - ErrorMessage1_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -966,6 +980,7 @@ Screens:
                               Y: =
                         - StarVisible1_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -995,365 +1010,8 @@ Screens:
                               Width: =153
                               X: =24
                               Y: =38
-                  - PM_DataCard2_1:
-                      Control: TypedDataCard@1.0.6
-                      Variant: PcfCoreTextualEditCard
-                      Properties:
-                        BorderColor: =RGBA(243, 242, 241, 1)
-                        DataField: ="PM"
-                        Default: |-
-                          =LookUp(Project_DB,
-                          업무_계정 = 계정_combo_3.Selected.Value &&
-                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
-                          ).PM
-                        DisplayMode: =DisplayMode.View
-                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,PM)
-                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, PM)
-                        Required: =false
-                        Update: =PM_text_1.Value
-                        Width: =450
-                        WidthFit: =false
-                        X: =2
-                        Y: =0
-                      Children:
-                        - DataCardKey40_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              FontSize: =9
-                              Height: =22
-                              Text: =Parent.DisplayName
-                              Tooltip: =Parent.DisplayName
-                              VerticalAlignment: =VerticalAlign.Bottom
-                              Width: |+
-                                =Parent.Width - 150
-                              X: =32
-                              Y: =10
-                        - PM_text_1:
-                            Control: FluentV8/TextBox@1.7.1
-                            Properties:
-                              AccessibleLabel: =Parent.DisplayName
-                              ColorBackground: =RGBA(245, 245, 245, 1)
-                              DisplayMode: =Parent.DisplayMode
-                              Font: =Font.Verdana
-                              FontSize: =10
-                              Required: =Parent.Required
-                              Tooltip: =Parent.DisplayName
-                              Value: =Parent.Default
-                              Width: |+
-                                =150
-                              X: =24
-                              Y: |+
-                                =38
-                        - ErrorMessage40_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              Color: =Color.Red
-                              FontSize: =9
-                              Height: =30
-                              Text: =Parent.Error
-                              Tooltip: =Parent.Error
-                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =PM_text_1.Y + PM_text_1.Height
-                        - StarVisible40_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Alignment: =Align.Center
-                              Height: =30
-                              Text: ="*"
-                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =30
-                              Y: =DataCardKey40_1.Y
-                  - 관련기종명_DataCard2_1:
-                      Control: TypedDataCard@1.0.6
-                      Variant: PcfCoreTextualEditCard
-                      Properties:
-                        BorderColor: =RGBA(243, 242, 241, 1)
-                        DataField: ="OData__xad00__xb828__xae30__xc885__xba"
-                        Default: |-
-                          =LookUp(Project_DB,
-                          업무_계정 = 계정_combo_3.Selected.Value &&
-                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
-                          ).관련기종명
-                        DisplayMode: =DisplayMode.View
-                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,관련기종명)
-                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 관련기종명)
-                        Required: =false
-                        Update: =DataCardValue42_1.Value
-                        Width: =270
-                        WidthFit: =false
-                        X: =5
-                        Y: =0
-                      Children:
-                        - DataCardKey42_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              FontSize: =9
-                              Height: =22
-                              Text: |+
-                                ="관련 기종명"
-                              Tooltip: =Parent.DisplayName
-                              VerticalAlignment: =VerticalAlign.Bottom
-                              Width: =Parent.Width - 48
-                              X: =28
-                              Y: =10
-                        - DataCardValue42_1:
-                            Control: FluentV8/TextBox@1.7.1
-                            Properties:
-                              AccessibleLabel: =Parent.DisplayName
-                              ColorBackground: =RGBA(245, 245, 245, 1)
-                              DisplayMode: =Parent.DisplayMode
-                              Font: =Font.Verdana
-                              FontSize: =10
-                              Required: =Parent.Required
-                              Tooltip: =Parent.DisplayName
-                              Value: =Parent.Default
-                              Width: |+
-                                =150
-                              X: =24
-                              Y: =DataCardKey42_1.Y + DataCardKey42_1.Height + 4
-                        - ErrorMessage42_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              Color: =Color.Red
-                              FontSize: =9
-                              Height: =30
-                              Text: =Parent.Error
-                              Tooltip: =Parent.Error
-                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =DataCardValue42_1.Y + DataCardValue42_1.Height
-                        - StarVisible42_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Alignment: =Align.Center
-                              Height: =30
-                              Text: ="*"
-                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =30
-                              Y: =DataCardKey42_1.Y
-                  - 업무_시작일자_DataCard1_1:
-                      Control: TypedDataCard@1.0.6
-                      Variant: PcfCoreDateEditCard
-                      Properties:
-                        BorderColor: =RGBA(243, 242, 241, 1)
-                        DataField: ="OData__xc5c5__xbb34___xc2dc__xc791__xc"
-                        Default: =ThisItem.업무_시작일자
-                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
-                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무_시작일자)
-                        Height: =74
-                        Required: =true
-                        Update: =DataCardValue1_1.Value
-                        Width: =175
-                        WidthFit: =false
-                        X: =1
-                        Y: =1
-                      Children:
-                        - DataCardKey2_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              FontSize: =9
-                              Height: =22
-                              Text: |+
-                                ="업무 시작일자"
-                              Tooltip: =Parent.DisplayName
-                              VerticalAlignment: =VerticalAlign.Bottom
-                              Width: =Parent.Width - 48
-                              X: =36
-                              Y: =10
-                        - DataCardValue1_1:
-                            Control: FluentV8/DatePicker@1.5.9
-                            Properties:
-                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
-                              DisplayMode: =Parent.DisplayMode
-                              FillColor: |-
-                                =If(
-                                    editMode, 
-                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
-                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
-                                )
-                              Font: =Font.Verdana
-                              FontSize: =9
-                              MaxDate: =Date(Year(Today())+100,1,1)
-                              MinDate: =Date(1900,1,1)
-                              Tooltip: =Parent.DisplayName
-                              Value: =Parent.Default
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =DataCardKey2_1.Y + DataCardKey2_1.Height + 4
-                        - ErrorMessage2_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              Color: =Color.Red
-                              FontSize: =9
-                              Height: =30
-                              Text: =Parent.Error
-                              Tooltip: =Parent.Error
-                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =DataCardValue1_1.Y + DataCardValue1_1.Height
-                        - StarVisible2_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Alignment: =Align.Center
-                              Height: =30
-                              Text: ="*"
-                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =30
-                              X: =12
-                              Y: =DataCardKey2_1.Y
-                  - 업무_종료일자_DataCard1_1:
-                      Control: TypedDataCard@1.0.6
-                      Variant: PcfCoreDateEditCard
-                      Properties:
-                        BorderColor: =RGBA(243, 242, 241, 1)
-                        DataField: ="OData__xc5c5__xbb34___xc885__xb8cc__xc"
-                        Default: =ThisItem.업무_종료일자
-                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
-                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무_종료일자)
-                        Height: =74
-                        Required: =true
-                        Update: =DataCardValue2_1.Value
-                        Width: =175
-                        WidthFit: =false
-                        X: =2
-                        Y: =1
-                      Children:
-                        - DataCardKey3_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              FontSize: =9
-                              Height: =22
-                              Text: ="업무 종료일자"
-                              Tooltip: =Parent.DisplayName
-                              VerticalAlignment: =VerticalAlign.Bottom
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =10
-                        - DataCardValue2_1:
-                            Control: FluentV8/DatePicker@1.5.9
-                            Properties:
-                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
-                              DisplayMode: =Parent.DisplayMode
-                              FillColor: |-
-                                =If(
-                                    editMode, 
-                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
-                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
-                                )
-                              Font: =Font.Verdana
-                              FontSize: =9
-                              MaxDate: =Date(Year(Today())+100,1,1)
-                              MinDate: =Date(1900,1,1)
-                              Tooltip: =Parent.DisplayName
-                              Value: =Parent.Default
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =DataCardKey3_1.Y + DataCardKey3_1.Height + 4
-                        - ErrorMessage3_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              Color: =Color.Red
-                              FontSize: =9
-                              Height: =30
-                              Text: =Parent.Error
-                              Tooltip: =Parent.Error
-                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =DataCardValue2_1.Y + DataCardValue2_1.Height
-                        - StarVisible3_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Alignment: =Align.Center
-                              Height: =30
-                              Text: ="*"
-                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =30
-                              Y: =DataCardKey3_1.Y
-                  - 관련ECN_DataCard2_1:
-                      Control: TypedDataCard@1.0.6
-                      Variant: PcfCoreTextualEditCard
-                      Properties:
-                        BorderColor: =RGBA(243, 242, 241, 1)
-                        DataField: ="OData__xad00__xb828_ECN"
-                        Default: =ThisItem.관련ECN
-                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
-                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,관련ECN)
-                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 관련ECN)
-                        Required: =false
-                        Update: =DataCardValue41_1.Value
-                        Width: =180
-                        WidthFit: =false
-                        X: =3
-                        Y: =1
-                      Children:
-                        - DataCardKey41_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              FontSize: =9
-                              Height: =22
-                              Text: =Parent.DisplayName
-                              Tooltip: =Parent.DisplayName
-                              VerticalAlignment: =VerticalAlign.Bottom
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =10
-                        - DataCardValue41_1:
-                            Control: FluentV8/TextBox@1.7.1
-                            Properties:
-                              AccessibleLabel: =Parent.DisplayName
-                              ColorBackground: |-
-                                =If(
-                                    editMode, 
-                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
-                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
-                                )
-                              DisplayMode: =Parent.DisplayMode
-                              Font: =Font.Verdana
-                              FontSize: =9.5
-                              Required: =Parent.Required
-                              Tooltip: =Parent.DisplayName
-                              Value: =Parent.Default
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =DataCardKey41_1.Y + DataCardKey41_1.Height + 4
-                        - ErrorMessage41_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              AutoHeight: =true
-                              Color: =Color.Red
-                              FontSize: =9
-                              Height: =30
-                              Text: =Parent.Error
-                              Tooltip: =Parent.Error
-                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =Parent.Width - 48
-                              X: =24
-                              Y: =DataCardValue41_1.Y + DataCardValue41_1.Height
-                        - StarVisible41_1:
-                            Control: FluentV8/Label@1.8.6
-                            Properties:
-                              Alignment: =Align.Center
-                              Height: =30
-                              Text: ="*"
-                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                              Width: =30
-                              Y: =DataCardKey41_1.Y
                   - 프로젝트명_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1372,6 +1030,7 @@ Screens:
                       Children:
                         - DataCardKey34_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1384,6 +1043,7 @@ Screens:
                               Y: =10
                         - ErrorMessage34_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1397,6 +1057,7 @@ Screens:
                               Y: =
                         - StarVisible34_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1436,8 +1097,84 @@ Screens:
                                     FieldName: ="OData__xd504__xb85c__xc81d__xd2b8__xba"
                                     FieldType: ="s"
                                     Order: =1
+                  - PM_DataCard2_1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="PM"
+                        Default: |-
+                          =LookUp(Project_DB,
+                          업무_계정 = 계정_combo_3.Selected.Value &&
+                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
+                          ).PM
+                        DisplayMode: =DisplayMode.View
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,PM)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, PM)
+                        Required: =false
+                        Update: =PM_text_1.Value
+                        Width: =450
+                        WidthFit: =false
+                        X: =2
+                        Y: =0
+                      Children:
+                        - DataCardKey40_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: |+
+                                =Parent.Width - 150
+                              X: =32
+                              Y: =10
+                        - PM_text_1:
+                            Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: =RGBA(245, 245, 245, 1)
+                              DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =10
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: |+
+                                =150
+                              X: =24
+                              Y: |+
+                                =38
+                        - ErrorMessage40_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =PM_text_1.Y + PM_text_1.Height
+                        - StarVisible40_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey40_1.Y
                   - 시작날짜_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreDateEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1459,6 +1196,7 @@ Screens:
                       Children:
                         - DataCardKey29_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1471,6 +1209,7 @@ Screens:
                               Y: =10
                         - DataCardValue29_1:
                             Control: FluentV8/DatePicker@1.5.9
+                            MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
                               DisplayMode: =Parent.DisplayMode
@@ -1486,6 +1225,7 @@ Screens:
                               Y: =DataCardKey29_1.Y + DataCardKey29_1.Height + 4
                         - ErrorMessage29_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1499,6 +1239,7 @@ Screens:
                               Y: =DataCardValue29_1.Y + DataCardValue29_1.Height
                         - StarVisible29_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1508,7 +1249,7 @@ Screens:
                               X: =12
                               Y: =DataCardKey29_1.Y
                   - 종료날짜_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreDateEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1530,6 +1271,7 @@ Screens:
                       Children:
                         - DataCardKey30_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1542,6 +1284,7 @@ Screens:
                               Y: =10
                         - DataCardValue30_1:
                             Control: FluentV8/DatePicker@1.5.9
+                            MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
                               DisplayMode: =Parent.DisplayMode
@@ -1557,6 +1300,7 @@ Screens:
                               Y: =DataCardKey30_1.Y + DataCardKey30_1.Height + 4
                         - ErrorMessage30_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1570,6 +1314,7 @@ Screens:
                               Y: =DataCardValue30_1.Y + DataCardValue30_1.Height
                         - StarVisible30_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1577,8 +1322,83 @@ Screens:
                               Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                               Width: =30
                               Y: =DataCardKey30_1.Y
+                  - 관련기종명_DataCard2_1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xad00__xb828__xae30__xc885__xba"
+                        Default: |-
+                          =LookUp(Project_DB,
+                          업무_계정 = 계정_combo_3.Selected.Value &&
+                          프로젝트명 = 플젝_combo_3.Selected.프로젝트명
+                          ).관련기종명
+                        DisplayMode: =DisplayMode.View
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,관련기종명)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 관련기종명)
+                        Required: =false
+                        Update: =DataCardValue42_1.Value
+                        Width: =270
+                        WidthFit: =false
+                        X: =5
+                        Y: =0
+                      Children:
+                        - DataCardKey42_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: |+
+                                ="관련 기종명"
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =28
+                              Y: =10
+                        - DataCardValue42_1:
+                            Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: =RGBA(245, 245, 245, 1)
+                              DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =10
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: |+
+                                =150
+                              X: =24
+                              Y: =DataCardKey42_1.Y + DataCardKey42_1.Height + 4
+                        - ErrorMessage42_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue42_1.Y + DataCardValue42_1.Height
+                        - StarVisible42_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey42_1.Y
                   - 업무제목_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1593,10 +1413,12 @@ Screens:
                         Update: =DataCardValue38_1.Value
                         Width: =996
                         WidthFit: =false
+                        X: =0
                         Y: =1
                       Children:
                         - DataCardKey38_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1609,6 +1431,7 @@ Screens:
                               Y: =30
                         - DataCardValue38_1:
                             Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1628,6 +1451,7 @@ Screens:
                               Y: =64
                         - ErrorMessage38_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1641,6 +1465,7 @@ Screens:
                               Y: =DataCardValue38_1.Y + DataCardValue38_1.Height
                         - StarVisible38_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1649,8 +1474,234 @@ Screens:
                               Width: =30
                               X: =12
                               Y: =DataCardKey38_1.Y
+                  - 업무_시작일자_DataCard1_1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: PcfCoreDateEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xc5c5__xbb34___xc2dc__xc791__xc"
+                        Default: =ThisItem.업무_시작일자
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무_시작일자)
+                        Height: =74
+                        Required: =true
+                        Update: =DataCardValue1_1.Value
+                        Width: =175
+                        WidthFit: =false
+                        X: =1
+                        Y: =1
+                      Children:
+                        - DataCardKey2_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: |+
+                                ="업무 시작일자"
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =36
+                              Y: =10
+                        - DataCardValue1_1:
+                            Control: FluentV8/DatePicker@1.5.9
+                            MetadataKey: FieldValue
+                            Properties:
+                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
+                              DisplayMode: =Parent.DisplayMode
+                              FillColor: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              Font: =Font.Verdana
+                              FontSize: =9
+                              MaxDate: =Date(Year(Today())+100,1,1)
+                              MinDate: =Date(1900,1,1)
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey2_1.Y + DataCardKey2_1.Height + 4
+                        - ErrorMessage2_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue1_1.Y + DataCardValue1_1.Height
+                        - StarVisible2_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              X: =12
+                              Y: =DataCardKey2_1.Y
+                  - 업무_종료일자_DataCard1_1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: PcfCoreDateEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xc5c5__xbb34___xc885__xb8cc__xc"
+                        Default: =ThisItem.업무_종료일자
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,업무_종료일자)
+                        Height: =74
+                        Required: =true
+                        Update: =DataCardValue2_1.Value
+                        Width: =175
+                        WidthFit: =false
+                        X: =2
+                        Y: =1
+                      Children:
+                        - DataCardKey3_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: ="업무 종료일자"
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue2_1:
+                            Control: FluentV8/DatePicker@1.5.9
+                            MetadataKey: FieldValue
+                            Properties:
+                              AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
+                              DisplayMode: =Parent.DisplayMode
+                              FillColor: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              Font: =Font.Verdana
+                              FontSize: =9
+                              MaxDate: =Date(Year(Today())+100,1,1)
+                              MinDate: =Date(1900,1,1)
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey3_1.Y + DataCardKey3_1.Height + 4
+                        - ErrorMessage3_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue2_1.Y + DataCardValue2_1.Height
+                        - StarVisible3_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey3_1.Y
+                  - 관련ECN_DataCard2_1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: PcfCoreTextualEditCard
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DataField: ="OData__xad00__xb828_ECN"
+                        Default: =ThisItem.관련ECN
+                        DisplayMode: =If(editMode , DisplayMode.Edit, DisplayMode.View)
+                        DisplayName: =DataSourceInfo([@Task_DB],DataSourceInfo.DisplayName,관련ECN)
+                        MaxLength: =DataSourceInfo([@Task_DB], DataSourceInfo.MaxLength, 관련ECN)
+                        Required: =false
+                        Update: =DataCardValue41_1.Value
+                        Width: =180
+                        WidthFit: =false
+                        X: =3
+                        Y: =1
+                      Children:
+                        - DataCardKey41_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              FontSize: =9
+                              Height: =22
+                              Text: =Parent.DisplayName
+                              Tooltip: =Parent.DisplayName
+                              VerticalAlignment: =VerticalAlign.Bottom
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =10
+                        - DataCardValue41_1:
+                            Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
+                            Properties:
+                              AccessibleLabel: =Parent.DisplayName
+                              ColorBackground: |-
+                                =If(
+                                    editMode, 
+                                    RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
+                                    RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
+                                )
+                              DisplayMode: =Parent.DisplayMode
+                              Font: =Font.Verdana
+                              FontSize: =9.5
+                              Required: =Parent.Required
+                              Tooltip: =Parent.DisplayName
+                              Value: =Parent.Default
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardKey41_1.Y + DataCardKey41_1.Height + 4
+                        - ErrorMessage41_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              Color: =Color.Red
+                              FontSize: =9
+                              Height: =30
+                              Text: =Parent.Error
+                              Tooltip: =Parent.Error
+                              Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =DataCardValue41_1.Y + DataCardValue41_1.Height
+                        - StarVisible41_1:
+                            Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Alignment: =Align.Center
+                              Height: =30
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Y: =DataCardKey41_1.Y
                   - 업무요청자_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1668,6 +1719,7 @@ Screens:
                       Children:
                         - DataCardKey31_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1680,6 +1732,7 @@ Screens:
                               Y: =10
                         - DataCardValue31_1:
                             Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1699,6 +1752,7 @@ Screens:
                               Y: =DataCardKey31_1.Y + DataCardKey31_1.Height + 4
                         - ErrorMessage31_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1712,6 +1766,7 @@ Screens:
                               Y: =DataCardValue31_1.Y + DataCardValue31_1.Height
                         - StarVisible31_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1720,7 +1775,7 @@ Screens:
                               Width: =30
                               Y: =DataCardKey31_1.Y
                   - 상태_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1738,6 +1793,7 @@ Screens:
                       Children:
                         - DataCardKey32_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1750,6 +1806,7 @@ Screens:
                               Y: =10
                         - ErrorMessage32_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1763,6 +1820,7 @@ Screens:
                               Y: =
                         - StarVisible32_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1800,7 +1858,7 @@ Screens:
                               X: =24
                               Y: =40
                   - 상세 업무내용_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1819,6 +1877,7 @@ Screens:
                       Children:
                         - DataCardKey33_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1832,6 +1891,7 @@ Screens:
                               Y: =10
                         - DataCardValue33_1:
                             Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1853,6 +1913,7 @@ Screens:
                               Y: =DataCardKey33_1.Y + DataCardKey33_1.Height + 4
                         - ErrorMessage33_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1866,6 +1927,7 @@ Screens:
                               Y: =DataCardValue33_1.Y + DataCardValue33_1.Height
                         - StarVisible33_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1875,7 +1937,7 @@ Screens:
                               X: =12
                               Y: =DataCardKey33_1.Y
                   - 비고_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1888,10 +1950,12 @@ Screens:
                         Required: =false
                         Update: =DataCardValue36_1.Value
                         Width: =996
+                        X: =0
                         Y: =4
                       Children:
                         - DataCardKey36_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1905,6 +1969,7 @@ Screens:
                               Y: =6
                         - DataCardValue36_1:
                             Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               ColorBackground: |-
@@ -1926,6 +1991,7 @@ Screens:
                               Y: =30
                         - ErrorMessage36_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -1939,6 +2005,7 @@ Screens:
                               Y: =DataCardValue36_1.Y + DataCardValue36_1.Height
                         - StarVisible36_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -1947,7 +2014,7 @@ Screens:
                               Width: =30
                               Y: =DataCardKey36_1.Y
                   - 작성자_DataCard3_1:
-                      Control: TypedDataCard@1.0.6
+                      Control: TypedDataCard@1.0.7
                       Variant: PcfCoreTextualEditCard
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1960,10 +2027,12 @@ Screens:
                         Visible: =false
                         Width: =200
                         WidthFit: =false
+                        X: =0
                         Y: =5
                       Children:
                         - DataCardKey35_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldName
                             Properties:
                               AutoHeight: =true
                               FontSize: =9
@@ -1976,6 +2045,7 @@ Screens:
                               Y: =10
                         - DataCardValue35_1:
                             Control: FluentV8/TextBox@1.7.1
+                            MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
                               DisplayMode: =Parent.DisplayMode
@@ -1988,6 +2058,7 @@ Screens:
                               Y: =DataCardKey35_1.Y + DataCardKey35_1.Height + 4
                         - ErrorMessage35_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: ErrorMessage
                             Properties:
                               AutoHeight: =true
                               Color: =Color.Red
@@ -2001,6 +2072,7 @@ Screens:
                               Y: =DataCardValue35_1.Y + DataCardValue35_1.Height
                         - StarVisible35_1:
                             Control: FluentV8/Label@1.8.6
+                            MetadataKey: FieldRequired
                             Properties:
                               Alignment: =Align.Center
                               Height: =30
@@ -2049,17 +2121,14 @@ Screens:
                   FontWeight: =FontWeight.Semibold
                   Height: =25
                   Icon: ="Send"
-                  OnSelect: |-
+                  OnSelect: |+
                     =SubmitForm(Form1_1);
-                    Set(ShowPopup, false);
-                    Set(editMode, false);
-                    Notify("업무 현황이 저장되었습니다.",NotificationType.Success);
                   Text: ="저장"
                   Visible: |+
                     =editMode
                   Width: =78
                   X: =752
-                  Y: =632
+                  Y: =640
             - cancle_btn:
                 Control: Button@0.0.44
                 Properties:
@@ -2078,7 +2147,7 @@ Screens:
                   Visible: =editMode && If(Form1_1.Mode = FormMode.New, false, true)
                   Width: =78
                   X: =848
-                  Y: =632
+                  Y: =640
             - Edit_btn:
                 Control: Button@0.0.44
                 Properties:
@@ -2097,7 +2166,7 @@ Screens:
                     !editMode
                   Width: =85
                   X: =841
-                  Y: =632
+                  Y: =640
             - Rectangle3_7:
                 Control: Rectangle@2.3.0
                 Properties:
@@ -2113,7 +2182,30 @@ Screens:
                   PressedFill: =RGBA(0, 0, 0, 0)
                   Width: =896
                   X: =28
-                  Y: =611
+                  Y: |+
+                    =DataCardValue36_1.Y+582
+
+
+
+
+
+
+            - ButtonCanvas3:
+                Control: Button@0.0.44
+                Properties:
+                  BasePaletteColor: =RGBA(212, 0, 4, 1)
+                  Font: =Font.Verdana
+                  FontSize: =12
+                  Height: =25
+                  Icon: ="Delete"
+                  OnSelect: |-
+                    =Set(gblTaskToDelete, SelectedItem);
+                    Set(showTaskDeletePopup, true);
+                  Text: ="삭제"
+                  Visible: =editMode && If(Form1_1.Mode = FormMode.New, false, true)
+                  Width: =85
+                  X: =635
+                  Y: =640
       - Icon3:
           Control: Classic/Icon@2.5.0
           Properties:
@@ -2137,3 +2229,161 @@ Screens:
             Width: =24
             X: =16
             Y: =69
+      - Container12:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(159, 227, 171, 0.57)
+            Height: =34
+            Visible: =varShowToast
+            Width: =278
+            X: =571
+            Y: =56
+          Children:
+            - text:
+                Control: Text@0.0.50
+                Properties:
+                  Align: ='TextCanvas.Align'.Center
+                  Font: =Font.Verdana
+                  Size: =12
+                  Text: =varToastMessage
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =170
+                  X: =32
+                  Y: =1
+            - toastTimer:
+                Control: Timer@2.1.0
+                Properties:
+                  AutoStart: =true
+                  BorderColor: =RGBA(98, 100, 167, 1)
+                  BorderStyle: =BorderStyle.None
+                  Color: =RGBA(255, 255, 255, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(200, 198, 196, 1)
+                  DisabledFill: =RGBA(243, 242, 241, 1)
+                  Duration: =3000
+                  Fill: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Font: =Font.'Segoe UI'
+                  Height: =34
+                  HoverBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  OnTimerEnd: =Set(varShowToast, false)
+                  PressedBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  Size: =10.5
+                  Start: |+
+                    =varShowToast
+                  Visible: =false
+                  X: =50
+            - Icon5:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(79, 90, 94, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =26
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.Cancel
+                  OnSelect: =Set(varShowToast,false)
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =26
+                  X: =245
+                  Y: =4
+            - Icon7:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(54, 176, 75, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =25
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.CheckBadge
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =25
+                  X: =7
+                  Y: =4.5
+      - Container13:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderThickness: =2
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =130
+            Visible: =showTaskDeletePopup
+            Width: =318
+            X: =524
+            Y: =284
+          Children:
+            - TextCanvas4:
+                Control: Text@0.0.50
+                Properties:
+                  Align: ='TextCanvas.Align'.Center
+                  Text: ="해당 업무 현황을 삭제하시겠습니까?"
+                  VerticalAlign: =VerticalAlign.Bottom
+                  Width: =317
+                  Y: =22
+            - ButtonCanvas8:
+                Control: Button@0.0.44
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Font: =Font.Verdana
+                  FontSize: =13
+                  Height: =28
+                  OnSelect: |+
+                    =If(
+                        !IsBlank(gblTaskToDelete),
+                        Remove(Task_DB, gblTaskToDelete)
+                    );
+                    Set(showTaskDeletePopup, false);
+                    Set(gblTaskToDelete, Blank());
+                    Set(ShowPopup,false);
+
+                    Set(varToastMessage, "업무 현황이 삭제되었습니다.");
+                    Set(varShowToast, true);
+                  Text: ="예"
+                  Width: =90
+                  X: =54
+                  Y: =81
+            - ButtonCanvas9:
+                Control: Button@0.0.44
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Font: =Font.Verdana
+                  FontSize: =13
+                  Height: =28
+                  OnSelect: |-
+                    =Set(showTaskDeletePopup, false);
+                    Set(gblTaskToDelete, Blank());
+                  Text: ="아니오"
+                  Width: =90
+                  X: =173
+                  Y: =81
