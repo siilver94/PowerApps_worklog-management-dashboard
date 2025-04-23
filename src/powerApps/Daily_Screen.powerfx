@@ -87,9 +87,10 @@ Screens:
                   Font: =Font.Verdana
                   FontSize: =10
                   Height: =25
-                  OnSelect: |+
+                  OnSelect: |-
                     =Set(currentView, "업무현황"); // '리스트'로 상태 업데이트
                     Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
                   Text: ="업무현황"
                   Width: =80
                   X: =200
@@ -310,9 +311,9 @@ Screens:
                         OnSelect: |+
                           =Remove(colDailyTasks, ThisItem);
 
-                        Text: ="- 제거"
-                        Width: =52
-                        X: =868
+                        Text: ="- 숨기기"
+                        Width: =60
+                        X: =860
                         Y: =1
                   - txtWorkHour:
                       Control: FluentV8/TextBox@1.7.1
@@ -561,6 +562,27 @@ Screens:
                         Width: =154.7
                         X: =70.5
                         Y: =163
+                  - btn_delete:
+                      Control: Button@0.0.44
+                      Properties:
+                        BasePaletteColor: =RGBA(252, 15, 15, 1)
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        Height: =21
+                        Icon: ="Delete"
+                        OnSelect: |+
+                          =
+                          Set(
+                              gblDelRecord,      // ❶ 삭제 대상 저장 (Record 타입)
+                              ThisItem
+                          );
+                          Set(ShowDelPopup,true);
+                        Text: ="삭제"
+                        Visible: |+
+                          =varEditMode
+                        Width: =70
+                        X: =758
+                        Y: =1
       - Con_left:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -578,7 +600,7 @@ Screens:
                   FocusedBorderColor: =RGBA(98, 100, 167, 1)
                   FocusedBorderThickness: =2
                   Height: =347
-                  Items: "=SortByColumns(\r\n    // varFilterMode 분기\r\n    If(\r\n        varFilterMode = \"All\",\r\n        // 1) \"All\" -> 최대 1년치 + 작성자=본인\r\n        Search(\r\n            Filter(\r\n                Task_DB,\r\n                작성자 = name_label.Text,\r\n                OData__xc5c5__xbb34___xc2dc__xc791__xc >= Today() - 365\r\n            ),\r\n            searchTxt.Value,  // 검색할 문자열\r\n            업무제목       // 검색할 컬럼\r\n        ),\r\n \r\n        varFilterMode = \"15Days\",\r\n        // 2) \"15Days\" -> 오늘 ±7일 범위 + 작성자=본인\r\n        Search(\r\n            Filter(\r\n                Task_DB,\r\n                작성자 = name_label.Text,\r\n                // (오늘~7일후) or (오늘~7일전) 이런 조건\r\n               \r\n                (OData__xc5c5__xbb34___xc2dc__xc791__xc >= Today()-7) && (OData__xc5c5__xbb34___xc2dc__xc791__xc <= Today()+7)\r\n            ),\r\n            searchTxt.Value,\r\n            업무제목\r\n        )\r\n    ),\r\n \r\n    // 정렬 기준: \"OData__xc5c5__xbb34___xc2dc__xc791__xc\", 내림차순\r\n    \"OData__xc5c5__xbb34___xc2dc__xc791__xc\",\r\n    SortOrder.Descending\r\n)\r\n "
+                  Items: "=SortByColumns(\r\n    Filter(\r\n        // 날짜 범위 조건 (기존 유지)\r\n        Switch(\r\n            varFilterMode,\r\n            \r\n            \"All\",\r\n            Search(\r\n                Filter(\r\n                    Task_DB,\r\n                    작성자 = name_label.Text &&\r\n                    OData__xc5c5__xbb34___xc2dc__xc791__xc >= Today() - 365\r\n                ),\r\n                searchTxt.Value,\r\n                업무제목\r\n            ),\r\n\r\n            \"15Days\",\r\n            Search(\r\n                Filter(\r\n                    Task_DB,\r\n                    작성자 = name_label.Text &&\r\n                    OData__xc5c5__xbb34___xc2dc__xc791__xc >= Today() - 7 &&\r\n                    OData__xc5c5__xbb34___xc2dc__xc791__xc <= Today() + 7\r\n                ),\r\n                searchTxt.Value,\r\n                업무제목\r\n            ),\r\n\r\n            Blank()\r\n        ),\r\n\r\n        // ✅ 상태 필터링\r\n        상태 in Filter(\r\n            [\r\n                If(chkPlanned.Checked, \"시작전\"),\r\n                If(chkInProgress.Checked, \"진행중\"),\r\n                If(chkCompleted.Checked, \"완료\")\r\n            ],\r\n            !IsBlank(Value)\r\n        )\r\n    ),\r\n    \"OData__xc5c5__xbb34___xc2dc__xc791__xc\",\r\n    SortOrder.Descending\r\n)\r\n"
                   TemplateSize: =73
                   Width: =382
                 Children:
@@ -669,15 +691,15 @@ Screens:
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
-            Height: =43
+            Height: =67
             Width: =382
             X: =19
-            Y: =357
+            Y: =337
           Children:
             - ButtonCanvas7:
                 Control: Button@0.0.44
                 Properties:
-                  BasePaletteColor: =If(varFilterMode = "All", RGBA(141,229,250,1), RGBA(200,200,200,1))
+                  BasePaletteColor: =If(varFilterMode = "All", RGBA(141,229,250,10),RGBA(200,200,200,1))
                   Font: =Font.Verdana
                   FontSize: =10
                   Height: =23
@@ -685,11 +707,11 @@ Screens:
                   Text: ="전 체"
                   Width: =70
                   X: =224
-                  Y: =10
+                  Y: =34
             - ButtonCanvas7_2:
                 Control: Button@0.0.44
                 Properties:
-                  BasePaletteColor: =If(varFilterMode = "15Days", RGBA(141,229,250,1), RGBA(200,200,200,1))
+                  BasePaletteColor: =If(varFilterMode = "15Days", RGBA(141,229,250,10),RGBA(200,200,200,1))
                   Font: =Font.Verdana
                   FontSize: =10
                   Height: =23
@@ -698,7 +720,7 @@ Screens:
                   Text: ="주 간"
                   Width: =70
                   X: =301
-                  Y: =10
+                  Y: =34
             - searchTxt:
                 Control: FluentV8/TextBox@1.7.1
                 Properties:
@@ -720,8 +742,8 @@ Screens:
                   Value: |+
                     =""
                   Width: =180
-                  X: =18
-                  Y: =9
+                  X: =10
+                  Y: =33
             - Rectangle3_2:
                 Control: Rectangle@2.3.0
                 Properties:
@@ -735,8 +757,39 @@ Screens:
                   HoverFill: =RGBA(98, 100, 167, 1)
                   PressedFill: =RGBA(98, 100, 167, 1)
                   Width: =179
-                  X: =18
-                  Y: =34
+                  X: =10
+                  Y: =58
+            - chkCompleted:
+                Control: CheckBox@0.0.27
+                Properties:
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =22
+                  Label: ="완료"
+                  Width: =80
+                  X: =164
+                  Y: =6
+            - chkPlanned:
+                Control: CheckBox@0.0.27
+                Properties:
+                  Checked: =true
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =22
+                  Label: ="시작전"
+                  Width: =80
+                  Y: =6
+            - chkInProgress:
+                Control: CheckBox@0.0.27
+                Properties:
+                  Checked: =true
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =22
+                  Label: ="진행중"
+                  Width: =80
+                  X: =82
+                  Y: =6
       - Container6:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -745,7 +798,7 @@ Screens:
             Height: =287
             Width: =382
             X: =19
-            Y: =58
+            Y: =46
           Children:
             - gal_Calendar_Days:
                 Control: Gallery@2.15.0
@@ -886,7 +939,7 @@ Screens:
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
                         Height: =28.8
                         HoverFill: =ColorValue("#FD625E10")
-                        OnSelect: "=// 달력 OnSelect\r\nClear(colDailyTasks);\r\n\r\n// 1) 해당 날짜의 Daily_DB 레코드\r\nClearCollect(\r\n    colDaily_DayRecords,\r\n    AddColumns(\r\n    Filter(\r\n        Daily_DB,\r\n        작성일자 = ThisItem.Value && 작성자 = name_label.Text\r\n    ),\r\n   \r\n    c업무_계정, ThisRecord.업무_계정,\r\n    c프로젝트명, ThisRecord.프로젝트명,\r\n    c업무제목, ThisRecord.업무제목,  // 혹은 Task_DB에서 가져오기\r\n    c업무_시작일자, ThisRecord.업무_시작일자,\r\n    c업무_종료일자, ThisRecord.업무_종료일자,\r\n    c상태, ThisRecord.상태,\r\n    c상세_업무내용, ThisRecord.상세_업무내용\r\n    )\r\n\r\n);\r\n\r\n// 2) Daily_DB가 전혀 없으면 => colDailyTasks 비우기\r\nIf(\r\n    CountRows(colDaily_DayRecords) > 0,\r\n    // 이미 작성된 데이터가 있으면\r\n    ClearCollect(colDailyTasks, colDaily_DayRecords),\r\n    // 하나도 없으면 빈 리스트\r\n    Clear(colDailyTasks)\r\n);\r\n\r\n// 날짜 변수\r\nSet(varSelectedDate, ThisItem.Value);"
+                        OnSelect: "=// 달력 OnSelect\r\nClear(colDailyTasks);\r\n\r\n// 1) 해당 날짜의 Daily_DB 레코드\r\nClearCollect(\r\n    colDaily_DayRecords,\r\n    AddColumns(\r\n    Filter(\r\n        Daily_DB,\r\n        작성일자 = ThisItem.Value && 작성자 = name_label.Text\r\n    ),\r\n   \r\n    c업무_계정, ThisRecord.업무_계정,\r\n    c프로젝트명, ThisRecord.프로젝트명,\r\n    c업무제목, ThisRecord.업무제목,  // 혹은 Task_DB에서 가져오기\r\n    c업무_시작일자, ThisRecord.업무_시작일자,\r\n    c업무_종료일자, ThisRecord.업무_종료일자,\r\n    c상태, ThisRecord.상태,\r\n    c상세_업무내용, ThisRecord.상세_업무내용\r\n    )\r\n\r\n);\r\n\r\n// 2) Daily_DB가 전혀 없으면 => colDailyTasks 비우기\r\nIf(\r\n    CountRows(colDaily_DayRecords) > 0,\r\n    // 이미 작성된 데이터가 있으면\r\n    ClearCollect(colDailyTasks, colDaily_DayRecords),\r\n    // 하나도 없으면 빈 리스트\r\n    Clear(colDailyTasks)\r\n);\r\n\r\n// 날짜 변수\r\nSet(varSelectedDate, ThisItem.Value);\r\n\r\nSet(varEditMode, false);\r\n"
                         PressedFill: =ColorValue("#FD625E30")
                         Width: =46
                         X: =3
@@ -1072,7 +1125,88 @@ Screens:
                   Height: =25
                   Icon: ="Send"
                   IconStyle: ='ButtonCanvas.IconStyle'.Filled
-                  OnSelect: "=// 1) 갤러리(Daily_Gallery) -> colDailyTasks (작업시간/내용 반영)\r\nForAll(\r\n    Daily_Gallery.AllItems,\r\n    Patch(\r\n        colDailyTasks,\r\n        ThisRecord,\r\n        {\r\n            작업시간: Value(txtWorkHour.Value),\r\n            작업내용: txtWorkContent.Value\r\n        }\r\n    )\r\n);\r\n\r\n// 2) colDailyTasks -> Daily_DB\r\nForAll(\r\n    colDailyTasks,\r\n    With(\r\n        {\r\n            existingRec: LookUp(\r\n                Daily_DB,\r\n                프로젝트명 = c프로젝트명 &&\r\n                작성일자 = varSelectedDate &&\r\n               작성자 = name_label.Text &&\r\n                업무제목 = c업무제목 &&\r\n                상세_업무내용 = c상세_업무내용\r\n                \r\n            )\r\n        },\r\n        If(\r\n            // 이미 존재 => Update\r\n            Not IsBlank(existingRec),\r\n            Patch(\r\n                Daily_DB,\r\n                existingRec, // 바로 레코드 참조\r\n                {\r\n                    작업내용: 작업내용,\r\n                    작업시간: 작업시간\r\n                    // 필요하면 '상태' 등도 업데이트\r\n                }\r\n            ),\r\n            // 새 항목 => Insert\r\n            Patch(\r\n                Daily_DB,\r\n                Defaults(Daily_DB),\r\n                {\r\n                    작성자: name_label.Text,\r\n                    프로젝트명: c프로젝트명,\r\n                    업무_계정: c업무_계정,\r\n                    업무_시작일자: c업무_시작일자,\r\n                    업무_종료일자: c업무_종료일자,\r\n                    업무제목: c업무제목,\r\n                    상세_업무내용: c상세_업무내용,\r\n                    상태: c상태,\r\n\r\n                    작업내용: 작업내용,\r\n                    작업시간: 작업시간,\r\n                    작성일자: varSelectedDate,\r\n                    팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                }\r\n            )\r\n        )\r\n    )\r\n);\r\n\r\nNotify(\"저장 완료!\", NotificationType.Success);\r\nSet(varEditMode, false);"
+                  OnSelect: |+
+                    =// 1) Daily_Gallery에서 사용자 입력(작업시간/내용)을 colDailyTasks에 반영
+                    ForAll(
+                        Daily_Gallery.AllItems,
+                        Patch(
+                            colDailyTasks,
+                            ThisRecord,
+                            {
+                                작업시간: Value(txtWorkHour.Value),
+                                작업내용: txtWorkContent.Value
+                            }
+                        )
+                    );
+
+                    // 2) colDailyTasks ➜ Daily_DB
+                    ForAll(
+                        colDailyTasks As d,             /* ❶ 별칭 d 로 지정 → 가독성 & 충돌방지 */
+                        With(
+                            {
+                                /* ❷ ID가 있으면 ID 로, 없으면 기존 복합 조건으로 매칭 */
+                                existingRec: If(
+                                    !IsBlank(d.ID),
+                                    LookUp(Daily_DB, ID = d.ID),
+                                    LookUp(
+                                        Daily_DB,
+                                        프로젝트명      = d.c프로젝트명 &&
+                                        작성일자        = varSelectedDate &&
+                                        작성자          = name_label.Text &&
+                                        업무제목        = d.c업무제목
+                                    )
+                                )
+                            },
+                            If(
+                                /* ❸ 이미 있으면 Update */
+                                !IsBlank(existingRec),
+                                Patch(
+                                    Daily_DB,
+                                    existingRec,
+                                    {
+                                        작업내용: d.작업내용,
+                                        작업시간: d.작업시간
+                                    }
+                                ),
+
+                                /* ❹ 없으면 Insert → 새 레코드(ID 반환) */
+                                With(
+                                    {
+                                        newRec: Patch(
+                                            Daily_DB,
+                                            Defaults(Daily_DB),
+                                            {
+                                                작성자:          name_label.Text,
+                                                프로젝트명:      d.c프로젝트명,
+                                                업무_계정:       d.c업무_계정,
+                                                업무_시작일자:   d.c업무_시작일자,
+                                                업무_종료일자:   d.c업무_종료일자,
+                                                업무제목:        d.c업무제목,
+                                                상세_업무내용:   d.c상세_업무내용,
+                                                상태:            d.c상태,
+                                                작업내용:        d.작업내용,
+                                                작업시간:        d.작업시간,
+                                                작성일자:        varSelectedDate,
+                                                팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀
+                                            }
+                                        )
+                                    },
+                                    /* ❺ 새 ID를 colDailyTasks에도 즉시 반영 → 다음 저장 때 중복 방지 */
+                                    Patch(
+                                        colDailyTasks,
+                                        d,
+                                        { ID: newRec.ID }
+                                    )
+                                )
+                            )
+                        )
+                    );
+
+                    Set(varToastMessage2, "저장이 완료되었습니다 ");
+                    Set(varShowToast2, true);
+                    Set(varEditMode, false);
+
+                    toastTimer2.Start;
                   Text: ="저장"
                   Visible: |+
                     =varEditMode
@@ -1133,3 +1267,179 @@ Screens:
             Width: =25
             X: =1283
             Y: =4
+      - OuterRactangle_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0.5)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledFill: =RGBA(0, 0, 0, 0.5)
+            DisplayMode: =DisplayMode.View
+            Fill: =RGBA(0, 0, 0, 0.5)
+            FocusedBorderColor: =RGBA(98, 100, 167, 1)
+            Height: =800
+            HoverFill: =RGBA(0, 0, 0, 0.5)
+            OnSelect: |-
+              =Set(ShowDelPopup,false);
+              Set(gblDelRecord, Blank());
+            PressedFill: =RGBA(0, 0, 0, 0.5)
+            Visible: =ShowDelPopup
+            Width: =1400
+            X: =-5
+            Y: =-5
+      - con_ShowDelPopup:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =150
+            Visible: =ShowDelPopup
+            Width: =336
+            X: =515
+            Y: =309
+          Children:
+            - del_title:
+                Control: Text@0.0.50
+                Properties:
+                  Align: ='TextCanvas.Align'.Center
+                  Font: =Font.Verdana
+                  Size: =15
+                  Text: ="일일 업무일지를 삭제하시겠습니까?"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =336
+                  Y: =21
+            - btn_Delete_yes:
+                Control: Button@0.0.44
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  Font: =Font.Verdana
+                  FontSize: =12
+                  OnSelect: |-
+                    =If(
+                        !IsBlank(gblDelRecord),
+                        // 1) 화면 컬렉션에서 제거
+                        Remove(colDailyTasks, gblDelRecord);
+
+                        // 2) 원본 데이터에서도 제거 (ID 필드 이름 맞춰 수정)
+                        If(
+                            !IsBlank(gblDelRecord.ID),
+                            RemoveIf(Daily_DB, ID = gblDelRecord.ID)
+                        )
+                    );
+
+                    // 3) 팝업 닫기 & 변수 초기화
+                    Set(ShowDelPopup,false);
+                    Set(gblDelRecord, Blank());
+
+                    Set(varToastMessage2, "삭제가 완료되었습니다.");
+                    Set(varShowToast2, true);
+                    toastTimer2.Start
+                  Text: ="예"
+                  X: =57
+                  Y: =87
+            - btn_Delete_no:
+                Control: Button@0.0.44
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  Font: =Font.Verdana
+                  FontSize: =12
+                  OnSelect: |-
+                    =Set(ShowDelPopup,false);
+                    Set(gblDelRecord, Blank());
+                  Text: ="아니오"
+                  X: =183
+                  Y: =87
+      - Container14:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(159, 227, 171, 0.57)
+            Height: =34
+            Visible: =varShowToast2
+            Width: =260
+            X: =663
+            Y: =58
+          Children:
+            - TextCanvas5:
+                Control: Text@0.0.50
+                Properties:
+                  Font: =Font.Verdana
+                  Height: =20
+                  Size: =12
+                  Text: =varToastMessage2
+                  Width: =162
+                  X: =38
+                  Y: =8
+            - Icon8:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(54, 176, 75, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =25
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.CheckBadge
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =25
+                  X: =7
+                  Y: =4
+            - Icon9:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(53, 61, 63, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =26
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.Cancel
+                  OnSelect: =Set(varShowToast2,false)
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =26
+                  X: =222
+                  Y: =5
+            - toastTimer2:
+                Control: Timer@2.1.0
+                Properties:
+                  AutoPause: =false
+                  BorderColor: =RGBA(98, 100, 167, 1)
+                  BorderStyle: =BorderStyle.None
+                  Color: =RGBA(255, 255, 255, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(200, 198, 196, 1)
+                  DisabledFill: =RGBA(243, 242, 241, 1)
+                  Duration: =3000
+                  Fill: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Font: =Font.'Segoe UI'
+                  HoverBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  OnTimerEnd: =Set(varShowToast2,false)
+                  PressedBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  Size: =10.5
+                  Start: =varShowToast2
+                  Visible: =false
+                  X: =66
+                  Y: =7
