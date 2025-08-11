@@ -1,0 +1,1851 @@
+Screens:
+  View_Screen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
+      OnVisible: |+
+        =/* 기존 세 변수 — 그대로 유지 */
+        //Set(vw_FirstDayOfMonth, Date(Year(Today()), Month(Today()), 1));
+        Set(vw_SelectedDate,    Blank());
+        Set(vw_StartOfWeek,     DateAdd(Today(), -Weekday(Today(), StartOfWeek.Monday)+1));
+
+        /* 0) 프로젝트 전체 선택 보강 (기존 코드) */
+            Collect(colSelProjects,If( CountRows(colSelProjects)=0 && CountRows(colProjectList)>0,
+         colProjectList.Value)
+        );
+    Children:
+      - Container1_2:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(207, 202, 196, 0.2)
+            Height: =732
+            Width: =1366
+            Y: =36
+      - Header_con_4:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(34, 35, 58, 1)
+            Height: =35
+            Width: =1366
+          Children:
+            - name_label_2:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  Font: =Font.Verdana
+                  FontSize: =8
+                  Height: =20
+                  Text: |+
+                    =If(
+                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
+                        Concatenate(
+                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
+                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
+                        ),
+                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
+                    )
+                  Width: =35
+                  X: =1310
+                  Y: =4
+            - Label8_2:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(244, 244, 243, 1)
+                  Font: =Font.Verdana
+                  FontSize: =14
+                  FontWeight: =FontWeight.Semibold
+                  Text: ="업무현황판"
+                  Width: =104
+                  X: =11
+                  Y: =1
+            - ButtonCanvas3_6:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무일지", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |+
+                    =Set(currentView, "업무일지"); // '리스트'로 상태 업데이트
+                    Navigate(Daily_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                  Text: ="업무일지"
+                  Width: =80
+                  X: =115
+                  Y: =5
+            - ButtonCanvas3_8:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "일정", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "일정"); // '달력'으로 상태 업데이트
+                    Navigate(View_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
+                  Text: ="일정"
+                  Visible: =false
+                  Width: =80
+                  X: =295
+                  Y: =5
+            - ButtonCanvas3_7:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무현황", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "업무현황"); // '리스트'로 상태 업데이트
+                    Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
+                  Text: ="업무현황"
+                  Width: =80
+                  X: =200
+                  Y: =5
+            - name_label_4:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontSize: =8
+                  Height: =25
+                  Text: =
+                  Width: =50
+                  X: =727
+                  Y: =10
+            - ButtonCanvas3_13:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무조회", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "업무조회"); // '리스트'로 상태 업데이트
+                    Navigate(View_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
+                  Text: ="업무조회"
+                  Width: =80
+                  X: =284
+                  Y: =5
+      - view_cal_con:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =287
+            Width: =382
+            X: =19
+            Y: =46
+          Children:
+            - gal_Calendar_Days_1:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_OneTextVariant_pcfCore
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  Fill: =Color.White
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Height: =206
+                  Items: |+
+                    =/* 42칸(6 주) 달력 + 팀 업무일지 유무·현재월·오늘 표시 */
+                    AddColumns(
+                        ForAll(
+                            Sequence(42),
+                            {
+                                /* ① 셀 날짜: 기존 컨트롤이 쓰는 Value 열 유지 */
+                                Value:
+                                    DateAdd(
+                                        varFirstDayOfMonth,                       /* 이번 달 1일 */
+                                        ThisRecord.Value
+                                        - Weekday(varFirstDayOfMonth, StartOfWeek.Sunday),
+                                        TimeUnit.Days
+                                    )
+                            }
+                        ),
+
+                        /* ② 오늘 여부 (선택: today_circle_1.Fill 에 사용) */
+                        IsToday,
+                        DateValue(Value) = Today(),
+
+                        /* ③ 이번 달 여부 (이전/다음 달 회색 처리용) */
+                        IsCurrentMonth,
+                        Month(Value) = Month(varFirstDayOfMonth),
+
+                        /* ④ 해당 날짜에 업무일지가 하나 이상 있는지 */
+                        HasDaily,
+                        CountRows(
+                            Filter(
+                                colDaily_Year,                          /* 올해+내 팀 캐시 */
+                                DateValue(OData__xc791__xc131__xc77c__xc790_) = DateValue(Value)
+                            )
+                        ) > 0
+                    )
+                  LoadingSpinner: =LoadingSpinner.Controls
+                  TemplateSize: =Self.Height/6
+                  Width: =370
+                  WrapCount: =7
+                  X: =6
+                  Y: =76
+                Children:
+                  - before/after_date_1:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =0.5
+                        DisabledFill: =RGBA(0,0,0,0)
+                        Fill: =If(ThisItem.IsCurrentMonth, Color.White, Color.LightGray)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        Height: =Parent.TemplateHeight
+                        HoverFill: =
+                        OnSelect: |-
+                          =If(
+                                  ThisItem.HasDaily,
+                                  Notify("이미 이 날짜에는 업무일지가 있습니다.", NotificationType.Information),
+                                  // 아직 작성 안 되었다면
+                                  Set(vw_SelectedDate, ThisItem.Value);
+                                  Set(varShowDailyForm, true)  // 팝업 or Navigate to another screen
+                              )
+                        PressedFill: =
+                        TabIndex: =0
+                        Width: =Parent.TemplateWidth
+                  - today_circle_1:
+                      Control: Circle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledFill: =RGBA(98, 100, 167, 1)
+                        Fill: =If(ThisItem.IsToday, RGBA(40,112,134,0.5), RGBA(0,0,0,0))
+                        Height: =20
+                        HoverFill: =RGBA(98, 100, 167, 1)
+                        OnSelect: =Select(Parent)
+                        PressedFill: =RGBA(98, 100, 167, 1)
+                        Width: =20
+                        X: =16.5
+                        Y: =7
+                  - dateNumber_1:
+                      Control: FluentV8/Label@1.8.6
+                      Properties:
+                        Alignment: =Align.Center
+                        Color: |-
+                          =If(
+                              // 공휴일 목록에 포함된 날이면 빨간색
+                              ThisItem.Value in colKoreaHolidays.HolidayDate,
+                              Color.Red,
+
+                              // 그 외: 요일에 따라 처리
+                              Switch(
+                                  Weekday(ThisItem.Value, StartOfWeek.Sunday),
+                                  1, Color.Red,   // 일요일
+                                  7, Color.Blue,  // 토요일
+                                  Color.Black     // 평일
+                              )
+                          )
+                        Font: =Font.Verdana
+                        FontSize: =7
+                        FontWeight: =FontWeight.Semibold
+                        Height: =24
+                        OnSelect: =Select(Parent)
+                        TabIndex: =-1
+                        Text: =	Day(ThisItem.Value)
+                        VerticalAlignment: =VerticalAlign.Top
+                        Width: =Parent.TemplateWidth - 24
+                        X: =12
+                        Y: =5
+                  - select_Date_1:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledFill: =RGBA(200, 198, 196, 1)
+                        Fill: |-
+                          =If(
+                              DateValue(ThisItem.Value) >= DateValue(vw_StartOfWeek) &&
+                              DateValue(ThisItem.Value) <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days),
+                              RGBA(255,87,34,0.3),        // 주황색 하이라이트
+                              RGBA(0,0,0,0)               // 기본 투명
+                          )
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        Height: =28.8
+                        HoverFill: =ColorValue("#FD625E10")
+                        OnSelect: |-
+                          =// 달력 셀 클릭 → 그 주(월요일)로 이동 + 주간 컬렉션 재생성
+                          Set(
+                              vw_StartOfWeek,
+                              DateAdd(
+                                  ThisItem.Value,                 // 날짜 열 이름(Value 또는 CalDate에 맞추세요)
+                                  -Weekday(ThisItem.Value, 2) + 1,
+                                  TimeUnit.Days
+                              )
+                          );
+
+                          /* 새 주(월~금) 데이터로 colWeek 갱신 */
+                          ClearCollect(
+                              colWeek,
+                              Filter(
+                                  colDaily_Year,                             // 로컬 1년 캐시
+                                  OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
+                                  OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days)
+                              )
+                          );
+
+                          /* 일간 모드는 쓰지 않으므로 Blank 유지 */
+                          Set(vw_SelectedDate, Blank());
+                        PressedFill: =ColorValue("#FD625E30")
+                        Width: =46
+                        X: =3
+                        Y: =2.8
+            - gal_Calendar_Weekdays_1:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Horizontal_TwoTextOneImageVariant_pcfCore
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =2
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Height: =25
+                  Items: =Calendar.WeekdaysShort()
+                  ShowScrollbar: =false
+                  TemplateSize: =Self.Width/7
+                  Width: =gal_Calendar_Days_1.Width
+                  X: =6
+                  Y: =gal_Calendar_Days_1.Y - Self.Height
+                Children:
+                  - Rectangle12_1:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DisabledFill: =RGBA(0,0,0,0)
+                        Fill: =RGBA(0,0,0,0)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        Height: =Parent.TemplateHeight
+                        HoverFill: =RGBA(0,0,0,0)
+                        OnSelect: =Select(Parent)
+                        PressedFill: =RGBA(0,0,0,0)
+                        TabIndex: =0
+                        Width: =Parent.TemplateWidth
+                  - Title11_1:
+                      Control: FluentV8/Label@1.8.6
+                      Properties:
+                        Alignment: =Align.Center
+                        Color: =RGBA(0, 0, 0, 1)
+                        Font: =Font.Verdana
+                        FontSize: =8
+                        FontWeight: =FontWeight.Normal
+                        Height: =Parent.TemplateHeight
+                        OnSelect: =Select(Parent)
+                        TabIndex: =-1
+                        Text: =ThisItem.Value
+                        VerticalAlignment: =VerticalAlign.Top
+                        Width: =Parent.TemplateWidth
+            - ButtonCanvas4_1:
+                Control: Button@0.0.45
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(53, 61, 63, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =0.5
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  FontWeight: =FontWeight.Normal
+                  Height: =21
+                  IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                  OnSelect: |+
+                    =/* 1) 이번 달 1일로 이동 (달력 갱신용) */
+                    Set(
+                        varFirstDayOfMonth,
+                        Date( Year(Today()), Month(Today()), 1 )
+                    );
+
+                    /* 2) 주간 모드 → 일간 변수는 비워 둡니다 */
+                    Set( vw_SelectedDate, Blank() );
+
+                    /* 3) 이번 주의 월요일 계산 */
+                    Set(
+                        vw_StartOfWeek,
+                        DateAdd(
+                            Today(),
+                            -Weekday( Today(), StartOfWeek.Monday ) + 1,
+                            TimeUnit.Days
+                        )
+                    );
+
+                    /* 4) 이번 주(월~금) 데이터 컬렉션 재생성 → 매트릭스·달력 즉시 갱신 */
+                    ClearCollect(
+                        colWeek,
+                        Filter(
+                            colDaily_Year,                              // 로컬 1년 캐시
+                            OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
+                            OData__xc791__xc131__xc77c__xc790_ <= DateAdd( vw_StartOfWeek, 4, TimeUnit.Days )
+                        )//,ID
+                    );
+                  Text: ="이번주"
+                  Width: =65
+                  X: =263
+                  Y: =20
+            - Icon2_2:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(98, 100, 167, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =25
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.ChevronLeft
+                  OnSelect: =Set( varFirstDayOfMonth, Date( Year( DateAdd( varFirstDayOfMonth, -1, TimeUnit.Months ) ), Month( DateAdd( varFirstDayOfMonth, -1, TimeUnit.Months ) ), 1 ) );
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =42
+                  X: =16
+                  Y: =18
+            - Icon2_3:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(98, 100, 167, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =25
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.ChevronRight
+                  OnSelect: =Set( varFirstDayOfMonth, Date( Year( DateAdd( varFirstDayOfMonth, 1, TimeUnit.Months ) ), Month( DateAdd( varFirstDayOfMonth, 1, TimeUnit.Months ) ), 1 ) );
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =42
+                  X: =151
+                  Y: =18
+            - Dates_label_2:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Alignment: =Align.Center
+                  Font: =Font.Verdana
+                  FontSize: =9
+                  FontWeight: =FontWeight.Normal
+                  Height: =25
+                  Text: =Text(varFirstDayOfMonth,"yyyy년 m월")
+                  Width: =76
+                  X: =66
+                  Y: =17
+            - icPrev:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(98, 100, 167, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =20
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.ChevronLeft
+                  OnSelect: |-
+                    =// 이전 주
+                    Set(vw_StartOfWeek, DateAdd(vw_StartOfWeek, -7, TimeUnit.Days));
+                    ClearCollect(
+                        colWeek,
+                        Filter(colDaily_Year,
+                            OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
+                            OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days))
+                    );
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =38
+                  X: =219
+                  Y: =20
+            - icnNext:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(98, 100, 167, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =20
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.ChevronRight
+                  OnSelect: |-
+                    =// 다음 주
+                    Set(vw_StartOfWeek, DateAdd(vw_StartOfWeek, 7, TimeUnit.Days));
+                    ClearCollect(
+                        colWeek,
+                        Filter(colDaily_Year,
+                            OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
+                            OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days))
+                    );
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =38
+                  X: =334
+                  Y: =20
+      - viewCon:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =716
+            Width: =950
+            X: =410
+            Y: =46
+          Children:
+            - gal_TeamMatrix:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Height: =684
+                  Items: |+
+                    =/* 0) ─ 주간 범위 변수 ─ */
+                    With(
+                        {
+                            baseRows: Filter(
+                                Daily_DB,
+                                OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
+                                OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days)
+                            )
+                        },
+
+                    /* 1) ─ 프로젝트 체크박스 필터 ─ */
+                    With(
+                        {
+                            rawRows:
+                                If(
+                                    CountRows(colSelProjects) = 0,
+                                    Filter(baseRows, false),          // 전부 해제 = 빈
+                                    Filter(
+                                        baseRows,
+                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 in colSelProjects.Value
+                                    )
+                                )
+                        },
+
+                    /* 2) ─ 직원별 GroupBy + 요일별 컬럼 ─ */
+                    AddColumns(
+                        GroupBy(
+                            /* 🔹 여기서 “팀별 / 프로젝트별” 분기 */
+                            If(
+                                varViewMode = "프로젝트별",
+                                //------------------------------------------------------
+                                /* ②-A)  프로젝트별 모드 : 권한 제한 없이 rawRows 그대로 */
+                                //------------------------------------------------------
+                                rawRows,
+
+                                //------------------------------------------------------
+                                /* ②-B)  팀별 모드 : 기존 Switch 로 권한 제한 유지    */
+                                //------------------------------------------------------
+                                Switch(
+                                    varMyRole,
+                                    /* ① 소장 — 모든 팀장의 업무만 */
+                                    "소장",
+                                        Filter(
+                                            AddColumns(
+                                                rawRows,
+                                                AuthorRole,
+                                                    LookUp(
+                                                        UserInfo_DB,
+                                                        '이름_한글' = '작성자'
+                                                    ).'직급2'
+                                            ),
+                                            AuthorRole = "팀장"
+                                        ),
+
+                                    /* ② 부문장 — 같은 부문의 팀장 업무만 */
+                                    "부문장",
+                                        Filter(
+                                            AddColumns(
+                                                rawRows,
+                                                AuthorRole,
+                                                    LookUp(
+                                                        UserInfo_DB,
+                                                        '이름_한글' = '작성자'
+                                                    ).'직급2',
+                                                AuthorDivision,
+                                                    LookUp(
+                                                        UserInfo_DB,
+                                                        '이름_한글' = '작성자'
+                                                    ).'부문'
+                                            ),
+                                            AuthorRole = "팀장"
+                                                && AuthorDivision = varMyDivision
+                                        ),
+
+                                    /* ③ 팀장 · ④ 팀원 — 같은 팀 업무만 */
+                                    Filter(
+                                        AddColumns(
+                                            rawRows,
+                                            AuthorTeam,
+                                                LookUp(
+                                                    UserInfo_DB,
+                                                    '이름_한글' = '작성자'
+                                                ).'팀'
+                                        ),
+                                        AuthorTeam = varMyTeam
+                                    )
+                                )   // ← Switch 끝
+                            ),        // ← If 끝
+
+                            /* ─ 직원별 그룹키 ─ */
+                            OData__xc791__xc131__xc790_,
+                            Rows
+                        ),
+
+                        /* ★ 여기서부터는 원래 컬럼 로직 그대로 ★ */
+                        첫업무제목,
+                            If(!IsEmpty(Rows), First(Rows).업무제목, ""),
+                        Mon, Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=1),
+                        T,   Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=2),
+                        W,   Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=3),
+                        Th,  Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=4),
+                        F,   Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=5)
+                    )
+                    ))
+                  TemplateSize: =131
+                  Width: =950
+                  Y: =32
+                Children:
+                  - memBackground_con:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(214, 221, 224, 0.24)
+                        Height: =126
+                        Width: =947
+                        X: =4
+                        Y: =4
+                      Children:
+                        - galMon:
+                            Control: Gallery@2.15.0
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                            Properties:
+                              BorderColor: =RGBA(243, 242, 241, 1)
+                              Fill: |
+                                =/* ★ 셀 / Rectangle / Container 의 Fill */
+
+                                If(
+                                    /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
+                                    CountIf(
+                                        Self.AllItems,                        // ← 해당 요일의 레코드 집합
+                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                    ) > 0,
+                                    RGBA(210,40,40,0.6),                     // ① 연한 빨강
+
+                                    /* ② 데이터가 아예 없으면  연회색 */
+                                    IsEmpty(Self.AllItems),
+                                    RGBA(220,220,220,1),                     // ② 연회색
+
+                                    /* ③ 그 밖에는 기본(흰색) */
+                                    RGBA(255,255,255,1)
+                                )
+                              FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                              FocusedBorderThickness: =2
+                              Height: =117
+                              Items: =ThisItem.Mon
+                              NavigationStep: =0
+                              OnSelect: =
+                              TemplateFill: =
+                              TemplateSize: =58
+                              Width: =170
+                              X: =57
+                              Y: =1
+                            Children:
+                              - lblProj_5:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =30
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =48
+                                    X: =113
+                              - lblTask_5:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    AutoHeight: =true
+                                    DisplayMode: =DisplayMode.View
+                                    Font: =Font.Verdana
+                                    FontSize: =7.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =54
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.업무제목
+                                    TextRole: ='Label.TextRole'.Default
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =105
+                                    X: =3
+                              - lblWkTime_5:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Right
+                                    Color: =RGBA(79, 90, 94, 1)
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =18
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    VerticalAlignment: =VerticalAlign.Middle
+                                    Width: =20
+                                    Wrap: =false
+                                    X: =132
+                                    Y: =27
+                              - Container16_5:
+                                  Control: GroupContainer@1.3.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    BorderColor: =RGBA(53, 61, 63, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =0.5
+                                    Fill: =RGBA(106, 122, 127, 1)
+                                    Height: =0.5
+                                    Width: =160
+                                    X: =4
+                                    Y: =56
+                              - btn_Tap:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    BorderColor: =RGBA(243, 242, 241, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =2
+                                    DisabledFill: =RGBA(0, 0, 0, 0)
+                                    Fill: =RGBA(0, 0, 0, 0)
+                                    FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                                    Height: =55
+                                    HoverFill: =RGBA(0, 0, 0, 0)
+                                    OnSelect: |-
+                                      =Set(varSelID, ThisItem.ID);        // PK만 저장
+                                      Set(varShowDetail, true);          // 팝업 열기
+                                    PressedFill: =RGBA(0, 0, 0, 0)
+                                    Width: =170
+                                    Y: =3
+                        - galTue:
+                            Control: Gallery@2.15.0
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                            Properties:
+                              BorderColor: =RGBA(243, 242, 241, 1)
+                              Fill: |
+                                =/* ★ 셀 / Rectangle / Container 의 Fill */
+
+                                If(
+                                    /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
+                                    CountIf(
+                                        Self.AllItems,                        // ← 해당 요일의 레코드 집합
+                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                    ) > 0,
+                                    RGBA(210,40,40,0.6),                     // ① 연한 빨강
+
+                                    /* ② 데이터가 아예 없으면  연회색 */
+                                    IsEmpty(Self.AllItems),
+                                    RGBA(220,220,220,1),                     // ② 연회색
+
+                                    /* ③ 그 밖에는 기본(흰색) */
+                                    RGBA(255,255,255,1)
+                                )
+                              FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                              FocusedBorderThickness: =2
+                              Height: =117
+                              Items: =ThisItem.T
+                              NavigationStep: =0
+                              TemplateFill: =
+                              TemplateSize: =58
+                              Width: =170
+                              WrapCount: =0
+                              X: =234
+                              Y: =1
+                            Children:
+                              - lblWkTime_10:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Right
+                                    Color: =RGBA(79, 90, 94, 1)
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =18
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =20
+                                    Wrap: =false
+                                    X: =132
+                                    Y: =27
+                              - Container16_10:
+                                  Control: GroupContainer@1.3.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    BorderColor: =RGBA(53, 61, 63, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =0.5
+                                    Fill: =RGBA(106, 122, 127, 1)
+                                    Height: =0.5
+                                    Width: =160
+                                    X: =6
+                                    Y: =57.5
+                              - lblProj_6:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =30
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =48
+                                    X: =113
+                              - lblTask_6:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    AutoHeight: =true
+                                    DisplayMode: =DisplayMode.View
+                                    Font: =Font.Verdana
+                                    FontSize: =7.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =54
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.업무제목
+                                    TextRole: ='Label.TextRole'.Default
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =105
+                                    X: =3
+                              - btn_Tap_1:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    BorderColor: =RGBA(243, 242, 241, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =2
+                                    DisabledFill: =RGBA(0, 0, 0, 0)
+                                    Fill: =RGBA(0, 0, 0, 0)
+                                    FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                                    Height: =55
+                                    HoverFill: =RGBA(0, 0, 0, 0)
+                                    OnSelect: |-
+                                      =Set(varSelID, ThisItem.ID);        // PK만 저장
+                                      Set(varShowDetail, true);          // 팝업 열기
+                                    PressedFill: =RGBA(0, 0, 0, 0)
+                                    Width: =170
+                                    Y: =3
+                        - galWed:
+                            Control: Gallery@2.15.0
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                            Properties:
+                              BorderColor: =RGBA(243, 242, 241, 1)
+                              Fill: |
+                                =/* ★ 셀 / Rectangle / Container 의 Fill */
+
+                                If(
+                                    /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
+                                    CountIf(
+                                        Self.AllItems,                        // ← 해당 요일의 레코드 집합
+                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                    ) > 0,
+                                    RGBA(210,40,40,0.6),                     // ① 연한 빨강
+
+                                    /* ② 데이터가 아예 없으면  연회색 */
+                                    IsEmpty(Self.AllItems),
+                                    RGBA(220,220,220,1),                     // ② 연회색
+
+                                    /* ③ 그 밖에는 기본(흰색) */
+                                    RGBA(255,255,255,1)
+                                )
+                              FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                              FocusedBorderThickness: =2
+                              Height: =117
+                              Items: =ThisItem.W
+                              NavigationStep: =0
+                              TemplateFill: =
+                              TemplateSize: =58
+                              Width: =170
+                              WrapCount: =0
+                              X: =411
+                              Y: =1
+                            Children:
+                              - lblWkTime_11:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Right
+                                    Color: =RGBA(79, 90, 94, 1)
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =18
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =20
+                                    Wrap: =false
+                                    X: =132
+                                    Y: =27
+                              - Container16_11:
+                                  Control: GroupContainer@1.3.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    BorderColor: =RGBA(53, 61, 63, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =0.5
+                                    Fill: =RGBA(106, 122, 127, 1)
+                                    Height: =0.5
+                                    Width: =160
+                                    X: =6
+                                    Y: =57.5
+                              - lblProj_7:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =30
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =48
+                                    X: =113
+                              - lblTask_7:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    AutoHeight: =true
+                                    DisplayMode: =DisplayMode.View
+                                    Font: =Font.Verdana
+                                    FontSize: =7.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =54
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.업무제목
+                                    TextRole: ='Label.TextRole'.Default
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =105
+                                    X: =3
+                              - btn_Tap_2:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    BorderColor: =RGBA(243, 242, 241, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =2
+                                    DisabledFill: =RGBA(0, 0, 0, 0)
+                                    Fill: =RGBA(0, 0, 0, 0)
+                                    FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                                    Height: =55
+                                    HoverFill: =RGBA(0, 0, 0, 0)
+                                    OnSelect: |-
+                                      =Set(varSelID, ThisItem.ID);        // PK만 저장
+                                      Set(varShowDetail, true);          // 팝업 열기
+                                    PressedFill: =RGBA(0, 0, 0, 0)
+                                    Width: =170
+                                    Y: =3
+                        - galThu:
+                            Control: Gallery@2.15.0
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                            Properties:
+                              BorderColor: =RGBA(243, 242, 241, 1)
+                              Fill: |
+                                =/* ★ 셀 / Rectangle / Container 의 Fill */
+
+                                If(
+                                    /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
+                                    CountIf(
+                                        Self.AllItems,                        // ← 해당 요일의 레코드 집합
+                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                    ) > 0,
+                                    RGBA(210,40,40,0.6),                     // ① 연한 빨강
+
+                                    /* ② 데이터가 아예 없으면  연회색 */
+                                    IsEmpty(Self.AllItems),
+                                    RGBA(220,220,220,1),                     // ② 연회색
+
+                                    /* ③ 그 밖에는 기본(흰색) */
+                                    RGBA(255,255,255,1)
+                                )
+                              FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                              FocusedBorderThickness: =2
+                              Height: =117
+                              Items: =ThisItem.Th
+                              NavigationStep: =0
+                              TemplateFill: =
+                              TemplateSize: =58
+                              Width: =170
+                              WrapCount: =0
+                              X: =588
+                            Children:
+                              - lblWkTime_8:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Right
+                                    Color: =RGBA(79, 90, 94, 1)
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =18
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =20
+                                    Wrap: =false
+                                    X: =132
+                                    Y: =27
+                              - Container16_8:
+                                  Control: GroupContainer@1.3.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    BorderColor: =RGBA(53, 61, 63, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =0.5
+                                    Fill: =RGBA(106, 122, 127, 1)
+                                    Height: =0.5
+                                    Width: =160
+                                    X: =6
+                                    Y: =57.5
+                              - lblProj_8:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =30
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =48
+                                    X: =113
+                              - lblTask_8:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    AutoHeight: =true
+                                    DisplayMode: =DisplayMode.View
+                                    Font: =Font.Verdana
+                                    FontSize: =7.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =54
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.업무제목
+                                    TextRole: ='Label.TextRole'.Default
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =105
+                                    X: =3
+                              - btn_Tap_3:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    BorderColor: =RGBA(243, 242, 241, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =2
+                                    DisabledFill: =RGBA(0, 0, 0, 0)
+                                    Fill: =RGBA(0, 0, 0, 0)
+                                    FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                                    Height: =55
+                                    HoverFill: =RGBA(0, 0, 0, 0)
+                                    OnSelect: |-
+                                      =Set(varSelID, ThisItem.ID);        // PK만 저장
+                                      Set(varShowDetail, true);          // 팝업 열기
+                                    PressedFill: =RGBA(0, 0, 0, 0)
+                                    Width: =170
+                                    Y: =3
+                        - galFri:
+                            Control: Gallery@2.15.0
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                            Properties:
+                              BorderColor: =RGBA(243, 242, 241, 1)
+                              Fill: |
+                                =/* ★ 셀 / Rectangle / Container 의 Fill */
+
+                                If(
+                                    /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
+                                    CountIf(
+                                        Self.AllItems,                        // ← 해당 요일의 레코드 집합
+                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                    ) > 0,
+                                    RGBA(210,40,40,0.6),                     // ① 연한 빨강
+
+                                    /* ② 데이터가 아예 없으면  연회색 */
+                                    IsEmpty(Self.AllItems),
+                                    RGBA(220,220,220,1),                     // ② 연회색
+
+                                    /* ③ 그 밖에는 기본(흰색) */
+                                    RGBA(255,255,255,1)
+                                )
+                              FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                              FocusedBorderThickness: =2
+                              Height: =117
+                              Items: =ThisItem.F
+                              NavigationStep: =0
+                              TemplateFill: =
+                              TemplateSize: =58
+                              Width: =170
+                              WrapCount: =0
+                              X: =765
+                            Children:
+                              - lblWkTime_9:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Right
+                                    Color: =RGBA(79, 90, 94, 1)
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =18
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =20
+                                    Wrap: =false
+                                    X: =132
+                                    Y: =27
+                              - Container16_9:
+                                  Control: GroupContainer@1.3.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    BorderColor: =RGBA(53, 61, 63, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =0.5
+                                    Fill: =RGBA(106, 122, 127, 1)
+                                    Height: =0.5
+                                    Width: =160
+                                    X: =6
+                                    Y: =57.5
+                              - lblProj_9:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    Font: =Font.Verdana
+                                    FontSize: =5.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =30
+                                    Italic: =true
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =48
+                                    X: =113
+                              - lblTask_9:
+                                  Control: FluentV8/Label@1.8.6
+                                  Properties:
+                                    Alignment: =Align.Left
+                                    AutoHeight: =true
+                                    DisplayMode: =DisplayMode.View
+                                    Font: =Font.Verdana
+                                    FontSize: =7.5
+                                    FontWeight: =FontWeight.Normal
+                                    Height: =54
+                                    OnSelect: =Select(Parent)
+                                    TabIndex: =-1
+                                    Text: =ThisItem.업무제목
+                                    TextRole: ='Label.TextRole'.Default
+                                    VerticalAlignment: =VerticalAlign.Top
+                                    Width: =105
+                                    X: =3
+                              - btn_Tap_4:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    BorderColor: =RGBA(243, 242, 241, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =2
+                                    DisabledFill: =RGBA(0, 0, 0, 0)
+                                    Fill: =RGBA(0, 0, 0, 0)
+                                    FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                                    Height: =55
+                                    HoverFill: =RGBA(0, 0, 0, 0)
+                                    OnSelect: |-
+                                      =Set(varSelID, ThisItem.ID);        // PK만 저장
+                                      Set(varShowDetail, true);          // 팝업 열기
+                                    PressedFill: =RGBA(0, 0, 0, 0)
+                                    Width: =170
+                                    Y: =3
+                  - lblUser:
+                      Control: FluentV8/Label@1.8.6
+                      Properties:
+                        Alignment: =Align.Center
+                        Font: =Font.Verdana
+                        FontSize: =9.5
+                        FontWeight: =FontWeight.Normal
+                        Height: =24
+                        OnSelect: =Select(Parent)
+                        TabIndex: =-1
+                        Text: =ThisItem.OData__xc791__xc131__xc790_
+                        VerticalAlignment: =VerticalAlign.Middle
+                        Width: =55
+                        X: =5
+                        Y: =52
+            - WeekCon:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =RGBA(240, 240, 240, 1)
+                  Height: =28
+                  Width: =950
+                Children:
+                  - TextCanvas9:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Font: =Font.Verdana
+                        Height: =22
+                        Size: =13
+                        Text: =Text(vw_StartOfWeek, "ddd(mm/dd)")
+                        Width: =100
+                        X: =98
+                        Y: =4
+                  - TextCanvas9_1:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Font: =Font.Verdana
+                        Height: =22
+                        Size: =13
+                        Text: = Text( DateAdd(vw_StartOfWeek, 1, TimeUnit.Days), "ddd(mm/dd)" )
+                        Width: =100
+                        X: =274
+                        Y: =4
+                  - TextCanvas9_2:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Font: =Font.Verdana
+                        Height: =22
+                        Size: =13
+                        Text: = Text( DateAdd(vw_StartOfWeek, 2, TimeUnit.Days), "ddd(mm/dd)" )
+                        Width: =100
+                        X: =450
+                        Y: =4
+                  - TextCanvas9_3:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Font: =Font.Verdana
+                        Height: =22
+                        Size: =13
+                        Text: = Text( DateAdd(vw_StartOfWeek, 3, TimeUnit.Days), "ddd(mm/dd)" )
+                        Width: =100
+                        X: =626
+                        Y: =4
+                  - TextCanvas9_4:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Font: =Font.Verdana
+                        Height: =22
+                        Size: =13
+                        Text: = Text( DateAdd(vw_StartOfWeek, 4, TimeUnit.Days), "ddd(mm/dd)" )
+                        Width: =100
+                        X: =805
+                        Y: =4
+                  - TextCanvas9_5:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Font: =Font.Verdana
+                        Height: =22
+                        Size: =13
+                        Text: ="이름"
+                        Width: =40
+                        X: =14
+                        Y: =4
+      - con_ProjFilter:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =425
+            Width: =382
+            X: =19
+            Y: =337
+          Children:
+            - gal_ProjectFilter:
+                Control: Gallery@2.15.0
+                Variant: Vertical
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 0.21)
+                  Fill: =RGBA(214, 221, 224, 0.13)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Height: =353
+                  Items: |+
+                    =/* gal_ProjectFilter.Items */
+
+                    With(
+                        {
+                            src:   If(varViewMode = "팀별", colProjectList, colAllProjects),
+                            key:   Lower( Substitute(txtProjSearch.Value, " ", "") )   // 🔹 검색어(공백 제거, 소문자)
+                        },
+
+                        If(
+                            IsBlank(key),          /* 검색어 없으면 원본 그대로 */
+                            src,
+
+                            /* 🔸 “key”가 포함된 행만 남긴다 */
+                            Filter(
+                                src,
+                                Find(
+                                    key,
+                                    Lower( Substitute(Value, " ", "") )   // ← 대상 문자열
+                                ) > 0
+                            )
+                        )
+                    )
+                  TemplateFill: |-
+                    =If(
+                        chkProj.Checked,                 // 체크된 상태
+                        RGBA(98,100,167,0.1),            // 연보라
+                        RGBA(0,0,0,0)                    // 투명
+                    )
+                  TemplateSize: =40
+                  Width: =339
+                  X: =12
+                  Y: =70
+                Children:
+                  - chkProj:
+                      Control: CheckBox@0.0.30
+                      Properties:
+                        Checked: =ThisItem.Value in colSelProjects.Value
+                        Font: =Font.Verdana
+                        FontSize: =11
+                        Label: =ThisItem.Value
+                        OnCheck: |-
+                          =Collect(colSelProjects, {Value: ThisItem.Value})
+                        OnSelect: =Select(Parent)
+                        OnUncheck: =RemoveIf(colSelProjects, Value = ThisItem.Value);
+                        Width: =253
+                        X: =16
+                        Y: =4
+            - chkAll:
+                Control: CheckBox@0.0.30
+                Properties:
+                  Checked: |+
+                    =/* 팀별 / 프로젝트별 모드에 따라 컬렉션을 자동 선택 */
+                    With(
+                        { tgt: If(varViewMode = "팀별", colProjectList, colAllProjects) },
+                        CountRows(tgt) > 0 && CountRows(colSelProjects) = CountRows(tgt)
+                    )
+                  Font: =Font.Verdana
+                  FontSize: =11
+                  FontWeight: =FontWeight.Semibold
+                  Label: ="전체 선택/해제"
+                  OnCheck: |-
+                    =With(
+                        { tgt: If(varViewMode = "팀별", colProjectList, colAllProjects) },
+                        Clear(colSelProjects);
+                        Collect(colSelProjects, tgt.Value)   // ← 열 이름이 Result 면 바꿔주세요
+                    )
+                  OnUncheck: =Clear(colSelProjects)
+                  X: =33
+                  Y: =38
+            - tgl_ViewMode:
+                Control: Radio@0.0.25
+                Properties:
+                  DefaultSelectedItems: =["팀별"]
+                  Font: =Font.Verdana
+                  FontSize: =12
+                  FontWeight: =FontWeight.Semibold
+                  Height: =36
+                  Items: =["팀별", "프로젝트별"]
+                  Layout: ='RadioGroupCanvas.Layout'.Horizontal
+                  OnChange: |+
+                    =/* ① 뷰 모드 저장 */
+                    Set(varViewMode, Self.Selected.Value);
+
+                    /* ② 선택 리스트 초기화 */
+                    Clear(colSelProjects);
+
+                    /* ③ 팀별이면 ‘전체 선택’, 프로젝트별이면 그대로 비워 둠 */
+                    If(
+                        varViewMode = "팀별",
+                        Collect(colSelProjects, colProjectList.Value)
+                        /* 프로젝트별일 때는 아무것도 Collect 하지 않음 → 전체 해제 상태 */
+                    );
+                  RadioSize: =15
+                  Width: =193
+                  X: =32
+                  Y: =1
+            - txtProjSearch:
+                Control: FluentV8/TextBox@1.7.2
+                Properties:
+                  ColorBackground: =RGBA(162, 165, 166, 0.11)
+                  Font: =Font.Verdana
+                  FontSize: =9
+                  Height: =30
+                  OnChange: =Set(varProjSearch, Lower(Self.Value))
+                  Placeholder: ="프로젝트명 검색"
+                  Width: =154
+                  X: =193
+                  Y: =37
+      - Rectangle3:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(243, 242, 241, 1)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            Fill: = RGBA(0,0,0,0.4)
+            FocusedBorderColor: =RGBA(98, 100, 167, 1)
+            Height: =768
+            HoverFill: =RGBA(0,0,0,0.4)
+            OnSelect: =Set(varShowDetail,false)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Visible: =varShowDetail
+            Width: =1366
+      - con_popup_dailyTask:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =603
+            Visible: =varShowDetail
+            Width: =1071
+            X: =171
+            Y: =83
+          Children:
+            - Icon6:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(79, 90, 94, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =32
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.Cancel
+                  OnSelect: = Set(varShowDetail,false);
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =32
+                  X: =1025
+                  Y: =12
+            - Gallery1:
+                Control: Gallery@2.15.0
+                Variant: Vertical
+                Properties:
+                  BorderColor: =RGBA(214, 221, 224, 1)
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =1
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Height: =536
+                  Items: |-
+                    =//LookUp(Daily_DB, ID = varSelID)
+                    /* gal_Detail.Items */
+                    If(
+                        IsBlank(varSelID),
+                        FirstN(Daily_DB, 1),            // ▶ 아직 선택 전: 스키마 유지용 1줄
+                        Filter(Daily_DB, ID = varSelID) // ▶ 선택 후: 실제 1줄
+                    )
+                  ShowScrollbar: =false
+                  TemplateSize: =531
+                  Width: =974
+                  X: =51
+                  Y: =52
+                Children:
+                  - TextCanvas8:
+                      Control: Text@0.0.51
+                      Properties:
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =25
+                        PaddingLeft: =5
+                        Size: =13
+                        Text: =ThisItem.업무_계정
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =155
+                        X: =95
+                        Y: =15
+                  - TextCanvas10:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =13
+                        Text: |+
+                          ="업 무 분 류"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =12
+                        Y: =15
+                  - TextCanvas10_1:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =13
+                        Text: ="프로젝트명"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =12
+                        Y: =59
+                  - TextCanvas8_2:
+                      Control: Text@0.0.51
+                      Properties:
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =40
+                        PaddingLeft: =5
+                        Size: =13
+                        Text: =ThisItem.프로젝트명
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =155
+                        X: =95
+                        Y: =59
+                  - TextCanvas10_2:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =13
+                        Text: |-
+                          ="업   무   명
+                          "
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =12
+                        Y: =118
+                  - TextCanvas8_3:
+                      Control: Text@0.0.51
+                      Properties:
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =40
+                        PaddingLeft: =5
+                        Size: =13
+                        Text: =ThisItem.업무제목
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =155
+                        X: =95
+                        Y: =118
+                  - TextCanvas10_3:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =13
+                        Text: ="시   작   일"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =12
+                        Y: =177
+                  - TextCanvas8_4:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =25
+                        PaddingLeft: =5
+                        Size: =13
+                        Text: =ThisItem.업무_시작일자
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Regular
+                        Width: =155
+                        X: =95
+                        Y: =177
+                  - TextCanvas10_4:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =13
+                        Text: ="종   료   일"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =12
+                        Y: =221
+                  - TextCanvas8_5:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =25
+                        PaddingLeft: =5
+                        Size: =13
+                        Text: =ThisItem.업무_종료일자
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Regular
+                        Width: =155
+                        X: =95
+                        Y: =221
+                  - TextCanvas10_5:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =13
+                        Text: ="상        태"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =12
+                        Y: =265
+                  - TextCanvas8_6:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =25
+                        PaddingLeft: =5
+                        Size: =13
+                        Text: =ThisItem.상태
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Regular
+                        Width: =155
+                        X: =95
+                        Y: =265
+                  - TextCanvas10_6:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Text: |
+                          ="내   용"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        X: =276
+                        Y: =15
+                  - TextCanvas8_7:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =238
+                        PaddingLeft: =10
+                        PaddingTop: =6
+                        Size: =13
+                        Text: =ThisItem.상세_업무내용
+                        VerticalAlign: =VerticalAlign.Top
+                        Weight: ='TextCanvas.Weight'.Regular
+                        Width: =303
+                        X: =276
+                        Y: =52
+                  - TextCanvas10_7:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Text: |
+                          ="작 업 시 간"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =603
+                        Y: =15
+                  - TextCanvas8_1:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =25
+                        PaddingLeft: =0
+                        Size: =13
+                        Text: =ThisItem.작업시간
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =40
+                        X: =687
+                        Y: =15
+                  - TextCanvas8_8:
+                      Control: Text@0.0.51
+                      Properties:
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =207
+                        PaddingLeft: =10
+                        PaddingTop: =6
+                        Size: =13
+                        Text: =ThisItem.작업내용
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =349
+                        X: =603
+                        Y: =83
+                  - TextCanvas10_8:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Text: |
+                          ="작 업 내 용"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =603
+                        Y: =52
+                  - btnSendFeedback:
+                      Control: Button@0.0.45
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Secondary
+                        DisplayMode: |-
+                          =If(
+                              name_label_2.Text in [
+                                 "인원 이름"
+                              ],
+                              DisplayMode.Edit,     // 목록에 있으면 활성
+                              DisplayMode.Disabled  // 아니면 회색(눌러도 무반응)
+                          )
+                        Font: =Font.Verdana
+                        FontSize: =13
+                        OnSelect: |+
+                          =/* ① 피드백 저장 */
+                          Patch(
+                              Daily_DB,
+                              ThisItem,
+                              { 피드백: txtFeedback.Value }        // TextInput 은 .Text
+                          );
+
+                          /* ② 받는 사람(작성자) 메일을 UserInfo_DB 에서 찾아오기 */
+                          Set(
+                              varRecipientEmail,
+                              LookUp(
+                                  UserInfo_DB,
+                                  이름_한글 = ThisItem.작성자,          // ← 매칭 기준 필드 (예: 이름, 사번 등)
+                                  'e-mail'                        // ← 실제 이메일 필드
+                              )
+                          );
+
+                          /* ③ Teams 1:1 채팅 (Flow 호출) */
+                          SendFeedbackChat.Run(
+                              ThisItem.ID,
+                              txtFeedback.Value,
+                              varRecipientEmail,
+                              ThisItem.작성일자, 
+                              ThisItem.업무제목,
+                              ThisItem.프로젝트명       
+                          );
+
+                          /* ④ UI 정리 */
+                          Reset(txtFeedback);
+                          Notify("피드백 저장 + Teams 채팅 전송 완료!", NotificationType.Success);
+                        Text: ="피드백 전송"
+                        Width: =100
+                        X: =852
+                        Y: =472
+                  - txtFeedback:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        Font: =Font.Verdana
+                        FontSize: =14
+                        Height: =90
+                        Mode: ='TextInputCanvas.Mode'.Multiline
+                        PaddingLeft: =0
+                        PaddingTop: =2
+                        Value: |-
+                          =If(
+                              !IsBlank(ThisItem.피드백),
+                               ThisItem.피드백,
+                              ""
+                          )
+                        Width: =940
+                        X: =12
+                        Y: =364
+                  - TextCanvas10_9:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Text: ="피 드 백"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        X: =12
+                        Y: =327
