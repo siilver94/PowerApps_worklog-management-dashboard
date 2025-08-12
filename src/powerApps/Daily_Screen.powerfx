@@ -3,7 +3,7 @@ Screens:
     Properties:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
-      OnVisible: "=//--- 30년 01월 01일까지 공휴일//\r\n\r\nClearCollect(\r\n    colKoreaHolidays,\r\n\r\n    // ===== 2025년 =====\r\n    // 설날 (음력 1/1 → 추정 2025-01-29 본행사)\r\n    {HolidayDate: Date(2025,1,28)}, // 설 전날\r\n    {HolidayDate: Date(2025,1,29)}, // 설 당일\r\n    {HolidayDate: Date(2025,1,30)}, // 설 다음날\r\n\r\n    // 3.1절\r\n    {HolidayDate: Date(2025,3,1)},\r\n    // 어린이날 (5/5), 예시: (5/6) 추가 가능 (사용자 예시)\r\n    {HolidayDate: Date(2025,5,1)},\r\n    {HolidayDate: Date(2025,5,5)},\r\n    {HolidayDate: Date(2025,5,6)},\r\n    // 부처님오신날(음력 4/8 → 양력 2025-5-6 추정) \r\n    // 주의: 5/5~5/6와 겹칠 가능성 높음 -> 정확 발표 참고\r\n    \r\n\r\n    // 현충일\r\n    {HolidayDate: Date(2025,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2025,8,15)},\r\n    // 추석(음력 8/15 → 추정 2025-10-5 당일)\r\n    {HolidayDate: Date(2025,10,3)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,4)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,5)}, // 추석 당일\r\n    {HolidayDate: Date(2025,10,6)}, // 추석 다음날\r\n{HolidayDate: Date(2025,10,7)},\r\n{HolidayDate: Date(2025,10,8)},\r\n\r\n   \r\n    {HolidayDate: Date(2025,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2025,12,25)},\r\n\r\n    // ===== 2026년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2026,1,1)},\r\n    // 설날 (음력 1/1 → 추정 2026-02-17)\r\n    {HolidayDate: Date(2026,2,16)},\r\n    {HolidayDate: Date(2026,2,17)},\r\n    {HolidayDate: Date(2026,2,18)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2026,3,1)},\r\n    {HolidayDate: Date(2026,3,2)},\r\n    // 어린이날\r\n\r\n    {HolidayDate: Date(2026,5,1)},\r\n    {HolidayDate: Date(2026,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2026-5-25 정도)\r\n    {HolidayDate: Date(2026,5,25)},\r\n    // 현충일\r\n    {HolidayDate: Date(2026,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2026,8,15)},\r\n    // 추석 (음력 8/15 → 추정 2026-9-25)\r\n    {HolidayDate: Date(2026,9,24)},\r\n    {HolidayDate: Date(2026,9,25)},\r\n    {HolidayDate: Date(2026,9,26)},\r\n    // 개천절\r\n    {HolidayDate: Date(2026,10,3)},\r\n    // 한글날\r\n    {HolidayDate: Date(2026,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2026,12,25)},\r\n\r\n    // ===== 2027년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2027,1,1)},\r\n    // 설날(추정 2027-2-6)\r\n   \r\n    {HolidayDate: Date(2027,2,6)},\r\n    {HolidayDate: Date(2027,2,7)},\r\n    {HolidayDate: Date(2027,2,8)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2027,3,1)},\r\n    // 어린이날\r\n    {HolidayDate: Date(2027,5,1)},\r\n    {HolidayDate: Date(2027,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2027-5-14)\r\n    {HolidayDate: Date(2027,5,13)},\r\n    // 현충일\r\n    {HolidayDate: Date(2027,6,7)},\r\n    // 광복절\r\n    {HolidayDate: Date(2027,8,16)},\r\n    // 추석(추정 2027-9-15)\r\n    {HolidayDate: Date(2027,9,14)},\r\n    {HolidayDate: Date(2027,9,15)},\r\n    {HolidayDate: Date(2027,9,16)},\r\n    // 개천절\r\n    {HolidayDate: Date(2027,10,4)},\r\n    // 한글날\r\n    {HolidayDate: Date(2027,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2027,12,25)},\r\n    {HolidayDate: Date(2027,12,27)},\r\n\r\n    // ===== 2028년 =====\r\n    {HolidayDate: Date(2028,1,1)},\r\n    // 설날(추정 2028-1-26)\r\n \r\n    {HolidayDate: Date(2028,1,26)},\r\n    {HolidayDate: Date(2028,1,27)},\r\n    {HolidayDate: Date(2028,1,28)},\r\n    {HolidayDate: Date(2028,3,1)},\r\n    {HolidayDate: Date(2028,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2028-5-2)\r\n    {HolidayDate: Date(2028,5,1)},\r\n    {HolidayDate: Date(2028,5,2)},\r\n    {HolidayDate: Date(2028,6,6)},\r\n    {HolidayDate: Date(2028,8,15)},\r\n    // 추석(추정 2028-10-4)\r\n    {HolidayDate: Date(2028,10,2)},\r\n    {HolidayDate: Date(2028,10,3)},\r\n    {HolidayDate: Date(2028,10,4)},\r\n    {HolidayDate: Date(2028,10,5)},\r\n\r\n    {HolidayDate: Date(2028,10,9)}, // 한글날\r\n    {HolidayDate: Date(2028,12,25)},// 성탄절\r\n\r\n    // ===== 2029년 =====\r\n    {HolidayDate: Date(2029,1,1)},\r\n    // 설날(추정 2029-2-13)\r\n    {HolidayDate: Date(2029,2,12)},\r\n    {HolidayDate: Date(2029,2,13)},\r\n    {HolidayDate: Date(2029,2,14)},\r\n    {HolidayDate: Date(2029,3,1)},\r\n    {HolidayDate: Date(2029,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2029-5-21)\r\n    {HolidayDate: Date(2029,5,21)},\r\n    {HolidayDate: Date(2029,6,6)},\r\n    {HolidayDate: Date(2029,8,15)},\r\n    // 추석(추정 2029-9-24)\r\n    {HolidayDate: Date(2029,9,21)},\r\n    {HolidayDate: Date(2029,9,22)},\r\n    {HolidayDate: Date(2029,9,24)},\r\n    \r\n    {HolidayDate: Date(2029,10,3)},\r\n    {HolidayDate: Date(2029,10,9)},\r\n    {HolidayDate: Date(2029,12,25)},\r\n\r\n    // ===== 2030년 =====\r\n    {HolidayDate: Date(2030,1,1)}\r\n);\r\n"
+      OnVisible: "=\r\n\r\n//--- 30년 01월 01일까지 공휴일//\r\n\r\nClearCollect(\r\n    colKoreaHolidays,\r\n\r\n    // ===== 2025년 =====\r\n    // 설날 (음력 1/1 → 추정 2025-01-29 본행사)\r\n    {HolidayDate: Date(2025,1,28)}, // 설 전날\r\n    {HolidayDate: Date(2025,1,29)}, // 설 당일\r\n    {HolidayDate: Date(2025,1,30)}, // 설 다음날\r\n\r\n    // 3.1절\r\n    {HolidayDate: Date(2025,3,1)},\r\n    // 어린이날 (5/5), 예시: (5/6) 추가 가능 (사용자 예시)\r\n    {HolidayDate: Date(2025,5,1)},\r\n    {HolidayDate: Date(2025,5,5)},\r\n    {HolidayDate: Date(2025,5,6)},\r\n    // 부처님오신날(음력 4/8 → 양력 2025-5-6 추정) \r\n    // 주의: 5/5~5/6와 겹칠 가능성 높음 -> 정확 발표 참고\r\n    \r\n    // 대통령 선거일\r\n    {HolidayDate: Date(2025,6,3)},\r\n    // 현충일\r\n    {HolidayDate: Date(2025,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2025,8,15)},\r\n    // 추석(음력 8/15 → 추정 2025-10-5 당일)\r\n    {HolidayDate: Date(2025,10,3)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,4)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,5)}, // 추석 당일\r\n    {HolidayDate: Date(2025,10,6)}, // 추석 다음날\r\n{HolidayDate: Date(2025,10,7)},\r\n{HolidayDate: Date(2025,10,8)},\r\n\r\n   \r\n    {HolidayDate: Date(2025,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2025,12,25)},\r\n\r\n    // ===== 2026년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2026,1,1)},\r\n    // 설날 (음력 1/1 → 추정 2026-02-17)\r\n    {HolidayDate: Date(2026,2,16)},\r\n    {HolidayDate: Date(2026,2,17)},\r\n    {HolidayDate: Date(2026,2,18)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2026,3,1)},\r\n    {HolidayDate: Date(2026,3,2)},\r\n    // 어린이날\r\n\r\n    {HolidayDate: Date(2026,5,1)},\r\n    {HolidayDate: Date(2026,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2026-5-25 정도)\r\n    {HolidayDate: Date(2026,5,25)},\r\n    // 현충일\r\n    {HolidayDate: Date(2026,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2026,8,15)},\r\n    // 추석 (음력 8/15 → 추정 2026-9-25)\r\n    {HolidayDate: Date(2026,9,24)},\r\n    {HolidayDate: Date(2026,9,25)},\r\n    {HolidayDate: Date(2026,9,26)},\r\n    // 개천절\r\n    {HolidayDate: Date(2026,10,3)},\r\n    // 한글날\r\n    {HolidayDate: Date(2026,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2026,12,25)},\r\n\r\n    // ===== 2027년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2027,1,1)},\r\n    // 설날(추정 2027-2-6)\r\n   \r\n    {HolidayDate: Date(2027,2,6)},\r\n    {HolidayDate: Date(2027,2,7)},\r\n    {HolidayDate: Date(2027,2,8)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2027,3,1)},\r\n    // 어린이날\r\n    {HolidayDate: Date(2027,5,1)},\r\n    {HolidayDate: Date(2027,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2027-5-14)\r\n    {HolidayDate: Date(2027,5,13)},\r\n    // 현충일\r\n    {HolidayDate: Date(2027,6,7)},\r\n    // 광복절\r\n    {HolidayDate: Date(2027,8,16)},\r\n    // 추석(추정 2027-9-15)\r\n    {HolidayDate: Date(2027,9,14)},\r\n    {HolidayDate: Date(2027,9,15)},\r\n    {HolidayDate: Date(2027,9,16)},\r\n    // 개천절\r\n    {HolidayDate: Date(2027,10,4)},\r\n    // 한글날\r\n    {HolidayDate: Date(2027,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2027,12,25)},\r\n    {HolidayDate: Date(2027,12,27)},\r\n\r\n    // ===== 2028년 =====\r\n    {HolidayDate: Date(2028,1,1)},\r\n    // 설날(추정 2028-1-26)\r\n \r\n    {HolidayDate: Date(2028,1,26)},\r\n    {HolidayDate: Date(2028,1,27)},\r\n    {HolidayDate: Date(2028,1,28)},\r\n    {HolidayDate: Date(2028,3,1)},\r\n    {HolidayDate: Date(2028,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2028-5-2)\r\n    {HolidayDate: Date(2028,5,1)},\r\n    {HolidayDate: Date(2028,5,2)},\r\n    {HolidayDate: Date(2028,6,6)},\r\n    {HolidayDate: Date(2028,8,15)},\r\n    // 추석(추정 2028-10-4)\r\n    {HolidayDate: Date(2028,10,2)},\r\n    {HolidayDate: Date(2028,10,3)},\r\n    {HolidayDate: Date(2028,10,4)},\r\n    {HolidayDate: Date(2028,10,5)},\r\n\r\n    {HolidayDate: Date(2028,10,9)}, // 한글날\r\n    {HolidayDate: Date(2028,12,25)},// 성탄절\r\n\r\n    // ===== 2029년 =====\r\n    {HolidayDate: Date(2029,1,1)},\r\n    // 설날(추정 2029-2-13)\r\n    {HolidayDate: Date(2029,2,12)},\r\n    {HolidayDate: Date(2029,2,13)},\r\n    {HolidayDate: Date(2029,2,14)},\r\n    {HolidayDate: Date(2029,3,1)},\r\n    {HolidayDate: Date(2029,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2029-5-21)\r\n    {HolidayDate: Date(2029,5,21)},\r\n    {HolidayDate: Date(2029,6,6)},\r\n    {HolidayDate: Date(2029,8,15)},\r\n    // 추석(추정 2029-9-24)\r\n    {HolidayDate: Date(2029,9,21)},\r\n    {HolidayDate: Date(2029,9,22)},\r\n    {HolidayDate: Date(2029,9,24)},\r\n    \r\n    {HolidayDate: Date(2029,10,3)},\r\n    {HolidayDate: Date(2029,10,9)},\r\n    {HolidayDate: Date(2029,12,25)},\r\n\r\n    // ===== 2030년 =====\r\n    {HolidayDate: Date(2030,1,1)}\r\n);\r\n"
     Children:
       - Container1_1:
           Control: GroupContainer@1.3.0
@@ -52,7 +52,7 @@ Screens:
                   X: =11
                   Y: =1
             - ButtonCanvas3_3:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =If(currentView = "업무일지", RGBA(150,153,255,1), RGBA(200,200,200,1))
                   Font: =Font.Verdana
@@ -66,7 +66,7 @@ Screens:
                   X: =115
                   Y: =5
             - ButtonCanvas3_4:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =If(currentView = "일정", RGBA(150,153,255,1), RGBA(200,200,200,1))
                   Font: =Font.Verdana
@@ -74,14 +74,14 @@ Screens:
                   Height: =25
                   OnSelect: |-
                     =Set(currentView, "일정"); // '달력'으로 상태 업데이트
-                    Navigate(Cal_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
+                    Navigate(View_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
                   Text: ="일정"
                   Visible: =false
                   Width: =80
                   X: =295
                   Y: =5
             - ButtonCanvas3_5:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =If(currentView = "업무현황", RGBA(150,153,255,1), RGBA(200,200,200,1))
                   Font: =Font.Verdana
@@ -105,6 +105,22 @@ Screens:
                   Width: =50
                   X: =727
                   Y: =10
+            - ButtonCanvas3_12:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무현황", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "업무조회"); // '리스트'로 상태 업데이트
+
+                    Navigate(View_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
+                  Text: ="업무조회"
+                  Width: =80
+                  X: =284
+                  Y: =5
       - Con_right:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -140,7 +156,7 @@ Screens:
                         TabIndex: =0
                         Width: =932
                   - TextCanvas1:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -151,7 +167,7 @@ Screens:
                         X: =12
                         Y: =10
                   - TextCanvas1_1:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -162,18 +178,18 @@ Screens:
                         X: =12
                         Y: =41
                   - TextCanvas1_2:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
                         Size: =10.5
-                        Text: ="상태"
+                        Text: '="상    태" '
                         Weight: ='TextCanvas.Weight'.Semibold
                         Width: =70
                         X: =12
-                        Y: =175
+                        Y: =179
                   - TextCanvas1_3:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -184,7 +200,7 @@ Screens:
                         X: =12
                         Y: =72
                   - TextCanvas1_4:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -195,14 +211,14 @@ Screens:
                         X: =244
                         Y: =14
                   - TextBox1:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: =RGBA(245, 245, 245, 1)
                         DisplayMode: =DisplayMode.View
                         Font: =Font.Verdana
                         FontSize: =8.3
                         FontWeight: =FontWeight.Normal
-                        Height: =160
+                        Height: =164
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         PaddingBottom: |+
@@ -218,7 +234,7 @@ Screens:
                         X: =244
                         Y: =35
                   - TextCanvas1_5:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -227,9 +243,9 @@ Screens:
                         Weight: ='TextCanvas.Weight'.Semibold
                         Width: =70
                         X: =12
-                        Y: =115
+                        Y: =119
                   - TextCanvas1_6:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -238,9 +254,9 @@ Screens:
                         Weight: ='TextCanvas.Weight'.Semibold
                         Width: =70
                         X: =12
-                        Y: =146
+                        Y: =150
                   - TextCanvas1_7:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -251,7 +267,7 @@ Screens:
                         X: =549
                         Y: =44
                   - txtWorkContent:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: |+
                           =If(
@@ -265,7 +281,7 @@ Screens:
                           =If(varEditMode , DisplayMode.Edit, DisplayMode.View)
                         Font: =Font.Verdana
                         FontSize: =8
-                        Height: =130
+                        Height: =133
                         Mode: ='TextBox.Mode'.Multiline
                         OnSelect: =Select(Parent)
                         Placeholder: ="작업 내용을 입력해주세요"
@@ -275,7 +291,7 @@ Screens:
                         X: =549
                         Y: =66
                   - TextCanvas1_8:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
                         Height: =20
@@ -302,7 +318,7 @@ Screens:
                         X: =532
                         Y: =10
                   - btnAddTask_1:
-                      Control: Button@0.0.44
+                      Control: Button@0.0.45
                       Properties:
                         BasePaletteColor: =RGBA(189, 178, 176, 1)
                         Font: =Font.Verdana
@@ -316,7 +332,7 @@ Screens:
                         X: =860
                         Y: =1
                   - txtWorkHour:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: |+
                           =If(
@@ -345,7 +361,7 @@ Screens:
                         X: =598
                         Y: =10
                   - TextBox1_1:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: =RGBA(245, 245, 245, 1)
                         DisplayMode: =DisplayMode.View
@@ -365,7 +381,7 @@ Screens:
                         X: =70
                         Y: =4
                   - TextBox1_2:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: =RGBA(245, 245, 245, 1)
                         DisplayMode: =DisplayMode.View
@@ -386,12 +402,12 @@ Screens:
                         X: =70
                         Y: =35
                   - TextBox1_3:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: =RGBA(245, 245, 245, 1)
                         DisplayMode: =DisplayMode.View
                         Font: =Font.Verdana
-                        FontSize: =8.3
+                        FontSize: =8
                         FontWeight: =FontWeight.Semibold
                         Height: =40
                         Mode: ='TextBox.Mode'.Multiline
@@ -407,7 +423,7 @@ Screens:
                         X: =70
                         Y: =66
                   - TextBox1_4:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: =RGBA(245, 245, 245, 1)
                         DisplayMode: =DisplayMode.View
@@ -425,9 +441,9 @@ Screens:
                           ThisItem.c업무_시작일자
                         Width: =155
                         X: =70
-                        Y: =109
+                        Y: =113
                   - TextBox1_5:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: =RGBA(245, 245, 245, 1)
                         DisplayMode: =DisplayMode.View
@@ -445,9 +461,9 @@ Screens:
                           ThisItem.c업무_종료일자
                         Width: =155
                         X: =70
-                        Y: =140
+                        Y: =144
                   - TextBox1_6:
-                      Control: FluentV8/TextBox@1.7.1
+                      Control: FluentV8/TextBox@1.7.2
                       Properties:
                         ColorBackground: =RGBA(245, 245, 245, 1)
                         DisplayMode: =DisplayMode.View
@@ -465,7 +481,7 @@ Screens:
                           ThisItem.c상태
                         Width: =155
                         X: =70
-                        Y: =169
+                        Y: =174
                   - Rectangle3_6:
                       Control: Rectangle@2.3.0
                       Properties:
@@ -476,12 +492,12 @@ Screens:
                         DisplayMode: =DisplayMode.View
                         Fill: =RGBA(0, 0, 0, 0.63)
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                        Height: =1
+                        Height: =0.7
                         HoverFill: =RGBA(0, 0, 0, 0)
                         PressedFill: =RGBA(0, 0, 0, 0)
                         Width: =154.7
                         X: =70.5
-                        Y: =192
+                        Y: =197
                   - Rectangle3_8:
                       Control: Rectangle@2.3.0
                       Properties:
@@ -524,12 +540,12 @@ Screens:
                         DisplayMode: =DisplayMode.View
                         Fill: =RGBA(0, 0, 0, 0.63)
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                        Height: =1
+                        Height: =0.7
                         HoverFill: =RGBA(0, 0, 0, 0)
                         PressedFill: =RGBA(0, 0, 0, 0)
                         Width: =154.7
                         X: =70.5
-                        Y: =132
+                        Y: =136
                   - Rectangle3_11:
                       Control: Rectangle@2.3.0
                       Properties:
@@ -556,14 +572,14 @@ Screens:
                         DisplayMode: =DisplayMode.View
                         Fill: =RGBA(0, 0, 0, 0.63)
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                        Height: =1
+                        Height: =0.7
                         HoverFill: =RGBA(0, 0, 0, 0)
                         PressedFill: =RGBA(0, 0, 0, 0)
                         Width: =154.7
                         X: =70.5
-                        Y: =163
+                        Y: =167
                   - btn_delete:
-                      Control: Button@0.0.44
+                      Control: Button@0.0.45
                       Properties:
                         BasePaletteColor: =RGBA(252, 15, 15, 1)
                         Font: =Font.Verdana
@@ -583,6 +599,28 @@ Screens:
                         Width: =70
                         X: =758
                         Y: =1
+                  - btnFeedback:
+                      Control: Button@0.0.45
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Secondary
+                        BorderColor: =RGBA(0, 0, 0, 0.59)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =0.5
+                        Font: =Font.Verdana
+                        FontColor: =RGBA(15, 84, 140, 1)
+                        FontSize: =11
+                        Height: =20
+                        OnSelect: |-
+                          =ClearCollect(
+                              colSelFB,
+                              { 제목: ThisItem.업무제목, 내용: ThisItem.피드백 }
+                          );
+                          Set(varShowFB, true)
+                        Text: ="피드백"
+                        Visible: =!IsBlank(ThisItem.피드백)
+                        Width: =70
+                        X: =648
+                        Y: =10
       - Con_left:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -600,7 +638,75 @@ Screens:
                   FocusedBorderColor: =RGBA(98, 100, 167, 1)
                   FocusedBorderThickness: =2
                   Height: =347
-                  Items: "=SortByColumns(\r\n    Filter(\r\n        // 날짜 범위 조건 (기존 유지)\r\n        Switch(\r\n            varFilterMode,\r\n            \r\n            \"All\",\r\n            Search(\r\n                Filter(\r\n                    Task_DB,\r\n                    작성자 = name_label.Text &&\r\n                    OData__xc5c5__xbb34___xc2dc__xc791__xc >= Today() - 365\r\n                ),\r\n                searchTxt.Value,\r\n                업무제목\r\n            ),\r\n\r\n            \"15Days\",\r\n            Search(\r\n                Filter(\r\n                    Task_DB,\r\n                    작성자 = name_label.Text &&\r\n                    OData__xc5c5__xbb34___xc2dc__xc791__xc >= Today() - 7 &&\r\n                    OData__xc5c5__xbb34___xc2dc__xc791__xc <= Today() + 7\r\n                ),\r\n                searchTxt.Value,\r\n                업무제목\r\n            ),\r\n\r\n            Blank()\r\n        ),\r\n\r\n        // ✅ 상태 필터링\r\n        상태 in Filter(\r\n            [\r\n                If(chkPlanned.Checked, \"시작전\"),\r\n                If(chkInProgress.Checked, \"진행중\"),\r\n                If(chkCompleted.Checked, \"완료\")\r\n            ],\r\n            !IsBlank(Value)\r\n        )\r\n    ),\r\n    \"OData__xc5c5__xbb34___xc2dc__xc791__xc\",\r\n    SortOrder.Descending\r\n)\r\n"
+                  Items: |+
+                    =/* ──────────────────────────────────────────────────────────────
+                       gal_Task_list.Items  ―  대용량 위임 최적 버전
+                       1) 날짜 컷오프를 변수로 상수화
+                       2) Filter 조건을 쉼표(AND)로 분리
+                       3) 상태·검색어는 앞에서 미리 계산
+                    ────────────────────────────────────────────────────────────── */
+                    With(
+                        {
+                            /* ① 날짜 상수화  ─ 서버가 그대로 비교 가능 */
+                            dtYearAgo : DateAdd( Today(), -365,TimeUnit.Days ),
+                            dt15Start : DateAdd( Today(),  -7 ,TimeUnit.Days ),
+                            dt15End   : DateAdd( Today(),   7 ,TimeUnit.Days ),
+
+                            /* ② 검색어 (소문자·Trim); 빈 문자열이면 Blank() */
+                            kwd : If(
+                                      IsBlank(Trim(searchTxt.Value)),
+                                      Blank(),
+                                      Lower( Trim(searchTxt.Value) )
+                                  ),
+
+                            /* ③ 체크박스로 선택된 상태만 남긴 테이블 */
+                            statSel : Filter(
+                                [
+                                    If( chkPlanned.Checked   , "시작전" ),
+                                    If( chkInProgress.Checked, "진행중"),
+                                    If( chkCompleted.Checked , "완료"  )
+                                ],
+                                !IsBlank( Value )
+                            )
+                        },
+
+                        /* ④ 모든 조건을 한 번의 Filter 로 처리 */
+                        SortByColumns(
+                            Filter(
+                                /* ─ ④-1. 날짜별 기본 데이터셋 ─ */
+                                Switch(
+                                    varFilterMode,
+                                    "15Days",
+                                        Filter(
+                                            Task_DB,
+                                            작성자          = name_label.Text,
+                                            업무_시작일자  >= dt15Start,
+                                            업무_시작일자  <= dt15End
+                                        ),
+                                    /* Default = "All" */
+                                        Filter(
+                                            Task_DB,
+                                            작성자          = name_label.Text,
+                                            업무_시작일자  >= dtYearAgo
+                                        )
+                                ),
+
+                                /* ─ ④-2. 상태 필터 ─ */
+                                상태 in statSel.Value,
+
+                                /* ─ ④-3. 제목 검색 (StartsWith = 위임 가능) ─ */
+                                If(
+                                    IsBlank( kwd ),
+                                    true,   /* 검색어 없으면 전체 통과 */
+                                    StartsWith( Lower( 업무제목 ), kwd )
+                                )
+                            ),
+
+                            /* ⑤ 최종 정렬 */
+                           "OData__xc5c5__xbb34___xc2dc__xc791__xc",          /* SharePoint 열 내부 이름으로 교체 */
+                            SortOrder.Descending
+                        )
+                    )
                   TemplateSize: =73
                   Width: =382
                 Children:
@@ -615,7 +721,7 @@ Screens:
                       Control: FluentV8/Label@1.8.6
                       Properties:
                         Font: =Font.Verdana
-                        FontSize: =8.7
+                        FontSize: =8.4
                         FontWeight: =FontWeight.Semibold
                         Height: =20
                         OnSelect: =Select(Parent)
@@ -640,7 +746,7 @@ Screens:
                         Width: =200
                         X: =48
                   - btnAddTask:
-                      Control: Button@0.0.44
+                      Control: Button@0.0.45
                       Properties:
                         BasePaletteColor: =RGBA(156, 220, 79, 1)
                         Font: =Font.Verdana
@@ -665,6 +771,7 @@ Screens:
                         FontSize: =8
                         FontWeight: =FontWeight.Normal
                         Height: =22
+                        Italic: =true
                         OnSelect: =Select(Parent)
                         TabIndex: =-1
                         Text: =Text(ThisItem.업무_시작일자, "yyyy.mm.dd") & " ~"
@@ -679,6 +786,7 @@ Screens:
                         FontSize: =8
                         FontWeight: =FontWeight.Normal
                         Height: =22
+                        Italic: =true
                         OnSelect: =Select(Parent)
                         TabIndex: =-1
                         Text: =Text(ThisItem.업무_종료일자, "yyyy.mm.dd") & ""
@@ -697,7 +805,7 @@ Screens:
             Y: =337
           Children:
             - ButtonCanvas7:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =If(varFilterMode = "All", RGBA(141,229,250,10),RGBA(200,200,200,1))
                   Font: =Font.Verdana
@@ -709,7 +817,7 @@ Screens:
                   X: =224
                   Y: =34
             - ButtonCanvas7_2:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =If(varFilterMode = "15Days", RGBA(141,229,250,10),RGBA(200,200,200,1))
                   Font: =Font.Verdana
@@ -722,7 +830,7 @@ Screens:
                   X: =301
                   Y: =34
             - searchTxt:
-                Control: FluentV8/TextBox@1.7.1
+                Control: FluentV8/TextBox@1.7.2
                 Properties:
                   ColorBackground: |+
                     =If(
@@ -735,7 +843,7 @@ Screens:
                   Font: =Font.Verdana
                   FontSize: =9
                   Height: =25
-                  Mode: ='TextBox.Mode'.Multiline
+                  Mode: ='TextBox.Mode'.SingleLine
                   OnChange: =
                   OnSelect: =
                   Placeholder: ="업무 제목을 입력해주세요"
@@ -749,44 +857,54 @@ Screens:
                 Properties:
                   BorderColor: =RGBA(243, 242, 241, 1)
                   BorderStyle: =BorderStyle.None
-                  BorderThickness: =2
+                  BorderThickness: =1
                   DisabledFill: =RGBA(200, 198, 196, 1)
-                  Fill: =RGBA(79, 90, 94, 1)
+                  Fill: =RGBA(0, 0, 0, 0.49)
                   FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                  Height: =0.5
+                  Height: =0.4
                   HoverFill: =RGBA(98, 100, 167, 1)
                   PressedFill: =RGBA(98, 100, 167, 1)
                   Width: =179
                   X: =10
                   Y: =58
             - chkCompleted:
-                Control: CheckBox@0.0.27
+                Control: CheckBox@0.0.30
                 Properties:
+                  Checked: =varShowCompleted
                   Font: =Font.Verdana
                   FontSize: =10
+                  FontWeight: =FontWeight.Semibold
                   Height: =22
                   Label: ="완료"
+                  OnCheck: =	Collect(colSelStatus, {Value:"완료"})
+                  OnUncheck: =RemoveIf(colSelStatus, Value="완료")
                   Width: =80
                   X: =164
                   Y: =6
             - chkPlanned:
-                Control: CheckBox@0.0.27
+                Control: CheckBox@0.0.30
                 Properties:
-                  Checked: =true
+                  Checked: =varShowPlanned
                   Font: =Font.Verdana
                   FontSize: =10
+                  FontWeight: =FontWeight.Semibold
                   Height: =22
                   Label: ="시작전"
+                  OnCheck: =Collect(colSelStatus, {Value:"시작전"})
+                  OnUncheck: =RemoveIf(colSelStatus, Value="시작전")
                   Width: =80
                   Y: =6
             - chkInProgress:
-                Control: CheckBox@0.0.27
+                Control: CheckBox@0.0.30
                 Properties:
-                  Checked: =true
+                  Checked: =	"진행중" in colSelStatus.Value
                   Font: =Font.Verdana
                   FontSize: =10
+                  FontWeight: =FontWeight.Semibold
                   Height: =22
                   Label: ="진행중"
+                  OnCheck: =Collect(colSelStatus, {Value:"진행중"})
+                  OnUncheck: =RemoveIf(colSelStatus, Value="진행중")
                   Width: =80
                   X: =82
                   Y: =6
@@ -809,21 +927,58 @@ Screens:
                   FocusedBorderColor: =RGBA(98, 100, 167, 1)
                   FocusedBorderThickness: =2
                   Height: =206
-                  Items: |-
-                    = AddColumns(
-                        ForAll(
-                            Sequence(42),
-                            // 기존 날짜 계산
-                             varFirstDayOfMonth + (ThisRecord.Value - Weekday(varFirstDayOfMonth, StartOfWeek.Sunday))
-                        ),
-                        HasDaily,
-                        CountRows(
-                            Filter(
+                  Items: |+
+                    =/* ─────────────────────────────────────────────────────────────
+                       gal_Calendar_Days.Items  (피드백 여부 컬럼 추가)
+                    ──────────────────────────────────────────────────────────── */
+                    With(
+                        {
+                            /* 1) 이번 달 + 내 이름 데이터 한 번만 캐싱 */
+                            monthRows: Filter(
                                 Daily_DB,
-                                작성일자 = Value
-                                    && 작성자 = name_label.Text
+                                작성자     = name_label.Text,
+                                작성일자  >= varFirstDayOfMonth,
+                                작성일자  <  DateAdd(varFirstDayOfMonth, 1,TimeUnit.Months)
                             )
-                        ) > 0
+                        },
+
+                        /* 2) 42칸(6주) 달력 + 추가 컬럼 */
+                        AddColumns(
+                            ForAll(
+                                Sequence(42),
+                                {
+                                    /* 셀 날짜 계산 (기존) */
+                                    Value: DateAdd(
+                                               varFirstDayOfMonth,
+                                               ThisRecord.Value
+                                                 - Weekday(varFirstDayOfMonth, StartOfWeek.Sunday),TimeUnit.Days
+                                           )
+                                }
+                            ),
+
+                            /* 오늘 여부 */
+                            IsToday,
+                                DateValue(Value) = Today(),
+
+                            /* 이번 달 여부 */
+                            IsCurrentMonth,
+                                Month(Value) = Month(varFirstDayOfMonth),
+
+                            /* 업무 존재 여부 (주황 점) */
+                            HasDaily,
+                                CountIf(
+                                    monthRows,
+                                    DateValue(작성일자) = DateValue(Value)
+                                ) > 0,
+
+                            /* 🔹 피드백 존재 여부 (파란 점) */
+                            HasFeedback,
+                                CountIf(
+                                    monthRows,
+                                    DateValue(작성일자) = DateValue(Value) &&
+                                    !IsBlank(피드백)                     // ← ‘피드백’ 열 이름 맞춰주세요
+                                ) > 0
+                        )
                     )
                   TemplateSize: =Self.Height/6
                   Width: =370
@@ -865,12 +1020,12 @@ Screens:
                         BorderThickness: =2
                         DisabledFill: =RGBA(98, 100, 167, 1)
                         Fill: =RGBA(240, 98, 15, 1)
-                        Height: =4.5
+                        Height: =4.6
                         HoverFill: =RGBA(98, 100, 167, 1)
                         OnSelect: =Select(Parent)
                         PressedFill: =RGBA(98, 100, 167, 1)
                         Visible: =ThisItem.HasDaily
-                        Width: =4.5
+                        Width: =4.6
                         X: =23.8
                         Y: =24
                   - today_circle:
@@ -919,9 +1074,36 @@ Screens:
                         TabIndex: =-1
                         Text: =Day(ThisItem.Value)
                         VerticalAlignment: =VerticalAlign.Top
-                        Width: =Parent.TemplateWidth - 24
+                        Width: |+
+                          =Parent.TemplateWidth - 24
                         X: =12
                         Y: =5
+                  - iconFeedbackDot:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        Color: =RGBA(15, 108, 189, 1)
+                        DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                        DisabledColor: =RGBA(0, 0, 0, 0)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Height: =18
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Icon: =Icon.Message
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =3
+                        PaddingLeft: =3
+                        PaddingRight: =3
+                        PaddingTop: =3
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Visible: =ThisItem.HasFeedback
+                        Width: =18
+                        X: =27
+                        Y: |+
+                          =-2
                   - select_Date:
                       Control: Rectangle@2.3.0
                       Properties:
@@ -989,7 +1171,7 @@ Screens:
                         VerticalAlignment: =VerticalAlign.Top
                         Width: =Parent.TemplateWidth
             - ButtonCanvas4:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   BorderColor: =RGBA(53, 61, 63, 1)
@@ -1098,7 +1280,7 @@ Screens:
             Y: =58
           Children:
             - ButtonCanvas5:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   BorderColor: =RGBA(0, 0, 0, 1)
@@ -1114,7 +1296,7 @@ Screens:
                   X: =245
                   Y: =7
             - Send_btn:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   BorderColor: =RGBA(0, 0, 0, 1)
@@ -1202,6 +1384,8 @@ Screens:
                         )
                     );
 
+
+
                     Set(varToastMessage2, "저장이 완료되었습니다 ");
                     Set(varShowToast2, true);
                     Set(varEditMode, false);
@@ -1226,7 +1410,7 @@ Screens:
                   X: =15
                   Y: =3
             - Cancle_btn:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   BorderColor: =RGBA(0, 0, 0, 1)
@@ -1267,39 +1451,19 @@ Screens:
             Width: =25
             X: =1283
             Y: =4
-      - OuterRactangle_1:
-          Control: Rectangle@2.3.0
-          Properties:
-            BorderColor: =RGBA(0, 0, 0, 0.5)
-            BorderStyle: =BorderStyle.None
-            BorderThickness: =2
-            DisabledFill: =RGBA(0, 0, 0, 0.5)
-            DisplayMode: =DisplayMode.View
-            Fill: =RGBA(0, 0, 0, 0.5)
-            FocusedBorderColor: =RGBA(98, 100, 167, 1)
-            Height: =800
-            HoverFill: =RGBA(0, 0, 0, 0.5)
-            OnSelect: |-
-              =Set(ShowDelPopup,false);
-              Set(gblDelRecord, Blank());
-            PressedFill: =RGBA(0, 0, 0, 0.5)
-            Visible: =ShowDelPopup
-            Width: =1400
-            X: =-5
-            Y: =-5
       - con_ShowDelPopup:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
-            Height: =150
+            Height: =135
             Visible: =ShowDelPopup
             Width: =336
             X: =515
             Y: =309
           Children:
             - del_title:
-                Control: Text@0.0.50
+                Control: Text@0.0.51
                 Properties:
                   Align: ='TextCanvas.Align'.Center
                   Font: =Font.Verdana
@@ -1309,7 +1473,7 @@ Screens:
                   Width: =336
                   Y: =21
             - btn_Delete_yes:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   Font: =Font.Verdana
@@ -1335,10 +1499,11 @@ Screens:
                     Set(varShowToast2, true);
                     toastTimer2.Start
                   Text: ="예"
-                  X: =57
-                  Y: =87
+                  Width: =88
+                  X: =61
+                  Y: =83
             - btn_Delete_no:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   Font: =Font.Verdana
@@ -1347,8 +1512,9 @@ Screens:
                     =Set(ShowDelPopup,false);
                     Set(gblDelRecord, Blank());
                   Text: ="아니오"
-                  X: =183
-                  Y: =87
+                  Width: =88
+                  X: =187
+                  Y: =83
       - Container14:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -1361,7 +1527,7 @@ Screens:
             Y: =58
           Children:
             - TextCanvas5:
-                Control: Text@0.0.50
+                Control: Text@0.0.51
                 Properties:
                   Font: =Font.Verdana
                   Height: =20
@@ -1443,3 +1609,82 @@ Screens:
                   Visible: =false
                   X: =66
                   Y: =7
+      - OuterRactangle_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0.5)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledFill: =RGBA(0, 0, 0, 0.5)
+            DisplayMode: =DisplayMode.View
+            Fill: =RGBA(0, 0, 0, 0.5)
+            FocusedBorderColor: =RGBA(98, 100, 167, 1)
+            Height: =768
+            HoverFill: =RGBA(0, 0, 0, 0.5)
+            OnSelect: =Set(varShowFB,false)
+            PressedFill: =RGBA(0, 0, 0, 0.5)
+            Visible: =varShowFB
+            Width: =1366
+      - cntFeedbackPopup:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =190
+            Visible: =varShowFB
+            Width: =440
+            X: =463
+            Y: =288
+          Children:
+            - TextCanvas2:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ='TextCanvas.Align'.Center
+                  Font: =Font.Verdana
+                  Height: =22
+                  Size: =15
+                  Text: |+
+                    ="피드백"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =78
+                  X: =178
+                  Y: =14
+            - Icon11:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(79, 90, 94, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =30
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.Cancel
+                  OnSelect: =Set(varShowFB,false)
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =30
+                  X: =392
+                  Y: =8
+            - TextCanvas2_1:
+                Control: Text@0.0.51
+                Properties:
+                  Fill: =RGBA(156, 163, 166, 0.16)
+                  Font: =Font.Verdana
+                  Height: =115
+                  PaddingBottom: =7
+                  PaddingLeft: =7
+                  PaddingRight: =7
+                  PaddingTop: =7
+                  Size: =13
+                  Text: =First(colSelFB).내용
+                  Width: =398
+                  X: =22
+                  Y: =59
