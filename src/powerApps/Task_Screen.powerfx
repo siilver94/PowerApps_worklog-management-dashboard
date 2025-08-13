@@ -25,7 +25,7 @@ Screens:
             Y: =35
           Children:
             - TextCanvas3:
-                Control: Text@0.0.50
+                Control: Text@0.0.51
                 Properties:
                   BorderColor: =RGBA(53, 61, 63, 1)
                   BorderStyle: =BorderStyle.Solid
@@ -40,7 +40,7 @@ Screens:
                   X: =8
                   Y: =32
             - TextCanvas3_1:
-                Control: Text@0.0.50
+                Control: Text@0.0.51
                 Properties:
                   BorderColor: =RGBA(53, 61, 63, 1)
                   BorderStyle: =BorderStyle.Solid
@@ -88,7 +88,7 @@ Screens:
             Y: =52
           Children:
             - ButtonCanvas2:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =If(FilterMode = "All", RGBA(141,229,250,1), RGBA(200,200,200,1))
                   Font: =Font.Verdana
@@ -102,7 +102,7 @@ Screens:
                   X: =120
                   Y: =9
             - ButtonCanvas2_1:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =If(FilterMode = "InProgress", RGBA(141,229,250,1), RGBA(200,200,200,1))
                   Font: =Font.Verdana
@@ -114,12 +114,12 @@ Screens:
                   X: =200
                   Y: =9
             - new_btn:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
-                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderColor: =RGBA(106, 122, 127, 1)
                   BorderStyle: =BorderStyle.Solid
-                  BorderThickness: =0.5
+                  BorderThickness: =0.3
                   Font: =Font.Verdana
                   FontSize: =11
                   Height: =24
@@ -133,86 +133,6 @@ Screens:
                   Width: =95
                   X: =8
                   Y: =9
-      - Header_con_3:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            Fill: =RGBA(34, 35, 58, 1)
-            Height: =35
-            Width: =1366
-          Children:
-            - name_label_1:
-                Control: FluentV8/Label@1.8.6
-                Properties:
-                  Color: =RGBA(255, 255, 255, 1)
-                  FontSize: =8
-                  Height: =25
-                  Text: |+
-                    =If(
-                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
-                        Concatenate(
-                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
-                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
-                        ),
-                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
-                    )
-                  Width: =50
-                  X: =1310
-                  Y: =4
-            - Label8_3:
-                Control: FluentV8/Label@1.8.6
-                Properties:
-                  Color: =RGBA(244, 244, 243, 1)
-                  Font: =Font.Verdana
-                  FontSize: =14
-                  FontWeight: =FontWeight.Bold
-                  Text: ="업무현황판"
-                  Width: =104
-                  X: =11
-                  Y: =1
-            - ButtonCanvas3_9:
-                Control: Button@0.0.44
-                Properties:
-                  BasePaletteColor: =If(currentView = "업무일지", RGBA(150,153,255,1), RGBA(200,200,200,1))
-                  Font: =Font.Verdana
-                  FontSize: =10
-                  Height: =25
-                  OnSelect: |+
-                    =Set(currentView, "업무일지"); // '리스트'로 상태 업데이트
-                    Navigate(Daily_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
-                  Text: ="업무일지"
-                  Width: =80
-                  X: =115
-                  Y: =5
-            - ButtonCanvas3_10:
-                Control: Button@0.0.44
-                Properties:
-                  BasePaletteColor: =If(currentView = "일정", RGBA(150,153,255,1), RGBA(200,200,200,1))
-                  Font: =Font.Verdana
-                  FontSize: =10
-                  Height: =25
-                  OnSelect: |-
-                    =Set(currentView, "일정"); // '달력'으로 상태 업데이트
-                    Navigate(Cal_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
-                  Text: ="일정"
-                  Visible: =false
-                  Width: =80
-                  X: =295
-                  Y: =5
-            - ButtonCanvas3_11:
-                Control: Button@0.0.44
-                Properties:
-                  BasePaletteColor: =If(currentView = "업무현황", RGBA(150,153,255,1), RGBA(200,200,200,1))
-                  Font: =Font.Verdana
-                  FontSize: =10
-                  Height: =25
-                  OnSelect: |+
-                    =Set(currentView, "업무현황"); // '리스트'로 상태 업데이트
-                    Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
-                  Text: ="업무현황"
-                  Width: =80
-                  X: =200
-                  Y: =5
       - Icon4:
           Control: Classic/Icon@2.5.0
           Properties:
@@ -289,32 +209,61 @@ Screens:
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
                         FocusedBorderThickness: =2
                         Height: =574
-                        Items: |-
-                          =With(
+                        Items: |+
+                          =/* gal_TaskGallery.Items  ―  변수 스코프 수정 & 위임 최적화 */
+                          With(
+                              /* 0) 날짜 상수: 서버 비교용 */
                               {
-                                FilteredData: Filter(
-                                  Task_DB,
-                                  작성자 = name_label.Text
-                                  && (
-                                      FilterMode = "All"
-                                      || (
-                                          DateValue(업무_시작일자) <= Today()
-                                          && DateValue(업무_종료일자) >= Today()
+                                  dtToday   : Today(),
+                                  dtYearAgo : DateAdd( Today(), -365,TimeUnit.Days )
+                              },
+
+                              With(
+                                  /* 1) 작성자 + 날짜 조건 (전부 서버 위임) */
+                                  {
+                                      baseRows :
+                                          Switch(
+                                              varFilterMode,
+                                              "15Days",
+                                                  Filter(
+                                                      Task_DB,
+                                                      작성자           = name_label_1.Text,
+                                                      업무_시작일자 <= dtToday,
+                                                      업무_종료일자 >= dtToday
+                                                  ),
+                                              /* default = "All" */
+                                                  Filter(
+                                                      Task_DB,
+                                                      작성자           = name_label_1.Text,
+                                                      업무_시작일자 >= dtYearAgo
+                                                  )
+                                          )
+                                  },
+
+                                  With(
+                                      /* 2) 프로젝트 다중 선택 필터 (로컬) */
+                                      {
+                                          projRows :
+                                              If(
+                                                  IsEmpty( colSelectedProjects ),
+                                                  baseRows,
+                                                  Filter(
+                                                      baseRows,
+                                                      프로젝트명 in colSelectedProjects.Value
+                                                  )
+                                              )
+                                      },
+
+                                      /* 3) 상태 필터 + 정렬 (로컬) */
+                                      SortByColumns(
+                                          Filter(
+                                              projRows,
+                                              상태 = Label10_1.Text      // 진행중·완료 등
+                                          ),
+                                           "OData__xc5c5__xbb34___xc2dc__xc791__xc",           // 내부 열 이름으로 교체
+                                          SortOrder.Descending
                                       )
                                   )
-                                  // 바뀐 부분 ↓↓↓
-                                  && (
-                                    // 체크가 하나 이상 있어야 하고
-                                    !IsEmpty(colSelectedProjects)
-                                    // 그 프로젝트명이어야
-                                    && 프로젝트명 in colSelectedProjects.Value
-                                  )
-                                )
-                              },
-                              SortByColumns(
-                                Filter(FilteredData, 상태 = Label10_1.Text),
-                                "OData__xc5c5__xbb34___xc2dc__xc791__xc",
-                                SortOrder.Descending
                               )
                           )
                         OnSelect: |-
@@ -440,7 +389,7 @@ Screens:
                         Width: =260
                         X: =4
                   - chkProject:
-                      Control: CheckBox@0.0.27
+                      Control: CheckBox@0.0.30
                       Properties:
                         Checked: =ThisItem.Value in colSelectedProjects.Value
                         Font: =Font.Verdana
@@ -454,7 +403,7 @@ Screens:
                         X: =4
                         Y: =7
             - chkSelectAll:
-                Control: CheckBox@0.0.27
+                Control: CheckBox@0.0.30
                 Properties:
                   Checked: =true
                   Font: =Font.Verdana
@@ -476,26 +425,6 @@ Screens:
                   Width: =120
                   X: =4
                   Y: =8
-      - OuterRactangle:
-          Control: Rectangle@2.3.0
-          Properties:
-            BorderColor: =RGBA(243, 242, 241, 1)
-            BorderStyle: =BorderStyle.None
-            BorderThickness: =2
-            DisabledFill: =RGBA(0, 0, 0, 0)
-            Fill: =RGBA(0, 0, 0, 0.5)
-            FocusedBorderColor: =RGBA(98, 100, 167, 1)
-            Height: =770
-            HoverFill: =
-            OnSelect: |-
-              =Set(ShowPopup, false);
-              Set(editMode, false);
-              ResetForm(Form1_1);
-              Set(SelectedItem,{});
-            PressedFill: =RGBA(0, 0, 0, 0)
-            Visible: =ShowPopup
-            Width: =1369
-            X: =-1
       - Container8:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -549,32 +478,61 @@ Screens:
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
                         FocusedBorderThickness: =2
                         Height: =573
-                        Items: |-
-                          =With(
+                        Items: |+
+                          =/* gal_TaskGallery.Items  ―  변수 스코프 수정 & 위임 최적화 */
+                          With(
+                              /* 0) 날짜 상수: 서버 비교용 */
                               {
-                                FilteredData: Filter(
-                                  Task_DB,
-                                  작성자 = name_label.Text
-                                  && (
-                                      FilterMode = "All"
-                                      || (
-                                          DateValue(업무_시작일자) <= Today()
-                                          && DateValue(업무_종료일자) >= Today()
+                                  dtToday   : Today(),
+                                  dtYearAgo : DateAdd( Today(), -365,TimeUnit.Days )
+                              },
+
+                              With(
+                                  /* 1) 작성자 + 날짜 조건 (전부 서버 위임) */
+                                  {
+                                      baseRows :
+                                          Switch(
+                                              varFilterMode,
+                                              "15Days",
+                                                  Filter(
+                                                      Task_DB,
+                                                      작성자           = name_label_1.Text,
+                                                      업무_시작일자 <= dtToday,
+                                                      업무_종료일자 >= dtToday
+                                                  ),
+                                              /* default = "All" */
+                                                  Filter(
+                                                      Task_DB,
+                                                      작성자           = name_label_1.Text,
+                                                      업무_시작일자 >= dtYearAgo
+                                                  )
+                                          )
+                                  },
+
+                                  With(
+                                      /* 2) 프로젝트 다중 선택 필터 (로컬) */
+                                      {
+                                          projRows :
+                                              If(
+                                                  IsEmpty( colSelectedProjects ),
+                                                  baseRows,
+                                                  Filter(
+                                                      baseRows,
+                                                      프로젝트명 in colSelectedProjects.Value
+                                                  )
+                                              )
+                                      },
+
+                                      /* 3) 상태 필터 + 정렬 (로컬) */
+                                      SortByColumns(
+                                          Filter(
+                                              projRows,
+                                              상태 = Label10_2.Text      // 진행중·완료 등
+                                          ),
+                                           "OData__xc5c5__xbb34___xc2dc__xc791__xc",           // 내부 열 이름으로 교체
+                                          SortOrder.Descending
                                       )
                                   )
-                                  // 바뀐 부분 ↓↓↓
-                                  && (
-                                    // 체크가 하나 이상 있어야 하고
-                                    !IsEmpty(colSelectedProjects)
-                                    // 그 프로젝트명이어야
-                                    && 프로젝트명 in colSelectedProjects.Value
-                                  )
-                                )
-                              },
-                              SortByColumns(
-                                Filter(FilteredData, 상태 = Label10_2.Text),
-                                "OData__xc5c5__xbb34___xc2dc__xc791__xc",
-                                SortOrder.Descending
                               )
                           )
                         OnSelect: |-
@@ -597,7 +555,7 @@ Screens:
                               Width: =305
                               Y: =4
                         - ButtonCanvas1_2:
-                            Control: Button@0.0.44
+                            Control: Button@0.0.45
                             Properties:
                               BasePaletteColor: =RGBA(23, 93, 150, 1)
                               Font: =Font.Verdana
@@ -727,32 +685,61 @@ Screens:
                         Fill: =RGBA(255, 255, 255, 1)
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
                         FocusedBorderThickness: =2
-                        Items: |-
-                          =With(
+                        Items: |+
+                          =/* gal_TaskGallery.Items  ―  변수 스코프 수정 & 위임 최적화 */
+                          With(
+                              /* 0) 날짜 상수: 서버 비교용 */
                               {
-                                FilteredData: Filter(
-                                  Task_DB,
-                                  작성자 = name_label_1.Text
-                                  && (
-                                      FilterMode = "All"
-                                      || (
-                                          DateValue(업무_시작일자) <= Today()
-                                          && DateValue(업무_종료일자) >= Today()
+                                  dtToday   : Today(),
+                                  dtYearAgo : DateAdd( Today(), -365,TimeUnit.Days )
+                              },
+
+                              With(
+                                  /* 1) 작성자 + 날짜 조건 (전부 서버 위임) */
+                                  {
+                                      baseRows :
+                                          Switch(
+                                              varFilterMode,
+                                              "15Days",
+                                                  Filter(
+                                                      Task_DB,
+                                                      작성자           = name_label_1.Text,
+                                                      업무_시작일자 <= dtToday,
+                                                      업무_종료일자 >= dtToday
+                                                  ),
+                                              /* default = "All" */
+                                                  Filter(
+                                                      Task_DB,
+                                                      작성자           = name_label_1.Text,
+                                                      업무_시작일자 >= dtYearAgo
+                                                  )
+                                          )
+                                  },
+
+                                  With(
+                                      /* 2) 프로젝트 다중 선택 필터 (로컬) */
+                                      {
+                                          projRows :
+                                              If(
+                                                  IsEmpty( colSelectedProjects ),
+                                                  baseRows,
+                                                  Filter(
+                                                      baseRows,
+                                                      프로젝트명 in colSelectedProjects.Value
+                                                  )
+                                              )
+                                      },
+
+                                      /* 3) 상태 필터 + 정렬 (로컬) */
+                                      SortByColumns(
+                                          Filter(
+                                              projRows,
+                                              상태 = Label10.Text      // 진행중·완료 등
+                                          ),
+                                           "OData__xc5c5__xbb34___xc2dc__xc791__xc",           // 내부 열 이름으로 교체
+                                          SortOrder.Descending
                                       )
                                   )
-                                  // 바뀐 부분 ↓↓↓
-                                  && (
-                                    // 체크가 하나 이상 있어야 하고
-                                    !IsEmpty(colSelectedProjects)
-                                    // 그 프로젝트명이어야
-                                    && 프로젝트명 in colSelectedProjects.Value
-                                  )
-                                )
-                              },
-                              SortByColumns(
-                                Filter(FilteredData, 상태 = Label10.Text),
-                                "OData__xc5c5__xbb34___xc2dc__xc791__xc",
-                                SortOrder.Descending
                               )
                           )
                         NavigationStep: =0
@@ -803,7 +790,7 @@ Screens:
                               X: =8
                               Y: =23
                         - ButtonCanvas1:
-                            Control: Button@0.0.44
+                            Control: Button@0.0.45
                             Properties:
                               BasePaletteColor: =RGBA(61, 53, 45, 1)
                               Font: =Font.Verdana
@@ -853,6 +840,314 @@ Screens:
                               Width: =200
                               X: =8
                               Y: =2
+      - Icon3:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =RGBA(13, 50, 61, 1)
+            DisabledBorderColor: =RGBA(243, 242, 241, 1)
+            DisabledColor: =RGBA(220, 220, 220, 1)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            Height: =24
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Icon: =Icon.OptionsList
+            PaddingBottom: =3
+            PaddingLeft: =3
+            PaddingRight: =3
+            PaddingTop: =3
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Width: =24
+            X: =16
+            Y: =69
+      - Container12:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(159, 227, 171, 0.57)
+            Height: =34
+            Visible: =varShowToast
+            Width: =278
+            X: =571
+            Y: =56
+          Children:
+            - text:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ='TextCanvas.Align'.Center
+                  Font: =Font.Verdana
+                  Size: =12
+                  Text: =varToastMessage
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =170
+                  X: =32
+                  Y: =1
+            - toastTimer:
+                Control: Timer@2.1.0
+                Properties:
+                  AutoStart: =true
+                  BorderColor: =RGBA(98, 100, 167, 1)
+                  BorderStyle: =BorderStyle.None
+                  Color: =RGBA(255, 255, 255, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(200, 198, 196, 1)
+                  DisabledFill: =RGBA(243, 242, 241, 1)
+                  Duration: =3000
+                  Fill: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Font: =Font.'Segoe UI'
+                  Height: =34
+                  HoverBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  OnTimerEnd: =Set(varShowToast, false)
+                  PressedBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  Size: =10.5
+                  Start: |+
+                    =varShowToast
+                  Visible: =false
+                  X: =50
+            - Icon5:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(79, 90, 94, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =26
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.Cancel
+                  OnSelect: =Set(varShowToast,false)
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =26
+                  X: =245
+                  Y: =4
+            - Icon7:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(54, 176, 75, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =25
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.CheckBadge
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =25
+                  X: =7
+                  Y: =4.5
+      - Container13:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderThickness: =2
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =130
+            Visible: =showTaskDeletePopup
+            Width: =318
+            X: =524
+            Y: =284
+          Children:
+            - TextCanvas4:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ='TextCanvas.Align'.Center
+                  Text: ="해당 업무 현황을 삭제하시겠습니까?"
+                  VerticalAlign: =VerticalAlign.Bottom
+                  Width: =317
+                  Y: =22
+            - ButtonCanvas8:
+                Control: Button@0.0.45
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Font: =Font.Verdana
+                  FontSize: =13
+                  Height: =28
+                  OnSelect: |+
+                    =If(
+                        !IsBlank(gblTaskToDelete),
+                        Remove(Task_DB, gblTaskToDelete)
+                    );
+                    Set(showTaskDeletePopup, false);
+                    Set(gblTaskToDelete, Blank());
+                    Set(ShowPopup,false);
+
+                    Set(varToastMessage, "업무 현황이 삭제되었습니다.");
+                    Set(varShowToast, true);
+                  Text: ="예"
+                  Width: =90
+                  X: =54
+                  Y: =81
+            - ButtonCanvas9:
+                Control: Button@0.0.45
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Font: =Font.Verdana
+                  FontSize: =13
+                  Height: =28
+                  OnSelect: |-
+                    =Set(showTaskDeletePopup, false);
+                    Set(gblTaskToDelete, Blank());
+                  Text: ="아니오"
+                  Width: =90
+                  X: =173
+                  Y: =81
+      - Header_con_5:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(34, 35, 58, 1)
+            Height: =35
+            Width: =1366
+          Children:
+            - name_label_1:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  Font: =Font.Verdana
+                  FontSize: =8
+                  Height: =20
+                  Text: |+
+                    =If(
+                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
+                        Concatenate(
+                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
+                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
+                        ),
+                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
+                    )
+                  Width: =35
+                  X: =1310
+                  Y: =4
+            - Label8_3:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(244, 244, 243, 1)
+                  Font: =Font.Verdana
+                  FontSize: =14
+                  FontWeight: =FontWeight.Semibold
+                  Text: ="업무현황판"
+                  Width: =104
+                  X: =11
+                  Y: =1
+            - ButtonCanvas3_9:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무일지", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |+
+                    =Set(currentView, "업무일지"); // '리스트'로 상태 업데이트
+                    Navigate(Daily_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                  Text: ="업무일지"
+                  Width: =80
+                  X: =115
+                  Y: =5
+            - ButtonCanvas3_11:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "일정", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "일정"); // '달력'으로 상태 업데이트
+                    Navigate(View_Screen, ScreenTransition.Fade); // Calendar_Screen으로 이동
+                  Text: ="일정"
+                  Visible: =false
+                  Width: =80
+                  X: =295
+                  Y: =5
+            - ButtonCanvas3_10:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무현황", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "업무현황"); // '리스트'로 상태 업데이트
+                    Navigate(Task_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
+                  Text: ="업무현황"
+                  Width: =80
+                  X: =200
+                  Y: =5
+            - name_label_6:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontSize: =8
+                  Height: =25
+                  Text: =
+                  Width: =50
+                  X: =727
+                  Y: =10
+            - ButtonCanvas3_14:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무조회", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "업무조회"); // '리스트'로 상태 업데이트
+                    Navigate(View_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
+                  Text: ="업무조회"
+                  Width: =80
+                  X: =284
+                  Y: =5
+      - OuterRactangle:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(243, 242, 241, 1)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            Fill: =RGBA(0, 0, 0, 0.5)
+            FocusedBorderColor: =RGBA(98, 100, 167, 1)
+            Height: =770
+            HoverFill: =
+            OnSelect: |-
+              =Set(ShowPopup, false);
+              Set(editMode, false);
+              ResetForm(Form1_1);
+              Set(SelectedItem,{});
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Visible: =ShowPopup
+            Width: =1369
+            X: =-1
       - inputTask_con:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -874,7 +1169,7 @@ Screens:
                   Y: =173
                 Children:
                   - TextCanvas3_3:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Align: ='TextCanvas.Align'.Center
                         Fill: =RGBA(180, 214, 250, 0.33)
@@ -893,7 +1188,7 @@ Screens:
                   Width: =1019
                 Children:
                   - TextCanvas3_2:
-                      Control: Text@0.0.50
+                      Control: Text@0.0.51
                       Properties:
                         Align: ='TextCanvas.Align'.Center
                         BorderColor: =RGBA(79, 90, 94, 1)
@@ -907,7 +1202,7 @@ Screens:
                         Weight: ='TextCanvas.Weight'.Semibold
                         Width: =80
             - Form1_1:
-                Control: Form@2.4.3
+                Control: Form@2.4.4
                 Variant: Classic
                 Layout: Vertical
                 Properties:
@@ -990,7 +1285,7 @@ Screens:
                               X: =12
                               Y: =DataCardKey1_1.Y
                         - 계정_combo_3:
-                            Control: ComboBox@0.0.49
+                            Control: ComboBox@0.0.51
                             Properties:
                               BorderColor: =RGBA(0, 0, 0, 0.63)
                               BorderStyle: =BorderStyle.Solid
@@ -1067,7 +1362,7 @@ Screens:
                               X: =8
                               Y: =DataCardKey34_1.Y
                         - 플젝_combo_3:
-                            Control: ComboBox@0.0.49
+                            Control: ComboBox@0.0.51
                             Properties:
                               BorderColor: =RGBA(0, 0, 0, 0.63)
                               BorderStyle: =BorderStyle.Solid
@@ -1133,7 +1428,7 @@ Screens:
                               X: =32
                               Y: =10
                         - PM_text_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -1289,6 +1584,7 @@ Screens:
                               AccessibleLabel: =If(Parent.Required, Substitute("{0}. 필요합니다.", "{0}", Parent.DisplayName), Parent.DisplayName)
                               DisplayMode: =Parent.DisplayMode
                               FillColor: =RGBA(245, 245, 245, 1)
+                              FirstWeekOfYear: ='DatePicker.FirstWeekOfYear'.FirstDay
                               Font: =Font.Verdana
                               FontSize: =9
                               MaxDate: =Date(Year(Today())+100,1,1)
@@ -1358,7 +1654,7 @@ Screens:
                               X: =28
                               Y: =10
                         - DataCardValue42_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -1430,7 +1726,7 @@ Screens:
                               X: =36
                               Y: =30
                         - DataCardValue38_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -1593,10 +1889,13 @@ Screens:
                                     RGBA(255, 255, 255, 1),  // 편집 가능(흰색)
                                     RGBA(245, 245, 245, 1)   // 편집 불가(연회색)
                                 )
+                              FirstDayOfWeek: =0
+                              FirstWeekOfYear: ='DatePicker.FirstWeekOfYear'.FirstFourDayWeek
                               Font: =Font.Verdana
                               FontSize: =9
                               MaxDate: =Date(Year(Today())+100,1,1)
                               MinDate: =Date(1900,1,1)
+                              ShowGoToToday: =true
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
                               Width: =Parent.Width - 48
@@ -1657,7 +1956,7 @@ Screens:
                               X: =24
                               Y: =10
                         - DataCardValue41_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -1731,7 +2030,7 @@ Screens:
                               X: =24
                               Y: =10
                         - DataCardValue31_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -1744,6 +2043,7 @@ Screens:
                               DisplayMode: =Parent.DisplayMode
                               Font: =Font.Verdana
                               FontSize: =9.5
+                              Mode: ='TextBox.Mode'.SingleLine
                               Required: =Parent.Required
                               Tooltip: =Parent.DisplayName
                               Value: =Parent.Default
@@ -1829,7 +2129,7 @@ Screens:
                               Width: =30
                               Y: =DataCardKey32_1.Y
                         - 상태_combo_1:
-                            Control: ComboBox@0.0.49
+                            Control: ComboBox@0.0.51
                             Properties:
                               Appearance: ='ComboboxCanvas.Appearance'.FilledDarker
                               BasePaletteColor: =RGBA(217, 178, 178, 1)
@@ -1890,7 +2190,7 @@ Screens:
                               X: =36
                               Y: =10
                         - DataCardValue33_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -1968,7 +2268,7 @@ Screens:
                               X: =28
                               Y: =6
                         - DataCardValue36_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -2044,7 +2344,7 @@ Screens:
                               X: =24
                               Y: =10
                         - DataCardValue35_1:
-                            Control: FluentV8/TextBox@1.7.1
+                            Control: FluentV8/TextBox@1.7.2
                             MetadataKey: FieldValue
                             Properties:
                               AccessibleLabel: =Parent.DisplayName
@@ -2110,7 +2410,7 @@ Screens:
                   X: =974
                   Y: =11
             - send_btn:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   BorderColor: =RGBA(0, 0, 0, 1)
@@ -2130,7 +2430,7 @@ Screens:
                   X: =752
                   Y: =640
             - cancle_btn:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   BorderColor: =RGBA(0, 0, 0, 1)
@@ -2149,7 +2449,7 @@ Screens:
                   X: =848
                   Y: =640
             - Edit_btn:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Secondary
                   BorderColor: =RGBA(0, 0, 0, 1)
@@ -2191,7 +2491,7 @@ Screens:
 
 
             - ButtonCanvas3:
-                Control: Button@0.0.44
+                Control: Button@0.0.45
                 Properties:
                   BasePaletteColor: =RGBA(212, 0, 4, 1)
                   Font: =Font.Verdana
@@ -2206,184 +2506,3 @@ Screens:
                   Width: =85
                   X: =635
                   Y: =640
-      - Icon3:
-          Control: Classic/Icon@2.5.0
-          Properties:
-            BorderColor: =RGBA(0, 0, 0, 0)
-            Color: =RGBA(13, 50, 61, 1)
-            DisabledBorderColor: =RGBA(243, 242, 241, 1)
-            DisabledColor: =RGBA(220, 220, 220, 1)
-            DisabledFill: =RGBA(0, 0, 0, 0)
-            Height: =24
-            HoverBorderColor: =RGBA(0, 0, 0, 0)
-            HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-            HoverFill: =RGBA(0, 0, 0, 0)
-            Icon: =Icon.OptionsList
-            PaddingBottom: =3
-            PaddingLeft: =3
-            PaddingRight: =3
-            PaddingTop: =3
-            PressedBorderColor: =RGBA(0, 0, 0, 0)
-            PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-            PressedFill: =RGBA(0, 0, 0, 0)
-            Width: =24
-            X: =16
-            Y: =69
-      - Container12:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            Fill: =RGBA(159, 227, 171, 0.57)
-            Height: =34
-            Visible: =varShowToast
-            Width: =278
-            X: =571
-            Y: =56
-          Children:
-            - text:
-                Control: Text@0.0.50
-                Properties:
-                  Align: ='TextCanvas.Align'.Center
-                  Font: =Font.Verdana
-                  Size: =12
-                  Text: =varToastMessage
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =170
-                  X: =32
-                  Y: =1
-            - toastTimer:
-                Control: Timer@2.1.0
-                Properties:
-                  AutoStart: =true
-                  BorderColor: =RGBA(98, 100, 167, 1)
-                  BorderStyle: =BorderStyle.None
-                  Color: =RGBA(255, 255, 255, 1)
-                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
-                  DisabledColor: =RGBA(200, 198, 196, 1)
-                  DisabledFill: =RGBA(243, 242, 241, 1)
-                  Duration: =3000
-                  Fill: =RGBA(98, 100, 167, 1)
-                  FocusedBorderThickness: =2
-                  Font: =Font.'Segoe UI'
-                  Height: =34
-                  HoverBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -10%)
-                  HoverColor: =RGBA(255, 255, 255, 1)
-                  HoverFill: =ColorFade(RGBA(98, 100, 167, 1), -10%)
-                  OnTimerEnd: =Set(varShowToast, false)
-                  PressedBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  PressedColor: =RGBA(255, 255, 255, 1)
-                  PressedFill: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  Size: =10.5
-                  Start: |+
-                    =varShowToast
-                  Visible: =false
-                  X: =50
-            - Icon5:
-                Control: Classic/Icon@2.5.0
-                Properties:
-                  BorderColor: =RGBA(0, 0, 0, 0)
-                  Color: =RGBA(79, 90, 94, 1)
-                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
-                  DisabledColor: =RGBA(220, 220, 220, 1)
-                  DisabledFill: =RGBA(0, 0, 0, 0)
-                  Height: =26
-                  HoverBorderColor: =RGBA(0, 0, 0, 0)
-                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  HoverFill: =RGBA(0, 0, 0, 0)
-                  Icon: =Icon.Cancel
-                  OnSelect: =Set(varShowToast,false)
-                  PaddingBottom: =3
-                  PaddingLeft: =3
-                  PaddingRight: =3
-                  PaddingTop: =3
-                  PressedBorderColor: =RGBA(0, 0, 0, 0)
-                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  PressedFill: =RGBA(0, 0, 0, 0)
-                  Width: =26
-                  X: =245
-                  Y: =4
-            - Icon7:
-                Control: Classic/Icon@2.5.0
-                Properties:
-                  BorderColor: =RGBA(0, 0, 0, 0)
-                  Color: =RGBA(54, 176, 75, 1)
-                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
-                  DisabledColor: =RGBA(220, 220, 220, 1)
-                  DisabledFill: =RGBA(0, 0, 0, 0)
-                  Height: =25
-                  HoverBorderColor: =RGBA(0, 0, 0, 0)
-                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  HoverFill: =RGBA(0, 0, 0, 0)
-                  Icon: =Icon.CheckBadge
-                  PaddingBottom: =3
-                  PaddingLeft: =3
-                  PaddingRight: =3
-                  PaddingTop: =3
-                  PressedBorderColor: =RGBA(0, 0, 0, 0)
-                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  PressedFill: =RGBA(0, 0, 0, 0)
-                  Width: =25
-                  X: =7
-                  Y: =4.5
-      - Container13:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            BorderThickness: =2
-            Fill: =RGBA(255, 255, 255, 1)
-            Height: =130
-            Visible: =showTaskDeletePopup
-            Width: =318
-            X: =524
-            Y: =284
-          Children:
-            - TextCanvas4:
-                Control: Text@0.0.50
-                Properties:
-                  Align: ='TextCanvas.Align'.Center
-                  Text: ="해당 업무 현황을 삭제하시겠습니까?"
-                  VerticalAlign: =VerticalAlign.Bottom
-                  Width: =317
-                  Y: =22
-            - ButtonCanvas8:
-                Control: Button@0.0.44
-                Properties:
-                  Appearance: ='ButtonCanvas.Appearance'.Secondary
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  BorderStyle: =BorderStyle.Solid
-                  BorderThickness: =1
-                  Font: =Font.Verdana
-                  FontSize: =13
-                  Height: =28
-                  OnSelect: |+
-                    =If(
-                        !IsBlank(gblTaskToDelete),
-                        Remove(Task_DB, gblTaskToDelete)
-                    );
-                    Set(showTaskDeletePopup, false);
-                    Set(gblTaskToDelete, Blank());
-                    Set(ShowPopup,false);
-
-                    Set(varToastMessage, "업무 현황이 삭제되었습니다.");
-                    Set(varShowToast, true);
-                  Text: ="예"
-                  Width: =90
-                  X: =54
-                  Y: =81
-            - ButtonCanvas9:
-                Control: Button@0.0.44
-                Properties:
-                  Appearance: ='ButtonCanvas.Appearance'.Secondary
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  BorderStyle: =BorderStyle.Solid
-                  BorderThickness: =1
-                  Font: =Font.Verdana
-                  FontSize: =13
-                  Height: =28
-                  OnSelect: |-
-                    =Set(showTaskDeletePopup, false);
-                    Set(gblTaskToDelete, Blank());
-                  Text: ="아니오"
-                  Width: =90
-                  X: =173
-                  Y: =81
