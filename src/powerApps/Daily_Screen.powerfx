@@ -639,71 +639,58 @@ Screens:
                   FocusedBorderThickness: =2
                   Height: =347
                   Items: |+
-                    =/* ──────────────────────────────────────────────────────────────
-                       gal_Task_list.Items  ―  대용량 위임 최적 버전
-                       1) 날짜 컷오프를 변수로 상수화
-                       2) Filter 조건을 쉼표(AND)로 분리
-                       3) 상태·검색어는 앞에서 미리 계산
-                    ────────────────────────────────────────────────────────────── */
+                    =/* gal_Task_list.Items — 간단/안정 버전 */
                     With(
                         {
-                            /* ① 날짜 상수화  ─ 서버가 그대로 비교 가능 */
-                            dtYearAgo : DateAdd( Today(), -365,TimeUnit.Days ),
-                            dt15Start : DateAdd( Today(),  -7 ,TimeUnit.Days ),
-                            dt15End   : DateAdd( Today(),   7 ,TimeUnit.Days ),
-
-                            /* ② 검색어 (소문자·Trim); 빈 문자열이면 Blank() */
-                            kwd : If(
-                                      IsBlank(Trim(searchTxt.Value)),
-                                      Blank(),
-                                      Lower( Trim(searchTxt.Value) )
-                                  ),
-
-                            /* ③ 체크박스로 선택된 상태만 남긴 테이블 */
-                            statSel : Filter(
-                                [
-                                    If( chkPlanned.Checked   , "시작전" ),
-                                    If( chkInProgress.Checked, "진행중"),
-                                    If( chkCompleted.Checked , "완료"  )
-                                ],
-                                !IsBlank( Value )
-                            )
-                        },
-
-                        /* ④ 모든 조건을 한 번의 Filter 로 처리 */
-                        SortByColumns(
-                            Filter(
-                                /* ─ ④-1. 날짜별 기본 데이터셋 ─ */
-                                Switch(
-                                    varFilterMode,
-                                    "15Days",
-                                        Filter(
-                                            Task_DB,
-                                            작성자          = name_label.Text,
-                                            업무_시작일자  >= dt15Start,
-                                            업무_시작일자  <= dt15End
-                                        ),
-                                    /* Default = "All" */
-                                        Filter(
-                                            Task_DB,
-                                            작성자          = name_label.Text,
-                                            업무_시작일자  >= dtYearAgo
-                                        )
+                            // ① 날짜+작성자(서버 위임)
+                            src:
+                                If(
+                                    varFilterMode = "15Days",
+                                    Filter(
+                                        Task_DB,
+                                        작성자 = name_label.Text,
+                                        업무_시작일자 >= DateAdd(Today(), -7, TimeUnit.Days),
+                                        업무_시작일자 <= DateAdd(Today(),  7, TimeUnit.Days)
+                                    ),
+                                    Filter(
+                                        Task_DB,
+                                        작성자 = name_label.Text,
+                                        업무_시작일자 >= DateAdd(Today(), -365, TimeUnit.Days)
+                                    )
                                 ),
 
-                                /* ─ ④-2. 상태 필터 ─ */
-                                상태 in statSel.Value,
+                            // ② 검색어(소문자+공백 제거)
+                            key: With(
+                                    { t: Trim(searchTxt.Value) },
+                                    If(IsBlank(t), Blank(), Lower(Substitute(t, " ", "")))
+                                 )
+                        },
 
-                                /* ─ ④-3. 제목 검색 (StartsWith = 위임 가능) ─ */
-                                If(
-                                    IsBlank( kwd ),
-                                    true,   /* 검색어 없으면 전체 통과 */
-                                    StartsWith( Lower( 업무제목 ), kwd )
+                        // ③ 상태 필터(위임 가능: 상수 비교 + OR)
+                        //    → ④ 제목 '포함' 검색(로컬) 적용 → ⑤ 정렬
+                        SortByColumns(
+                            If(
+                                IsBlank(key),
+                                Filter(
+                                    src,
+                                    (chkPlanned.Checked    && 상태 = "시작전")  ||
+                                    (chkInProgress.Checked && 상태 = "진행중") ||
+                                    (chkCompleted.Checked  && 상태 = "완료")
+                                ),
+                                Filter(
+                                    Filter(
+                                        src,
+                                        (chkPlanned.Checked    && 상태 = "시작전")  ||
+                                        (chkInProgress.Checked && 상태 = "진행중") ||
+                                        (chkCompleted.Checked  && 상태 = "완료")
+                                    ),
+                                    Find(
+                                        key,
+                                        Lower(Substitute(업무제목, " ", ""))
+                                    ) > 0
                                 )
                             ),
-
-                            /* ⑤ 최종 정렬 */
-                           "OData__xc5c5__xbb34___xc2dc__xc791__xc",          /* SharePoint 열 내부 이름으로 교체 */
+                            "OData__xc5c5__xbb34___xc2dc__xc791__xc",   // 내부 열 이름 맞춰주세요
                             SortOrder.Descending
                         )
                     )
