@@ -121,6 +121,45 @@ Screens:
                   Width: =80
                   X: =284
                   Y: =5
+            - Icon4_1:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(255, 255, 255, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =25
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.Person
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =25
+                  X: =1285
+                  Y: =4
+            - ButtonCanvas3_15:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "업무현황", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "업무조회"); // '리스트'로 상태 업데이트
+
+                    Navigate(View_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
+                  Text: ="업무조회"
+                  Width: =80
+                  X: =367
+                  Y: =5
       - Container6:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -482,29 +521,6 @@ Screens:
                   Width: =76
                   X: =143
                   Y: =20
-      - Icon4_1:
-          Control: Classic/Icon@2.5.0
-          Properties:
-            BorderColor: =RGBA(0, 0, 0, 0)
-            Color: =RGBA(255, 255, 255, 1)
-            DisabledBorderColor: =RGBA(243, 242, 241, 1)
-            DisabledColor: =RGBA(220, 220, 220, 1)
-            DisabledFill: =RGBA(0, 0, 0, 0)
-            Height: =25
-            HoverBorderColor: =RGBA(0, 0, 0, 0)
-            HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-            HoverFill: =RGBA(0, 0, 0, 0)
-            Icon: =Icon.Person
-            PaddingBottom: =3
-            PaddingLeft: =3
-            PaddingRight: =3
-            PaddingTop: =3
-            PressedBorderColor: =RGBA(0, 0, 0, 0)
-            PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-            PressedFill: =RGBA(0, 0, 0, 0)
-            Width: =25
-            X: =1283
-            Y: =4
       - OuterRactangle_1:
           Control: Rectangle@2.3.0
           Properties:
@@ -521,108 +537,14 @@ Screens:
             PressedFill: =RGBA(0, 0, 0, 0.5)
             Visible: =varShowFB
             Width: =1366
-      - Container14:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
-          Properties:
-            Fill: =RGBA(159, 227, 171, 1)
-            Height: =34
-            Visible: =varShowToast2
-            Width: =260
-            X: =663
-            Y: =37
-          Children:
-            - TextCanvas5:
-                Control: Text@0.0.51
-                Properties:
-                  Font: =Font.Verdana
-                  Height: =20
-                  Size: =12
-                  Text: =varToastMessage2
-                  Width: =162
-                  X: =38
-                  Y: =8
-            - Icon8:
-                Control: Classic/Icon@2.5.0
-                Properties:
-                  BorderColor: =RGBA(0, 0, 0, 0)
-                  Color: =RGBA(54, 176, 75, 1)
-                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
-                  DisabledColor: =RGBA(220, 220, 220, 1)
-                  DisabledFill: =RGBA(0, 0, 0, 0)
-                  Height: =25
-                  HoverBorderColor: =RGBA(0, 0, 0, 0)
-                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  HoverFill: =RGBA(0, 0, 0, 0)
-                  Icon: =Icon.CheckBadge
-                  PaddingBottom: =3
-                  PaddingLeft: =3
-                  PaddingRight: =3
-                  PaddingTop: =3
-                  PressedBorderColor: =RGBA(0, 0, 0, 0)
-                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  PressedFill: =RGBA(0, 0, 0, 0)
-                  Width: =25
-                  X: =7
-                  Y: =4
-            - Icon9:
-                Control: Classic/Icon@2.5.0
-                Properties:
-                  BorderColor: =RGBA(0, 0, 0, 0)
-                  Color: =RGBA(53, 61, 63, 1)
-                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
-                  DisabledColor: =RGBA(220, 220, 220, 1)
-                  DisabledFill: =RGBA(0, 0, 0, 0)
-                  Height: =26
-                  HoverBorderColor: =RGBA(0, 0, 0, 0)
-                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  HoverFill: =RGBA(0, 0, 0, 0)
-                  Icon: =Icon.Cancel
-                  OnSelect: =Set(varShowToast2,false)
-                  PaddingBottom: =3
-                  PaddingLeft: =3
-                  PaddingRight: =3
-                  PaddingTop: =3
-                  PressedBorderColor: =RGBA(0, 0, 0, 0)
-                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  PressedFill: =RGBA(0, 0, 0, 0)
-                  Width: =26
-                  X: =222
-                  Y: =5
-            - toastTimer2:
-                Control: Timer@2.1.0
-                Properties:
-                  AutoPause: =false
-                  BorderColor: =RGBA(98, 100, 167, 1)
-                  BorderStyle: =BorderStyle.None
-                  Color: =RGBA(255, 255, 255, 1)
-                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
-                  DisabledColor: =RGBA(200, 198, 196, 1)
-                  DisabledFill: =RGBA(243, 242, 241, 1)
-                  Duration: =3000
-                  Fill: =RGBA(98, 100, 167, 1)
-                  FocusedBorderThickness: =2
-                  Font: =Font.'Segoe UI'
-                  HoverBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -10%)
-                  HoverColor: =RGBA(255, 255, 255, 1)
-                  HoverFill: =ColorFade(RGBA(98, 100, 167, 1), -10%)
-                  OnTimerEnd: =Set(varShowToast2,false)
-                  PressedBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  PressedColor: =RGBA(255, 255, 255, 1)
-                  PressedFill: =ColorFade(RGBA(98, 100, 167, 1), -30%)
-                  Size: =10.5
-                  Start: =varShowToast2
-                  Visible: =false
-                  X: =66
-                  Y: =7
       - Container10:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
             Height: =38
-            Width: =323
-            X: =1028
+            Width: =352
+            X: =1000
             Y: =58
           Children:
             - ButtonCanvas5:
@@ -639,7 +561,7 @@ Screens:
                   Text: ="편집"
                   Visible: =!varEditMode
                   Width: =70
-                  X: =245
+                  X: =278
                   Y: =7
             - Send_btn:
                 Control: Button@0.0.45
@@ -653,12 +575,34 @@ Screens:
                   Height: =25
                   Icon: ="Send"
                   IconStyle: ='ButtonCanvas.IconStyle'.Filled
-                  OnSelect: "=// 1) Daily_Gallery에서 사용자 입력(작업시간/내용)을 colDailyTasks에 반영  \U0001F535 기존 그대로\r\nForAll(\r\n    Daily_Gallery.AllItems,\r\n    Patch(\r\n        colDailyTasks,\r\n        ThisRecord,\r\n        {\r\n            작업시간: Value(txtWorkHour.Value),\r\n            작업내용: txtWorkContent.Value\r\n        }\r\n    )\r\n);\r\n\r\n// 2) colDailyTasks ➜ Daily_DB  (단일 모드 vs 기간 반복 모드 분기)\r\nIf(\r\n    tglRepeat.Checked,\r\n    /* ===================================================================\r\n       \U0001F7E3 기간 반복 입력 모드 (tglRepeat = On)\r\n       - dpRepeatStart ~ dpRepeatEnd 사이 날짜에 대해\r\n       - colDailyTasks 내용을 그대로 새 레코드로 Insert\r\n       =================================================================== */\r\n    With(\r\n        {\r\n            _start: dpRepeatStart.SelectedDate,\r\n            _end:   dpRepeatEnd.SelectedDate\r\n        },\r\n        \r\n        // 2-1) 대상 날짜 컬렉션 생성\r\n        ClearCollect(\r\n            colTargetDates,\r\n            AddColumns(\r\n                Sequence( DateDiff(_start, _end) + 1 ),\r\n                TargetDate,\r\n                DateAdd(_start, Value - 1, TimeUnit.Days)\r\n            )\r\n        );\r\n        \r\n        // 2-2) 각 날짜 × 각 업무(colDailyTasks)를 Daily_DB에 Insert\r\n        ForAll(\r\n            colTargetDates As dt,\r\n            ForAll(\r\n                colDailyTasks As d,\r\n                With(\r\n                    {\r\n                        newRec: Patch(\r\n                            Daily_DB,\r\n                            Defaults(Daily_DB),\r\n                            {\r\n                                작성자:          name_label.Text,\r\n                                프로젝트명:      d.c프로젝트명,\r\n                                업무_계정:       d.c업무_계정,\r\n                                업무_시작일자:   d.c업무_시작일자,\r\n                                업무_종료일자:   d.c업무_종료일자,\r\n                                업무제목:        d.c업무제목,\r\n                                상세_업무내용:   d.c상세_업무내용,\r\n                                상태:            d.c상태,\r\n                                작업내용:        d.작업내용,\r\n                                작업시간:        d.작업시간,\r\n                                작성일자:        dt.TargetDate,    // ★ 날짜만 TargetDate로 변경\r\n                                팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                            }\r\n                        )\r\n                    },\r\n                    // 새로 만든 ID를 colDailyTasks에도 반영 (선택 사항이지만 일단 유지)\r\n                    Patch(\r\n                        colDailyTasks,\r\n                        d,\r\n                        { ID: newRec.ID }\r\n                    )\r\n                )\r\n            )\r\n        )\r\n    ),\r\n\r\n    /* ===================================================================\r\n       \U0001F535 단일 날짜 모드 (tglRepeat = Off)\r\n       - 네가 기존에 쓰던 Update/Insert 로직 그대로 유지\r\n       =================================================================== */\r\n    ForAll(\r\n        colDailyTasks As d,             /* ❶ 별칭 d 로 지정 → 가독성 & 충돌방지 */\r\n        With(\r\n            {\r\n                /* ❷ ID가 있으면 ID 로, 없으면 기존 복합 조건으로 매칭 */\r\n                existingRec: If(\r\n                    !IsBlank(d.ID),\r\n                    LookUp(Daily_DB, ID = d.ID),\r\n                    LookUp(\r\n                        Daily_DB,\r\n                        프로젝트명      = d.c프로젝트명 &&\r\n                        작성일자        = varSelectedDate &&\r\n                        작성자          = name_label.Text &&\r\n                        업무제목        = d.c업무제목\r\n                    )\r\n                )\r\n            },\r\n            If(\r\n                /* ❸ 이미 있으면 Update */\r\n                !IsBlank(existingRec),\r\n                Patch(\r\n                    Daily_DB,\r\n                    existingRec,\r\n                    {\r\n                        작업내용: d.작업내용,\r\n                        작업시간: d.작업시간\r\n                    }\r\n                ),\r\n\r\n                /* ❹ 없으면 Insert → 새 레코드(ID 반환) */\r\n                With(\r\n                    {\r\n                        newRec: Patch(\r\n                            Daily_DB,\r\n                            Defaults(Daily_DB),\r\n                            {\r\n                                작성자:          name_label.Text,\r\n                                프로젝트명:      d.c프로젝트명,\r\n                                업무_계정:       d.c업무_계정,\r\n                                업무_시작일자:   d.c업무_시작일자,\r\n                                업무_종료일자:   d.c업무_종료일자,\r\n                                업무제목:        d.c업무제목,\r\n                                상세_업무내용:   d.c상세_업무내용,\r\n                                상태:            d.c상태,\r\n                                작업내용:        d.작업내용,\r\n                                작업시간:        d.작업시간,\r\n                                작성일자:        varSelectedDate,\r\n                                팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                            }\r\n                        )\r\n                    },\r\n                    /* ❺ 새 ID를 colDailyTasks에도 즉시 반영 → 다음 저장 때 중복 방지 */\r\n                    Patch(\r\n                        colDailyTasks,\r\n                        d,\r\n                        { ID: newRec.ID }\r\n                    )\r\n                )\r\n            )\r\n        )\r\n    )\r\n);\r\n\r\n// 토스트 & 편집모드 종료는 그대로\r\nSet(varToastMessage2, \"저장이 완료되었습니다 \");\r\nSet(varShowToast2, true);\r\nSet(varEditMode, false);\r\ntoastTimer2.Start;\r\n"
-                  Text: ="저장"
+                  OnSelect: "=// 0) 이번 저장 시도에서 저장 성공 여부 초기화\r\nSet(varSaveSuccess, false);\r\n\r\n// 1) Daily_Gallery에서 사용자 입력(작업시간/내용)을 colDailyTasks에 반영\r\nForAll(\r\n    Daily_Gallery.AllItems,\r\n    Patch(\r\n        colDailyTasks,\r\n        ThisRecord,\r\n        {\r\n            작업시간: Value(txtWorkHour.Value),\r\n            작업내용: txtWorkContent.Value\r\n        }\r\n    )\r\n);\r\n\r\n// 2) colDailyTasks ➜ Daily_DB  (반복 제한 + 안내 + 단일/기간 분기)\r\nWith(\r\n    {\r\n        _isRepeat: tglRepeat.Checked,\r\n        _start:    dpRepeatStart.SelectedDate,\r\n        _end:      dpRepeatEnd.SelectedDate,\r\n        _days:     DateDiff(dpRepeatStart.SelectedDate, dpRepeatEnd.SelectedDate) + 1\r\n    },\r\n    \r\n    // 2-1) 반복 모드 + 15일 초과면 → 에러 알림 후 종료 (저장 안 함)\r\n    If(\r\n        _isRepeat && _days > 15,\r\n        Notify(\r\n            \"기간 반복 입력은 최대 15일까지 가능합니다. 현재 선택: \" & Text(_days) & \"일\",\r\n            NotificationType.Error\r\n        ),\r\n        \r\n        // 2-2) 15일 이내라면 → (반복/단일 모드에 따라 처리)\r\n        If(\r\n            _isRepeat,\r\n            \r\n            /* ===================================================================\r\n               \U0001F7E3 기간 반복 입력 모드 (tglRepeat = On, 15일 이하)\r\n               =================================================================== */\r\n\r\n            // 저장 전 안내 메시지\r\n            Notify(\r\n                Text(_start, \"yyyy년 m월 d일\") & \" ~ \" &\r\n                Text(_end, \"yyyy년 m월 d일\") &\r\n                \" (\" & Text(_days) & \"일) 동안 동일한 업무가 등록됩니다.\",\r\n                NotificationType.Information\r\n            );\r\n\r\n            // 2-2-1) 대상 날짜 컬렉션 생성\r\n            ClearCollect(\r\n                colTargetDates,\r\n                AddColumns(\r\n                    Sequence(_days),\r\n                    TargetDate,\r\n                    DateAdd(_start, Value - 1, TimeUnit.Days)\r\n                )\r\n            );\r\n            \r\n            // 2-2-2) 각 날짜 × 각 업무(colDailyTasks)를 Daily_DB에 Insert (항상 추가, 기존 데이터 보존)\r\n            ForAll(\r\n                colTargetDates As dt,\r\n                ForAll(\r\n                    colDailyTasks As d,\r\n                    With(\r\n                        {\r\n                            newRec: Patch(\r\n                                Daily_DB,\r\n                                Defaults(Daily_DB),\r\n                                {\r\n                                    작성자:          name_label.Text,\r\n                                    프로젝트명:      d.c프로젝트명,\r\n                                    업무_계정:       d.c업무_계정,\r\n                                    업무_시작일자:   d.c업무_시작일자,\r\n                                    업무_종료일자:   d.c업무_종료일자,\r\n                                    업무제목:        d.c업무제목,\r\n                                    상세_업무내용:   d.c상세_업무내용,\r\n                                    상태:            d.c상태,\r\n                                    작업내용:        d.작업내용,\r\n                                    작업시간:        d.작업시간,\r\n                                    작성일자:        dt.TargetDate,     // ★ 날짜만 TargetDate로\r\n                                    팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                                }\r\n                            )\r\n                        },\r\n                        // 새 ID를 colDailyTasks에 반영 (다음 저장 시 중복 Insert 방지용, 원래 로직 유지)\r\n                        Patch(\r\n                            colDailyTasks,\r\n                            d,\r\n                            { ID: newRec.ID }\r\n                        )\r\n                    )\r\n                )\r\n            );\r\n\r\n            // 반복 모드에서 실제로 저장 완료 → 성공 플래그 세팅\r\n            Set(varSaveSuccess, true),\r\n\r\n            /* ===================================================================\r\n               \U0001F535 단일 날짜 모드 (tglRepeat = Off)\r\n               =================================================================== */\r\n            ForAll(\r\n                colDailyTasks As d,\r\n                With(\r\n                    {\r\n                        existingRec: If(\r\n                            !IsBlank(d.ID),\r\n                            LookUp(Daily_DB, ID = d.ID),\r\n                            LookUp(\r\n                                Daily_DB,\r\n                                프로젝트명      = d.c프로젝트명 &&\r\n                                작성일자        = varSelectedDate &&\r\n                                작성자          = name_label.Text &&\r\n                                업무제목        = d.c업무제목\r\n                            )\r\n                        )\r\n                    },\r\n                    If(\r\n                        !IsBlank(existingRec),\r\n                        Patch(\r\n                            Daily_DB,\r\n                            existingRec,\r\n                            {\r\n                                작업내용: d.작업내용,\r\n                                작업시간: d.작업시간\r\n                            }\r\n                        ),\r\n                        With(\r\n                            {\r\n                                newRec: Patch(\r\n                                    Daily_DB,\r\n                                    Defaults(Daily_DB),\r\n                                    {\r\n                                        작성자:          name_label.Text,\r\n                                        프로젝트명:      d.c프로젝트명,\r\n                                        업무_계정:       d.c업무_계정,\r\n                                        업무_시작일자:   DateTimeValue(d.c업무_시작일자),\r\n                                        업무_종료일자:   DateTimeValue(d.c업무_종료일자),\r\n                                        업무제목:        d.c업무제목,\r\n                                        상세_업무내용:   d.c상세_업무내용,\r\n                                        상태:            d.c상태,\r\n                                        작업내용:        d.작업내용,\r\n                                        작업시간:        d.작업시간,\r\n                                        작성일자:        varSelectedDate,\r\n                                        팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                                    }\r\n                                )\r\n                            },\r\n                            Patch(\r\n                                colDailyTasks,\r\n                                d,\r\n                                { ID: newRec.ID }\r\n                            )\r\n                        )\r\n                    )\r\n                )\r\n            );\r\n\r\n            // 단일 모드에서도 Patch까지 끝나면 성공 플래그 세팅\r\n            Set(varSaveSuccess, true)\r\n        )\r\n    )\r\n);\r\n\r\n// 3) 토스트 & 편집모드 종료 (저장 성공일 때만 실행)\r\nIf(\r\n    varSaveSuccess,\r\n    Set(varToastMessage2, \"저장이 완료되었습니다 \");\r\n    Set(varShowToast2, true);\r\n    Set(varEditMode, false);\r\n    toastTimer2.Start\r\n);\r\n"
+                  Text: |+
+                    =If(
+                        tglRepeat.Checked,
+                        "저장(" &
+                            Text(
+                                DateDiff(
+                                    dpRepeatStart.SelectedDate,
+                                    dpRepeatEnd.SelectedDate
+                                ) + 1
+                            ) & "일)",
+                        "저장"
+                    )
                   Visible: |+
                     =varEditMode
-                  Width: =70
-                  X: =167
+                  Width: |-
+                    =If(
+                        tglRepeat.Checked,
+                        108
+                        ,    // 반복 모드일 때 넓게
+                        70     // 기본 모드일 때 좁게
+                    )
+                  X: |-
+                    =If(
+                        tglRepeat.Checked,
+                        165    ,    // 반복 모드일 때 넓게
+                        200     // 기본 모드일 때 좁게
+                    )
                   Y: =7
             - Dates_label:
                 Control: FluentV8/Label@1.8.6
@@ -667,28 +611,16 @@ Screens:
                   Font: =Font.Verdana
                   FontSize: =9.5
                   FontWeight: =FontWeight.Normal
-                  Height: =38
+                  Height: =29
                   Text: |+
-                    =If(
-                        tglRepeat.Checked,
-                        Text(
-                            dpRepeatStart.SelectedDate,
-                            "yyyy년 m월 d일"
-                        ) & " ~ " &
-                        Text(
-                            dpRepeatEnd.SelectedDate,
-                            "yyyy년 m월 d일"
-                        ) ,
-
-                        Text(
-                            varSelectedDate,
-                            "yyyy년 m월 d일"
-                        )
+                    =Text(
+                        varSelectedDate,
+                        "yyyy년 m월 d일"
                     )
                   VerticalAlignment: =VerticalAlign.Middle
                   Width: =150
-                  X: =24
-                  Y: =-1
+                  X: =15
+                  Y: =5
             - Cancle_btn:
                 Control: Button@0.0.45
                 Properties:
@@ -706,7 +638,7 @@ Screens:
                   Visible: |+
                     =varEditMode
                   Width: =70
-                  X: =245
+                  X: =278
                   Y: =7
       - Con_right:
           Control: GroupContainer@1.3.0
@@ -819,7 +751,7 @@ Screens:
                           ThisItem.c상세_업무내용
                         Width: =275
                         X: =240
-                        Y: =33
+                        Y: =35
                   - TextCanvas1_5:
                       Control: Text@0.0.51
                       Properties:
@@ -1614,10 +1546,10 @@ Screens:
           Variant: ManualLayout
           Properties:
             Fill: |-
-              =
-              If(tglRepeat.Checked, RGBA(255,255,255,1), RGBA(120,120,120,1))
+              =// If(tglRepeat.Checked, RGBA(255,255,255,1), RGBA(120,120,120,1))
+              If(tglRepeat.Checked, RGBA(7,119,224,0.4), RGBA(120,120,120,1))
             Height: =38
-            Width: =534
+            Width: =473
             X: =419
             Y: =58
           Children:
@@ -1625,11 +1557,13 @@ Screens:
                 Control: FluentV8/Toggle@1.6.7
                 Properties:
                   Font: =Font.Verdana
-                  FontSize: =10
+                  FontSize: =9
                   Height: =20
-                  Width: =80
-                  X: =100
-                  Y: =9
+                  OffText: =
+                  OnText: =
+                  Width: =50
+                  X: =64
+                  Y: =11
             - dpRepeatEnd:
                 Control: DatePicker@0.0.46
                 Properties:
@@ -1638,7 +1572,7 @@ Screens:
                   Height: =28
                   Placeholder: ="종료일"
                   Width: =160
-                  X: =368
+                  X: =306
                   Y: =6
             - dpRepeatStart:
                 Control: DatePicker@0.0.46
@@ -1650,7 +1584,7 @@ Screens:
                   Height: =28
                   Placeholder: ="시작일"
                   Width: =160
-                  X: =196
+                  X: =121
                   Y: =6
             - TextCanvas6:
                 Control: Text@0.0.51
@@ -1659,9 +1593,116 @@ Screens:
                   Font: =Font.Verdana
                   Height: =23
                   Size: =12
-                  Text: ="기간 다중 입력"
+                  Text: ="기간 입력"
                   VerticalAlign: =VerticalAlign.Middle
                   Weight: ='TextCanvas.Weight'.Semibold
-                  Width: =79
-                  X: =6
+                  Width: =60
+                  X: =3
                   Y: =9
+            - TextCanvas7:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ='TextCanvas.Align'.Center
+                  Font: =Font.Verdana
+                  Height: =25
+                  Size: =15
+                  Text: ="~"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =25
+                  X: =281
+                  Y: =9
+      - Con_Notify:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(159, 227, 171, 1)
+            Height: =34
+            Visible: =varShowToast2
+            Width: =260
+            X: =663
+            Y: =37
+          Children:
+            - TextCanvas5:
+                Control: Text@0.0.51
+                Properties:
+                  Font: =Font.Verdana
+                  Height: =20
+                  Size: =12
+                  Text: =varToastMessage2
+                  Width: =162
+                  X: =38
+                  Y: =8
+            - Icon8:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(54, 176, 75, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =25
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.CheckBadge
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =25
+                  X: =7
+                  Y: =4
+            - Icon9:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  Color: =RGBA(53, 61, 63, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(220, 220, 220, 1)
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Height: =26
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  Icon: =Icon.Cancel
+                  OnSelect: =Set(varShowToast2,false)
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  PressedBorderColor: =RGBA(0, 0, 0, 0)
+                  PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =26
+                  X: =222
+                  Y: =5
+            - toastTimer2:
+                Control: Timer@2.1.0
+                Properties:
+                  AutoPause: =false
+                  BorderColor: =RGBA(98, 100, 167, 1)
+                  BorderStyle: =BorderStyle.None
+                  Color: =RGBA(255, 255, 255, 1)
+                  DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledColor: =RGBA(200, 198, 196, 1)
+                  DisabledFill: =RGBA(243, 242, 241, 1)
+                  Duration: =3000
+                  Fill: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Font: =Font.'Segoe UI'
+                  HoverBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+                  OnTimerEnd: =Set(varShowToast2,false)
+                  PressedBorderColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                  Size: =10.5
+                  Start: =varShowToast2
+                  Visible: =false
+                  X: =66
+                  Y: =7
