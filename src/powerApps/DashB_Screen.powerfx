@@ -66,8 +66,8 @@ Screens:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
           Properties:
-            Height: =124
-            Width: =547
+            Height: =118
+            Width: =511
             X: =24
             Y: =48
           Children:
@@ -93,8 +93,8 @@ Screens:
                   SelectedDate: |+
                     =Today()
                   Width: =175
-                  X: =351
-                  Y: =76
+                  X: =327
+                  Y: =73
             - dpStart:
                 Control: DatePicker@0.0.46
                 Properties:
@@ -107,8 +107,8 @@ Screens:
                   Format: ='DatePickerCanvas.Format'.LongAbbreviated
                   SelectedDate: =Today()
                   Width: =175
-                  X: =160
-                  Y: =76
+                  X: =136
+                  Y: =73
             - btnRefresh:
                 Control: Button@0.0.45
                 Properties:
@@ -274,7 +274,7 @@ Screens:
             Items: =colTeamPeriodData
             Width: =229
             X: =24
-            Y: =194
+            Y: =186
           Children:
             - Rectangle4:
                 Control: Rectangle@2.3.0
@@ -365,7 +365,7 @@ Screens:
           Properties:
             Height: =34
             Width: =223
-            X: =597
+            X: =549
             Y: =43
           Children:
             - lblTotalHoursValue:
@@ -384,7 +384,7 @@ Screens:
           Properties:
             Height: =30
             Width: =223
-            X: =597
+            X: =549
             Y: =84
           Children:
             - TextCanvas12:
@@ -421,7 +421,7 @@ Screens:
           Properties:
             Height: =30
             Width: =223
-            X: =597
+            X: =549
             Y: =120
           Children:
             - lblAvgHoursValue_1:
@@ -450,7 +450,7 @@ Screens:
           Properties:
             Height: =30
             Width: =223
-            X: =597
+            X: =549
             Y: =156
           Children:
             - lblAvgHoursValue_2:
@@ -482,7 +482,7 @@ Screens:
           Properties:
             Height: =30
             Width: =223
-            X: =597
+            X: =549
             Y: =189
           Children:
             - lblTotalHoursValue_1:
@@ -532,7 +532,7 @@ Screens:
           Properties:
             Height: =30
             Width: =281
-            X: =597
+            X: =549
             Y: =225
           Children:
             - lblTotalHoursValue_2:
@@ -593,8 +593,8 @@ Screens:
             Size: =14
             Text: ="팀원별 작업시간"
             Width: =387
-            X: =975
-            Y: =48
+            X: =976
+            Y: =35
       - ColumnChart1:
           Control: BarChart@2.3.0
           Group: chtHoursByUser
@@ -609,17 +609,17 @@ Screens:
             HoverBorderColor: =RGBA(0, 0, 0, 0)
             ItemColorSet: |+
               =[
-                  RGBA(76, 114, 176, 1),   // Blue
-                  RGBA(139, 170, 204, 1),  // Light Blue
-                  RGBA(146, 146, 146, 1),  // Gray
-                  RGBA(82, 82, 82, 1),     // Dark Gray
-                  RGBA(218, 218, 218, 1),  // Light Gray
-                  RGBA(88, 144, 255, 1),   // Accent Blue
-                  RGBA(62, 90, 146, 1),    // Deep Blue
-                  RGBA(40, 60, 99, 1),     // Navy
-                  RGBA(180, 205, 230, 1),  // Very Light Blue
-                  RGBA(108, 116, 125, 1),  // Muted Gray
-                  RGBA(55, 70, 100, 1)     // Deep Steel Blue
+                  RGBA(37, 99, 235, 1),    // Deep Blue
+                  RGBA(99, 179, 237, 1),   // Sky Blue
+                  RGBA(20, 184, 166, 1),   // Teal
+                  RGBA(16, 185, 129, 1),   // Mint
+                  RGBA(5, 150, 105, 1),    // Dark Mint
+                  RGBA(74, 222, 128, 1),   // Lime Mint
+                  RGBA(34, 197, 94, 1),    // Green Accent
+                  RGBA(15, 118, 110, 1),   // Deep Teal
+                  RGBA(186, 230, 253, 1),  // Light Blue Gray
+                  RGBA(153, 246, 228, 1),  // Light Mint
+                  RGBA(224, 242, 254, 1)   // Very Light Blue
               ]
             Items: |-
               =Sort(
@@ -649,8 +649,8 @@ Screens:
             PressedBorderColor: =RGBA(0, 0, 0, 0)
             Size: =15
             Width: =365
-            X: =1000
-            Y: =51
+            X: =1001
+            Y: =38
       - Title4:
           Control: Label@2.5.1
           Group: chtHoursByAccount
@@ -683,17 +683,17 @@ Screens:
             ItemBorderThickness: =1
             ItemColorSet: |+
               =[
-                  RGBA(64, 64, 64, 1),     // Dark Gray
-                  RGBA(96, 96, 96, 1),     // Medium Gray
-                  RGBA(128, 128, 128, 1),  // Gray
-                  RGBA(160, 160, 160, 1),  // Light Gray
-                  RGBA(192, 192, 192, 1),  // Very Light Gray
-                  RGBA(55, 112, 255, 1),   // Accent Blue
-                  RGBA(255, 143, 0, 1),    // Accent Orange
-                  RGBA(0, 170, 140, 1),    // Accent Green
-                  RGBA(255, 214, 10, 1),   // Accent Yellow
-                  RGBA(230, 230, 230, 1),  // Soft Gray
-                  RGBA(200, 200, 200, 1)   // Soft Light Gray
+                  RGBA(37, 99, 235, 1),    // Deep Blue
+                  RGBA(99, 179, 237, 1),   // Sky Blue
+                  RGBA(20, 184, 166, 1),   // Teal
+                  RGBA(16, 185, 129, 1),   // Mint
+                  RGBA(5, 150, 105, 1),    // Dark Mint
+                  RGBA(74, 222, 128, 1),   // Lime Mint
+                  RGBA(34, 197, 94, 1),    // Green Accent
+                  RGBA(15, 118, 110, 1),   // Deep Teal
+                  RGBA(186, 230, 253, 1),  // Light Blue Gray
+                  RGBA(153, 246, 228, 1),  // Light Mint
+                  RGBA(224, 242, 254, 1)   // Very Light Blue
               ]
             Items: "=AddColumns(\r\n    GroupBy(\r\n        colTeamPeriodData,\r\n        업무_계정,\r\n        G\r\n    ),\r\n    Label,\r\n    OData__xc5c5__xbb34___xacc4__xc815_,\r\n   \r\n    TotalHours,\r\n    Sum(G, 작업시간)\r\n)\r\n"
             Items.Labels: =OData__xc5c5__xbb34___xacc4__xc815_
@@ -738,7 +738,7 @@ Screens:
             Size: =14
             Text: ="프로젝트별 작업시간 TOP5"
             Width: =428
-            X: =674
+            X: =589
             Y: =338
       - ColumnChart2:
           Control: BarChart@2.3.0
@@ -796,5 +796,308 @@ Screens:
             PressedBorderColor: =RGBA(0, 0, 0, 0)
             Size: =15
             Width: =428
-            X: =674
+            X: =589
             Y: =368
+      - conTrendTop3:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Height: =191
+            Width: =197
+            X: =830
+            Y: =60
+          Children:
+            - galTrendTop3:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  FocusedBorderThickness: =2
+                  Height: =156
+                  Items: |
+                    =With(
+                        {
+                            // 현재 + 이전 기간 데이터를 합친 소스 테이블 (업무_계정만 남김)
+                            AccountsSource: ShowColumns(
+                                Ungroup(
+                                    Table(
+                                        { T: colTeamPeriodData },
+                                        { T: colTeamPrevPeriodData }
+                                    ),
+                                    T
+                                ),OData__xc5c5__xbb34___xacc4__xc815_
+                            )
+                        },
+                        FirstN(
+                            SortByColumns(
+                                AddColumns(
+                                    // 업무_계정별로 그룹핑
+                                    AddColumns(
+                                        GroupBy(
+                                            AccountsSource,OData__xc5c5__xbb34___xacc4__xc815_,
+                                            AllRows
+                                        ),
+                                        // 현재 기간 총 작업시간
+                                        CurHours,
+                                        Sum(
+                                            Filter(
+                                                colTeamPeriodData,
+                                                업무_계정 = ThisRecord.업무_계정
+                                            ),
+                                            작업시간
+                                        ),
+                                        // 이전 기간 총 작업시간
+                                        PrevHours,
+                                        Sum(
+                                            Filter(
+                                                colTeamPrevPeriodData,
+                                                업무_계정 = ThisRecord.업무_계정
+                                            ),
+                                            작업시간
+                                        )
+                                    ),
+                                    // 변화량 & 절대값 (정렬용)
+                                    DiffHours,
+                                    CurHours - PrevHours,
+                                    DiffAbs,
+                                    Abs(CurHours - PrevHours)
+                                ),"DiffAbs",
+                                SortOrder.Descending
+                            ),
+                            3    // 변화 Top3만 가져오기
+                        )
+                    )
+                  Width: =197
+                  Y: =35
+                Children:
+                  - Rectangle6:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        DisabledFill: =RGBA(0,0,0,0)
+                        Fill: =RGBA(0,0,0,0)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        Height: =Parent.TemplateHeight
+                        HoverFill: =RGBA(0,0,0,0)
+                        OnSelect: =Select(Parent)
+                        PressedFill: =RGBA(0,0,0,0)
+                        TabIndex: =0
+                        Width: =193
+                  - Title7:
+                      Control: FluentV8/Label@1.8.6
+                      Properties:
+                        Font: =Font.Verdana
+                        FontSize: =10
+                        FontWeight: =FontWeight.Normal
+                        Height: =24
+                        OnSelect: =Select(Parent)
+                        TabIndex: =-1
+                        Text: |
+                          =ThisItem.OData__xc5c5__xbb34___xacc4__xc815_
+                        VerticalAlignment: =VerticalAlign.Top
+                        Width: =68
+                        X: =3
+                        Y: =12
+                  - Subtitle2:
+                      Control: FluentV8/Label@1.8.6
+                      Properties:
+                        Color: |
+                          =If(
+                              ThisItem.DiffHours > 0,
+                              Color.Red,
+                              If(
+                                  ThisItem.DiffHours < 0,
+                                  Color.Blue,
+                                  Color.Gray
+                              )
+                          )
+                        FontSize: =9
+                        FontWeight: =FontWeight.Normal
+                        Height: =24
+                        OnSelect: =Select(Parent)
+                        TabIndex: =-1
+                        Text: |
+                          =If(
+                              ThisItem.DiffHours > 0,
+                              "+" & Text(ThisItem.DiffHours, "0.0") & " 시간 (증가)",
+                              If(
+                                  ThisItem.DiffHours < 0,
+                                  Text(ThisItem.DiffHours, "0.0") & " 시간 (감소)",
+                                  "변화 없음"
+                              )
+                          )
+                        VerticalAlignment: =VerticalAlign.Top
+                        Width: =Title7.Width
+                        X: =99
+                        Y: =13
+                  - Icon10:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        Color: |-
+                          =If(
+                              ThisItem.DiffHours > 0,
+                              Color.Red,
+                              If(
+                                  ThisItem.DiffHours < 0,
+                                  Color.Blue,
+                                  Color.Gray
+                              )
+                          )
+                        DisabledBorderColor: =RGBA(243, 242, 241, 1)
+                        DisabledColor: =RGBA(220, 220, 220, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Height: =25
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Icon: |-
+                          =If(
+                              ThisItem.DiffHours > 0,
+                              Icon.ArrowUp,
+                              If(
+                                  ThisItem.DiffHours < 0,
+                                  Icon.ArrowDown,RemoveFlags
+                          )
+                          )
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =3
+                        PaddingLeft: =3
+                        PaddingRight: =3
+                        PaddingTop: =3
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =25
+                        X: =71
+                        Y: =12
+            - TextCanvas11:
+                Control: Text@0.0.51
+                Properties:
+                  Font: =Font.Verdana
+                  Height: =26
+                  Size: =12
+                  Text: ="전 기간 대비 주요 변화 Top3"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =172
+                  X: =15
+                  Y: =9
+      - TextCanvas14:
+          Control: Text@0.0.51
+          Properties:
+            Height: =135
+            Text: |+
+              =With(
+                  {
+                      // 기본 집계
+                      TotalHours: Sum(colTeamPeriodData, 작업시간),
+                      TotalTasks: CountRows(colTeamPeriodData)
+                  },
+                  With(
+                      {
+                          // 현재/이전 기간 합계 & 인원수
+                          CurTotalHours: Sum(colTeamPeriodData, 작업시간),
+                          CurPeople: CountRows(Distinct(colTeamPeriodData, 작성자)),
+                          PrevTotalHours: Sum(colTeamPrevPeriodData, 작업시간),
+                          PrevPeople: CountRows(Distinct(colTeamPrevPeriodData, 작성자))
+                      },
+                      With(
+                          {
+                              // 현재/이전 1인 평균 작업시간
+                              CurAvg: If(CurPeople > 0, CurTotalHours / CurPeople, Blank()),
+                              PrevAvg: If(PrevPeople > 0, PrevTotalHours / PrevPeople, Blank())
+                          },
+                          With(
+                              {
+                                  // 최다 시간 업무_계정 1개 추출
+                                  TopRecord: If(
+                                      CountRows(colTeamPeriodData) = 0,
+                                      Blank(),
+                                      First(
+                                          Sort(
+                                              AddColumns(
+                                                  GroupBy(
+                                                      colTeamPeriodData,
+                                                      업무_계정,      // ← 필요하면 여기 OData__xxx 로만 교체
+                                                      G
+                                                  ),
+                                                  TotalHoursByAcc,
+                                                  Sum(G, 작업시간)
+                                              ),
+                                              TotalHoursByAcc,
+                                              SortOrder.Descending
+                                          )
+                                      )
+                                  )
+                              },
+                              With(
+                                  {
+                                      // 증감률
+                                      ChangePct: If(
+                                          IsBlank(PrevAvg) || PrevAvg = 0,
+                                          Blank(),
+                                          (CurAvg - PrevAvg) / PrevAvg * 100
+                                      )
+                                  },
+                                  // ===== 여기서부터 실제 출력 텍스트 =====
+                                  "이번 기간(" &
+                                      Text(varStartDate, "yyyy년 m월 d일") & " ~ " &
+                                      Text(varEndDate, "yyyy년 m월 d일") & ") 동안 " &
+                                      varUserTeam & " 팀의 총 작업시간은 " &
+                                      Text(TotalHours, "0") & "시간, 전체 업무 건수는 " &
+                                      Text(TotalTasks, "0") & "건입니다. " &
+
+                                  // 1인 평균 작업시간
+                                  If(
+                                      !IsBlank(CurAvg),
+                                      "1인 평균 작업시간은 " &
+                                      Text(CurAvg, "0.0") & "시간이며, ",
+                                      ""
+                                  ) &
+
+                                  // 전 기간 대비 증감률 설명
+                                  If(
+                                      IsBlank(ChangePct),
+                                      "이전 기간과 비교할 데이터가 충분하지 않습니다. ",
+                                      "이전 기간 대비 약 " &
+                                      Text(Abs(ChangePct), "0.0") & "% " &
+                                      If(
+                                          ChangePct > 0,
+                                          "증가",
+                                          If(
+                                              ChangePct < 0,
+                                              "감소",
+                                              "변화"
+                                          )
+                                      ) & "했습니다. "
+                                  ) &
+
+                                  // 최다 업무_계정 설명
+                                  If(
+                                      !IsBlank(TopRecord),
+                                      "업무_계정 기준으로는 '" &
+                                      TopRecord.OData__xc5c5__xbb34___xacc4__xc815_ &    // ← 여기서도 OData__xxx 로 교체 가능
+                                      "'에 가장 많은 시간(" &
+                                      Text(TopRecord.TotalHoursByAcc, "0") & "시간, 전체의 " &
+                                      Text(
+                                          If(
+                                              TotalHours > 0,
+                                              Round(
+                                                  TopRecord.TotalHoursByAcc / TotalHours * 100,
+                                                  1
+                                              ),
+                                              Blank()
+                                          ),
+                                          "0.0"
+                                      ) & "%)이 투입되었습니다.",
+                                      ""
+                                  )
+                              )
+                          )
+                      )
+                  )
+              )
+            Width: =362
+            X: =976
+            Y: =552
