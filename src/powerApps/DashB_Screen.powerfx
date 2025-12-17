@@ -4,7 +4,10 @@ Screens:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
       OnVisible: |+
-        =// 1) 현재 사용자 팀
+        =
+
+        // 1) 현재 사용자 팀
+
         Set(
             varUserTeam,
             LookUp(
@@ -61,6 +64,58 @@ Screens:
                 작성일자 <= DateAdd(varStartDate, -1, TimeUnit.Days)
             )
         );
+        ClearCollect(
+            colAccAgg,
+            With(
+                { TotalH: Sum(colTeamPeriodData, 작업시간) },
+                Sort(
+                    AddColumns(
+                        GroupBy(
+                            colTeamPeriodData,
+                            OData__xc5c5__xbb34___xacc4__xc815_,
+                            G
+                        ),
+                        Label, OData__xc5c5__xbb34___xacc4__xc815_,
+                        Hours, Sum(G, 작업시간),
+                        Pct, If(TotalH > 0, Sum(G, 작업시간) / TotalH, 0)
+                    ),
+                    Hours,SortOrder.Descending
+                )
+            )
+        );
+
+        ClearCollect(
+            colAccAgg,
+            With(
+                { TotalH: Sum(colTeamPeriodData, 작업시간) },
+                With(
+                    {
+                        T: Sort(
+                            AddColumns(
+                                GroupBy(
+                                    colTeamPeriodData,
+                                    OData__xc5c5__xbb34___xacc4__xc815_,
+                                    G
+                                ),
+                                Label, OData__xc5c5__xbb34___xacc4__xc815_,
+                                Hours, Sum(G, 작업시간),
+                                Pct, If(TotalH > 0, Sum(G, 작업시간) / TotalH, 0)
+                            ),
+                            Hours,SortOrder.Descending
+                        )
+                    },
+                    AddColumns(
+                        T,
+                        RowNo,
+                        CountRows( Filter(T, Hours > ThisRecord.Hours) ) + 1,
+                        Color,
+                        Index(varAccPalette, CountRows( Filter(T, Hours > ThisRecord.Hours) ) + 1)
+                    )
+                )
+            )
+        );
+
+
     Children:
       - Con_Filter:
           Control: GroupContainer@1.3.0
@@ -112,7 +167,7 @@ Screens:
             - btnRefresh:
                 Control: Button@0.0.45
                 Properties:
-                  OnSelect: "=// 1) 기간 모드 저장\r\nSet(\r\n    varPeriodMode,\r\n    rdoPeriodMode.Selected.Value\r\n);\r\n\r\n// 2) 기간 모드에 따라 현재 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varStartDate,\r\n        DateAdd(\r\n            Today(),\r\n            -Weekday(Today(), StartOfWeek.Monday) + 1,\r\n            TimeUnit.Days\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        DateAdd(varStartDate, 6, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varStartDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()),\r\n            1\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()) + 1,\r\n            0       // 다음달 0일 = 이번달 말일\r\n        )\r\n    );\r\n    \r\n    // ---- 사용자 지정 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varStartDate,\r\n        dpStart.SelectedDate\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        dpEnd.SelectedDate\r\n    )\r\n);\r\n\r\n// 3) 현재 기간 일수\r\nSet(\r\n    varPeriodDays,\r\n    DateDiff(varStartDate, varEndDate) + 1\r\n);\r\n\r\n// 4) 현재 기간 데이터 (내 팀 + 기간)\r\nClearCollect(\r\n    colTeamPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varUserTeam &&\r\n        작성일자 >= varStartDate &&\r\n        작성일자 <= varEndDate\r\n    )\r\n);\r\n\r\n// 5) 이전 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 → 직전 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -7, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 → 직전 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Months)   // 지난달 1일\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)     // 지난달 말일\r\n    );\r\n    \r\n    // ---- 사용자 지정 → 동일 길이 바로 앞 구간 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(\r\n            varPrevEndDate,\r\n            - (varPeriodDays - 1),\r\n            TimeUnit.Days\r\n        )\r\n    )\r\n);\r\n\r\n// 6) 이전 기간 데이터 수집\r\nClearCollect(\r\n    colTeamPrevPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varUserTeam &&\r\n        작성일자 >= varPrevStartDate &&\r\n        작성일자 <= varPrevEndDate\r\n    )\r\n);\r\n"
+                  OnSelect: "=// 1) 기간 모드 저장\r\nSet(\r\n    varPeriodMode,\r\n    rdoPeriodMode_1.Selected.Value\r\n);\r\n\r\n// 2) 기간 모드에 따라 현재 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varStartDate,\r\n        DateAdd(\r\n            Today(),\r\n            -Weekday(Today(), StartOfWeek.Monday) + 1,\r\n            TimeUnit.Days\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        DateAdd(varStartDate, 6, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varStartDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()),\r\n            1\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()) + 1,\r\n            0       // 다음달 0일 = 이번달 말일\r\n        )\r\n    );\r\n    \r\n    // ---- 사용자 지정 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varStartDate,\r\n        dpStart_1.SelectedDate\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        dpEnd_1.SelectedDate\r\n    )\r\n);\r\n\r\n// 3) 현재 기간 일수\r\nSet(\r\n    varPeriodDays,\r\n    DateDiff(varStartDate, varEndDate) + 1\r\n);\r\n\r\n// 4) 현재 기간 데이터 (내 팀 + 기간)\r\nClearCollect(\r\n    colTeamPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varUserTeam &&\r\n        작성일자 >= varStartDate &&\r\n        작성일자 <= varEndDate\r\n    )\r\n);\r\n\r\n// 5) 이전 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 → 직전 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -7, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 → 직전 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Months)   // 지난달 1일\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)     // 지난달 말일\r\n    );\r\n    \r\n    // ---- 사용자 지정 → 동일 길이 바로 앞 구간 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(\r\n            varPrevEndDate,\r\n            - (varPeriodDays - 1),\r\n            TimeUnit.Days\r\n        )\r\n    )\r\n);\r\n\r\n// 6) 이전 기간 데이터 수집\r\nClearCollect(\r\n    colTeamPrevPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varUserTeam &&\r\n        작성일자 >= varPrevStartDate &&\r\n        작성일자 <= varPrevEndDate\r\n    )\r\n);\r\n"
                   Text: ="조회"
                   X: =160
                   Y: =8
@@ -274,7 +329,7 @@ Screens:
             Items: =colTeamPeriodData
             Width: =229
             X: =24
-            Y: =186
+            Y: =189
           Children:
             - Rectangle4:
                 Control: Rectangle@2.3.0
@@ -580,77 +635,6 @@ Screens:
                     ="최다 시간 프로젝트
                     "
                   Width: =137
-      - Title3:
-          Control: Label@2.5.1
-          Group: chtHoursByUser
-          Properties:
-            Align: =Align.Center
-            BorderColor: =RGBA(0, 0, 0, 1)
-            Color: =RGBA(37, 36, 35, 1)
-            DisabledColor: =RGBA(200, 198, 196, 1)
-            Font: =Font.'Segoe UI'
-            Height: =25
-            Size: =14
-            Text: ="팀원별 작업시간"
-            Width: =387
-            X: =976
-            Y: =35
-      - ColumnChart1:
-          Control: BarChart@2.3.0
-          Group: chtHoursByUser
-          Properties:
-            BorderColor: =RGBA(0, 0, 0, 0)
-            BorderStyle: =BorderStyle.None
-            BorderThickness: =2
-            Color: =RGBA(37, 36, 35, 1)
-            DisabledBorderColor: =RGBA(0, 0, 0, 0)
-            Font: =Font.'Segoe UI'
-            Height: =385
-            HoverBorderColor: =RGBA(0, 0, 0, 0)
-            ItemColorSet: |+
-              =[
-                  RGBA(37, 99, 235, 1),    // Deep Blue
-                  RGBA(99, 179, 237, 1),   // Sky Blue
-                  RGBA(20, 184, 166, 1),   // Teal
-                  RGBA(16, 185, 129, 1),   // Mint
-                  RGBA(5, 150, 105, 1),    // Dark Mint
-                  RGBA(74, 222, 128, 1),   // Lime Mint
-                  RGBA(34, 197, 94, 1),    // Green Accent
-                  RGBA(15, 118, 110, 1),   // Deep Teal
-                  RGBA(186, 230, 253, 1),  // Light Blue Gray
-                  RGBA(153, 246, 228, 1),  // Light Mint
-                  RGBA(224, 242, 254, 1)   // Very Light Blue
-              ]
-            Items: |-
-              =Sort(
-                  AddColumns(
-                      GroupBy(
-                          colTeamPeriodData,
-                          작성자,
-                          G
-                      ),
-                      Name,OData__xc791__xc131__xc790_
-                      ,
-                      TotalHours,
-                      Sum(G, 작업시간)
-                  ),
-                  TotalHours,SortOrder.Descending
-              )
-            Items.Labels: =OData__xc791__xc131__xc790_
-            Items.Series1: =TotalHours
-            Items.Series2: =TotalHours
-            Items.Series3: =TotalHours
-            Items.Series4: =TotalHours
-            Items.Series5: =TotalHours
-            Items.Series6: =TotalHours
-            Items.Series7: =TotalHours
-            Items.Series8: =TotalHours
-            Items.Series9: =TotalHours
-            PressedBorderColor: =RGBA(0, 0, 0, 0)
-            Size: =15
-            Width: =365
-            X: =1001
-            Y: =38
       - Title4:
           Control: Label@2.5.1
           Group: chtHoursByAccount
@@ -664,8 +648,8 @@ Screens:
             Size: =14
             Text: ="업무_계정별 작업시간 분포"
             Width: =373
-            X: =253
-            Y: =268
+            X: =249
+            Y: =286
       - PieChart1:
           Control: PieChart@2.2.0
           Group: chtHoursByAccount
@@ -682,27 +666,16 @@ Screens:
             ItemBorderColor: =RGBA(79, 90, 94, 1)
             ItemBorderThickness: =1
             ItemColorSet: |+
-              =[
-                  RGBA(37, 99, 235, 1),    // Deep Blue
-                  RGBA(99, 179, 237, 1),   // Sky Blue
-                  RGBA(20, 184, 166, 1),   // Teal
-                  RGBA(16, 185, 129, 1),   // Mint
-                  RGBA(5, 150, 105, 1),    // Dark Mint
-                  RGBA(74, 222, 128, 1),   // Lime Mint
-                  RGBA(34, 197, 94, 1),    // Green Accent
-                  RGBA(15, 118, 110, 1),   // Deep Teal
-                  RGBA(186, 230, 253, 1),  // Light Blue Gray
-                  RGBA(153, 246, 228, 1),  // Light Mint
-                  RGBA(224, 242, 254, 1)   // Very Light Blue
-              ]
-            Items: "=AddColumns(\r\n    GroupBy(\r\n        colTeamPeriodData,\r\n        업무_계정,\r\n        G\r\n    ),\r\n    Label,\r\n    OData__xc5c5__xbb34___xacc4__xc815_,\r\n   \r\n    TotalHours,\r\n    Sum(G, 작업시간)\r\n)\r\n"
+              =varAccPalette
+            Items: =colAccAgg
             Items.Labels: =OData__xc5c5__xbb34___xacc4__xc815_
-            Items.Series: =TotalHours
+            Items.Series: =Hours
+            OnSelect: =
             PressedBorderColor: =RGBA(0, 0, 0, 0)
             Size: =12
             Width: =373
-            X: =260
-            Y: =335
+            X: =256
+            Y: =353
       - Legend2:
           Control: Legend@2.1.0
           Group: chtHoursByAccount
@@ -715,19 +688,19 @@ Screens:
             DisabledColor: =RGBA(200, 198, 196, 1)
             DisabledFill: =RGBA(220, 220, 220, 1)
             Font: =Font.'Segoe UI'
-            Height: =55
+            Height: =54
             HoverBorderColor: =RGBA(0, 0, 0, 0)
             ItemColorSet: =PieChart1.ItemColorSet
             Items: =PieChart1.SeriesLabels
             Items.Value: =Value
             PressedBorderColor: =RGBA(0, 0, 0, 0)
             Size: =10
-            Width: =373
-            X: =260
-            Y: =597
+            Width: =427
+            X: =279
+            Y: =561
       - Title5:
           Control: Label@2.5.1
-          Group: chtHoursByProjectTop5
+          Group: chtProjectDist
           Properties:
             Align: =Align.Center
             BorderColor: =RGBA(0, 0, 0, 1)
@@ -736,13 +709,18 @@ Screens:
             Font: =Font.'Segoe UI'
             Height: =25
             Size: =14
-            Text: ="프로젝트별 작업시간 TOP5"
+            Text: |
+              =If(
+                  IsBlank(varSelectedAccount),
+                  "프로젝트 분포 (전체 업무_계정)",
+                  "프로젝트 분포 (" & varSelectedAccount & ")"
+              )
             Width: =428
-            X: =589
+            X: =900
             Y: =338
       - ColumnChart2:
           Control: BarChart@2.3.0
-          Group: chtHoursByProjectTop5
+          Group: chtProjectDist
           Properties:
             BorderColor: =RGBA(0, 0, 0, 0)
             BorderStyle: =BorderStyle.None
@@ -765,38 +743,45 @@ Screens:
                   RGBA(153, 246, 228, 1),  // Light Mint
                   RGBA(224, 242, 254, 1)   // Very Light Blue
               ]
-            Items: |+
-              =FirstN(
+            Items: |-
+              =With(
+                  {
+                      Base: Filter(
+                          colTeamPeriodData,
+                          IsBlank(varSelectedAccount) || 업무_계정 = varSelectedAccount
+                      ),
+                      TotalH: Sum(
+                          Filter(
+                              colTeamPeriodData,
+                              IsBlank(varSelectedAccount) || 업무_계정 = varSelectedAccount
+                          ),
+                          작업시간
+                      )
+                  },
                   Sort(
                       AddColumns(
-                          GroupBy(
-                              colTeamPeriodData,
-                              프로젝트명,
-                              G
-                          ),
-                          ProjectName,OData__xd504__xb85c__xc81d__xd2b8__xba0,
-                          TotalHours,
-                          Sum(G, 작업시간)
+                          GroupBy(Base, 프로젝트명, G),
+                          Label,OData__xd504__xb85c__xc81d__xd2b8__xba0,
+                          Hours, Sum(G, 작업시간),
+                          Pct, If(TotalH > 0, Sum(G, 작업시간)/TotalH, 0)
                       ),
-                      TotalHours,
-                      SortOrder.Descending
-                  ),
-                  5
+                      Hours,SortOrder.Descending
+                  )
               )
             Items.Labels: =OData__xd504__xb85c__xc81d__xd2b8__xba0
-            Items.Series1: =TotalHours
-            Items.Series2: =TotalHours
-            Items.Series3: =TotalHours
-            Items.Series4: =TotalHours
-            Items.Series5: =TotalHours
-            Items.Series6: =TotalHours
-            Items.Series7: =TotalHours
-            Items.Series8: =TotalHours
-            Items.Series9: =TotalHours
+            Items.Series1: =Hours
+            Items.Series2: =Pct
+            Items.Series3: =Pct
+            Items.Series4: =Pct
+            Items.Series5: =Pct
+            Items.Series6: =Pct
+            Items.Series7: =Pct
+            Items.Series8: =Pct
+            Items.Series9: =Pct
             PressedBorderColor: =RGBA(0, 0, 0, 0)
             Size: =15
             Width: =428
-            X: =589
+            X: =900
             Y: =368
       - conTrendTop3:
           Control: GroupContainer@1.3.0
@@ -804,8 +789,8 @@ Screens:
           Properties:
             Height: =191
             Width: =197
-            X: =830
-            Y: =60
+            X: =820
+            Y: =42
           Children:
             - galTrendTop3:
                 Control: Gallery@2.15.0
@@ -983,35 +968,31 @@ Screens:
                   Width: =172
                   X: =15
                   Y: =9
-      - TextCanvas14:
-          Control: Text@0.0.51
+      - HtmlText1:
+          Control: HtmlViewer@2.1.0
           Properties:
-            Height: =135
-            Text: |+
+            DisabledBorderColor: =RGBA(200, 198, 196, 1)
+            Font: =Font.'Segoe UI'
+            Height: =185
+            HtmlText: |+
               =With(
                   {
-                      // 기본 집계
                       TotalHours: Sum(colTeamPeriodData, 작업시간),
-                      TotalTasks: CountRows(colTeamPeriodData)
+                      TotalTasks: CountRows(colTeamPeriodData),
+                      CurTotalHours: Sum(colTeamPeriodData, 작업시간),
+                      CurPeople: CountRows(Distinct(colTeamPeriodData, 작성자)),
+                      PrevTotalHours: Sum(colTeamPrevPeriodData, 작업시간),
+                      PrevPeople: CountRows(Distinct(colTeamPrevPeriodData, 작성자))
                   },
                   With(
                       {
-                          // 현재/이전 기간 합계 & 인원수
-                          CurTotalHours: Sum(colTeamPeriodData, 작업시간),
-                          CurPeople: CountRows(Distinct(colTeamPeriodData, 작성자)),
-                          PrevTotalHours: Sum(colTeamPrevPeriodData, 작업시간),
-                          PrevPeople: CountRows(Distinct(colTeamPrevPeriodData, 작성자))
+                          CurAvg: If(CurPeople > 0, CurTotalHours / CurPeople, Blank()),
+                          PrevAvg: If(PrevPeople > 0, PrevTotalHours / PrevPeople, Blank())
                       },
                       With(
                           {
-                              // 현재/이전 1인 평균 작업시간
-                              CurAvg: If(CurPeople > 0, CurTotalHours / CurPeople, Blank()),
-                              PrevAvg: If(PrevPeople > 0, PrevTotalHours / PrevPeople, Blank())
-                          },
-                          With(
-                              {
-                                  // 최다 시간 업무_계정 1개 추출
-                                  TopRecord: If(
+                              TopRecord:
+                                  If(
                                       CountRows(colTeamPeriodData) = 0,
                                       Blank(),
                                       First(
@@ -1019,7 +1000,7 @@ Screens:
                                               AddColumns(
                                                   GroupBy(
                                                       colTeamPeriodData,
-                                                      업무_계정,      // ← 필요하면 여기 OData__xxx 로만 교체
+                                                      업무_계정,
                                                       G
                                                   ),
                                                   TotalHoursByAcc,
@@ -1029,75 +1010,145 @@ Screens:
                                               SortOrder.Descending
                                           )
                                       )
+                                  ),
+                              ChangePct:
+                                  If(
+                                      IsBlank(PrevAvg) || PrevAvg = 0,
+                                      Blank(),
+                                      (CurAvg - PrevAvg) / PrevAvg * 100
                                   )
-                              },
-                              With(
-                                  {
-                                      // 증감률
-                                      ChangePct: If(
-                                          IsBlank(PrevAvg) || PrevAvg = 0,
-                                          Blank(),
-                                          (CurAvg - PrevAvg) / PrevAvg * 100
-                                      )
-                                  },
-                                  // ===== 여기서부터 실제 출력 텍스트 =====
-                                  "이번 기간(" &
-                                      Text(varStartDate, "yyyy년 m월 d일") & " ~ " &
-                                      Text(varEndDate, "yyyy년 m월 d일") & ") 동안 " &
-                                      varUserTeam & " 팀의 총 작업시간은 " &
-                                      Text(TotalHours, "0") & "시간, 전체 업무 건수는 " &
-                                      Text(TotalTasks, "0") & "건입니다. " &
+                          },
+                          "<div style='font-size:16px; line-height:1.6;'>
 
-                                  // 1인 평균 작업시간
-                                  If(
-                                      !IsBlank(CurAvg),
-                                      "1인 평균 작업시간은 " &
-                                      Text(CurAvg, "0.0") & "시간이며, ",
-                                      ""
-                                  ) &
+                          이번 기간(<b>" &
+                              Text(varStartDate, "yyyy년 m월 d일") & " ~ " &
+                              Text(varEndDate, "yyyy년 m월 d일") &
+                              "</b>) 동안 " & varUserTeam &
+                              "의 총 작업시간은 <b>" &
+                              Text(TotalHours, "0") &
+                              "시간</b>, 전체 업무 건수는 <b>" &
+                              Text(TotalTasks, "0") &
+                              "건</b>입니다. " &
 
-                                  // 전 기간 대비 증감률 설명
-                                  If(
-                                      IsBlank(ChangePct),
-                                      "이전 기간과 비교할 데이터가 충분하지 않습니다. ",
-                                      "이전 기간 대비 약 " &
-                                      Text(Abs(ChangePct), "0.0") & "% " &
-                                      If(
-                                          ChangePct > 0,
-                                          "증가",
-                                          If(
-                                              ChangePct < 0,
-                                              "감소",
-                                              "변화"
-                                          )
-                                      ) & "했습니다. "
-                                  ) &
+                          If(
+                              !IsBlank(CurAvg),
+                              "1인 평균 작업시간은 <b>" &
+                              Text(CurAvg, "0.0") &
+                              "시간</b>이며, ",
+                              ""
+                          ) &
 
-                                  // 최다 업무_계정 설명
+                          If(
+                              IsBlank(ChangePct),
+                              "이전 기간과 비교할 데이터가 충분하지 않습니다. ",
+                              "이전 기간 대비 약 <b>" &
+                              Text(Abs(ChangePct), "0.0") & "%</b> " &
+                              If(ChangePct > 0, "증가", If(ChangePct < 0, "감소", "변화")) &
+                              "했습니다. "
+                          ) &
+
+                          If(
+                              !IsBlank(TopRecord),
+                              "업무_계정 기준으로는 '<b>" &
+                              TopRecord.OData__xc5c5__xbb34___xacc4__xc815_ &
+                              "</b>'에 가장 많은 시간(<b>" &
+                              Text(TopRecord.TotalHoursByAcc, "0") &
+                              "시간</b>, 전체의 <b>" &
+                              Text(
                                   If(
-                                      !IsBlank(TopRecord),
-                                      "업무_계정 기준으로는 '" &
-                                      TopRecord.OData__xc5c5__xbb34___xacc4__xc815_ &    // ← 여기서도 OData__xxx 로 교체 가능
-                                      "'에 가장 많은 시간(" &
-                                      Text(TopRecord.TotalHoursByAcc, "0") & "시간, 전체의 " &
-                                      Text(
-                                          If(
-                                              TotalHours > 0,
-                                              Round(
-                                                  TopRecord.TotalHoursByAcc / TotalHours * 100,
-                                                  1
-                                              ),
-                                              Blank()
-                                          ),
-                                          "0.0"
-                                      ) & "%)이 투입되었습니다.",
-                                      ""
-                                  )
-                              )
-                          )
+                                      TotalHours > 0,
+                                      Round(TopRecord.TotalHoursByAcc / TotalHours * 100, 1),
+                                      Blank()
+                                  ),
+                                  "0.0"
+                              ) &
+                              "%</b>)이 투입되었습니다.",
+                              ""
+                          ) &
+
+                          "</div>"
                       )
                   )
               )
-            Width: =362
-            X: =976
-            Y: =552
+            Size: =10.5
+            Width: =378
+            X: =988
+            Y: =48
+      - galAccLegend:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
+          Properties:
+            BorderColor: =RGBA(243, 242, 241, 1)
+            FocusedBorderColor: =RGBA(98, 100, 167, 1)
+            FocusedBorderThickness: =2
+            Height: =182
+            Items: =colAccAgg
+            TemplateFill: |-
+              =If(
+                  ThisItem.Label = varSelectedAccount,
+                  RGBA(230, 240, 255, 1),
+                  RGBA(0, 0, 0, 0)
+              )
+            TemplateSize: =40
+            Width: =237
+            X: =643
+            Y: =462
+          Children:
+            - Subtitle3:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  FontSize: =9
+                  FontWeight: |+
+                    =If(
+                        ThisItem.OData__xc5c5__xbb34___xacc4__xc815_ = varSelectedAccount,
+                        FontWeight.Semibold,
+                        FontWeight.Normal
+                    )
+                  Height: =24
+                  OnSelect: =Select(Parent)
+                  TabIndex: =-1
+                  Text: =ThisItem.OData__xc5c5__xbb34___xacc4__xc815_
+                  VerticalAlignment: =VerticalAlign.Top
+                  Width: =50
+                  Y: =8
+            - Subtitle3_4:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  FontSize: =9
+                  FontWeight: =FontWeight.Normal
+                  Height: =24
+                  OnSelect: =Select(Parent)
+                  TabIndex: =-1
+                  Text: |+
+                    =Text(ThisItem.Hours, "0") & "h  (" & Text(ThisItem.Pct, "0.00%") & ")"
+                  VerticalAlignment: =VerticalAlign.Top
+                  Width: =105
+                  X: =66
+                  Y: =8
+            - Rectangle7:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  DisabledFill: =RGBA(0,0,0,0)
+                  Fill: =RGBA(0,0,0,0)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  Height: =Parent.TemplateHeight
+                  HoverFill: =RGBA(0,0,0,0)
+                  OnSelect: |-
+                    =//Set(varSelectedAccount, ThisItem.OData__xc5c5__xbb34___xacc4__xc815_)
+                    If(
+                        varSelectedAccount = ThisItem.OData__xc5c5__xbb34___xacc4__xc815_,
+                        Set(varSelectedAccount, Blank()),
+                        Set(varSelectedAccount, ThisItem.OData__xc5c5__xbb34___xacc4__xc815_)
+                    )
+                  PressedFill: =RGBA(0,0,0,0)
+                  TabIndex: =0
+                  Width: =Parent.TemplateWidth
+      - ButtonCanvas6:
+          Control: Button@0.0.45
+          Properties:
+            OnSelect: |+
+              =Set(varSelectedAccount, Blank())
+            Text: ="전체보기"
+            X: =760
+            Y: =396
