@@ -64,26 +64,6 @@ Screens:
             )
         );
 
-
-        // 1) 팔레트: 차트용(Color) + HTML용(Hex)
-        Set(
-            varAccPalette,
-            [
-                RGBA(16, 94, 68, 1),
-                RGBA(19, 128, 96, 1),
-                RGBA(34, 197, 94, 1),
-                RGBA(20, 184, 166, 1),
-                RGBA(14, 116, 144, 1),
-                RGBA(2, 132, 199, 1),
-                RGBA(5, 150, 105, 1),
-                RGBA(22, 163, 74, 1),
-                RGBA(13, 148, 136, 1),
-                RGBA(8, 145, 178, 1),
-                RGBA(3, 105, 161, 1),
-                RGBA(6, 95, 70, 1)
-            ]
-        );
-
         // ✅ 1) 차트/갤러리 공통 팔레트 (초록~청록~블루그린)
         Set(
             varAccPalette,
@@ -134,7 +114,23 @@ Screens:
                                 Label: r.Label,
                                 Hours: r.Hours,
                                 Pct:   r.Pct,
-                                Color: Index(varAccPalette, Value)
+                                Color:
+        Switch(
+            Value,
+            1, RGBA(16, 94, 68, 1),
+            2, RGBA(19, 128, 96, 1),
+            3, RGBA(34, 197, 94, 1),
+            4, RGBA(20, 184, 166, 1),
+            5, RGBA(14, 116, 144, 1),
+            6, RGBA(2, 132, 199, 1),
+            7, RGBA(5, 150, 105, 1),
+            8, RGBA(22, 163, 74, 1),
+            9, RGBA(13, 148, 136, 1),
+            10, RGBA(8, 145, 178, 1),
+            11, RGBA(3, 105, 161, 1),
+            12, RGBA(6, 95, 70, 1),
+            RGBA(120,120,120,1)
+        )
                             }
                         )
                     )
@@ -317,46 +313,65 @@ Screens:
             X: =24
             Y: =48
           Children:
-            - rdoPeriodMode_1:
+            - rdoPeriodMode:
                 Control: Radio@0.0.25
                 Properties:
                   DefaultSelectedItems: |-
                     =
                     ["이번 달"]
                   Items: =["이번 주", "이번 달", "사용자 지정"]
+                  OnChange: |+
+                    =Switch(
+                        rdoPeriodMode.Selected.Value,
+                        "이번 주",
+                            Set(varStartDate, DateAdd(Today(), 1 - Weekday(Today(), StartOfWeek.Monday), TimeUnit.Days));
+                            Set(varEndDate,   DateAdd(varStartDate, 4, TimeUnit.Days)),
+
+                        "이번 달",
+                            Set(varStartDate, Date(Year(Today()), Month(Today()), 1));
+                            Set(varEndDate,   DateAdd(DateAdd(varStartDate, 1, TimeUnit.Months), -1, TimeUnit.Days)),
+
+                        "사용자 지정",
+                            Set(varStartDate, dpStart.SelectedDate);
+                            Set(varEndDate,   dpEnd.SelectedDate)
+                    );
                   Width: =146
                   X: =14
                   Y: =8
-            - btnRefresh_1:
+            - btnRefresh:
                 Control: Button@0.0.45
                 Properties:
-                  OnSelect: "=// 1) 기간 모드 저장\r\nSet(\r\n    varPeriodMode,\r\n    rdoPeriodMode_1.Selected.Value\r\n);\r\n\r\n// 2) 기간 모드에 따라 현재 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varStartDate,\r\n        DateAdd(\r\n            Today(),\r\n            -Weekday(Today(), StartOfWeek.Monday) + 1,\r\n            TimeUnit.Days\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        DateAdd(varStartDate, 6, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varStartDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()),\r\n            1\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()) + 1,\r\n            0       // 다음달 0일 = 이번달 말일\r\n        )\r\n    );\r\n    \r\n    // ---- 사용자 지정 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varStartDate,\r\n        dpStart_1.SelectedDate\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        dpEnd_1.SelectedDate\r\n    )\r\n);\r\n\r\n// 3) 현재 기간 일수\r\nSet(\r\n    varPeriodDays,\r\n    DateDiff(varStartDate, varEndDate) + 1\r\n);\r\n\r\n// 4) 현재 기간 데이터 (내 팀 + 기간)\r\nClearCollect(\r\n    colTeamPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varUserTeam &&\r\n        작성일자 >= varStartDate &&\r\n        작성일자 <= varEndDate\r\n    )\r\n);\r\n\r\n// 5) 이전 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 → 직전 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -7, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 → 직전 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Months)   // 지난달 1일\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)     // 지난달 말일\r\n    );\r\n    \r\n    // ---- 사용자 지정 → 동일 길이 바로 앞 구간 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(\r\n            varPrevEndDate,\r\n            - (varPeriodDays - 1),\r\n            TimeUnit.Days\r\n        )\r\n    )\r\n);\r\n\r\n// 6) 이전 기간 데이터 수집\r\nClearCollect(\r\n    colTeamPrevPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varUserTeam &&\r\n        작성일자 >= varPrevStartDate &&\r\n        작성일자 <= varPrevEndDate\r\n    )\r\n);\r\n"
+                  OnSelect: "=// 1) 기간 모드 저장\r\nSet(\r\n    varPeriodMode,\r\n    rdoPeriodMode.Selected.Value\r\n);\r\n\r\n// 2) 기간 모드에 따라 현재 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varStartDate,\r\n        DateAdd(\r\n            Today(),\r\n            -Weekday(Today(), StartOfWeek.Monday) + 1,\r\n            TimeUnit.Days\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        DateAdd(varStartDate, 6, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varStartDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()),\r\n            1\r\n        )\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        Date(\r\n            Year(Today()),\r\n            Month(Today()) + 1,\r\n            0       // 다음달 0일 = 이번달 말일\r\n        )\r\n    );\r\n    \r\n    // ---- 사용자 지정 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varStartDate,\r\n        dpStart.SelectedDate\r\n    );\r\n    Set(\r\n        varEndDate,\r\n        dpEnd.SelectedDate\r\n    )\r\n);\r\n\r\n// 3) 현재 기간 일수\r\nSet(\r\n    varPeriodDays,\r\n    DateDiff(varStartDate, varEndDate) + 1\r\n);\r\n\r\n// 4) 현재 기간 데이터 (내 팀 + 기간)\r\nClearCollect(\r\n    colTeamPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varMyTeam &&\r\n        작성일자 >= varStartDate &&\r\n        작성일자 <= varEndDate\r\n    )\r\n);\r\n\r\n// 5) 이전 기간 시작/종료일 계산\r\nSwitch(\r\n    varPeriodMode,\r\n    \r\n    // ---- 이번 주 → 직전 주 ----\r\n    \"이번 주\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -7, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    \r\n    // ---- 이번 달 → 직전 달 ----\r\n    \"이번 달\",\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Months)   // 지난달 1일\r\n    );\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)     // 지난달 말일\r\n    );\r\n    \r\n    // ---- 사용자 지정 → 동일 길이 바로 앞 구간 ----\r\n    \"사용자 지정\",\r\n    Set(\r\n        varPrevEndDate,\r\n        DateAdd(varStartDate, -1, TimeUnit.Days)\r\n    );\r\n    Set(\r\n        varPrevStartDate,\r\n        DateAdd(\r\n            varPrevEndDate,\r\n            - (varPeriodDays - 1),\r\n            TimeUnit.Days\r\n        )\r\n    )\r\n);\r\n\r\n// 6) 이전 기간 데이터 수집\r\nClearCollect(\r\n    colTeamPrevPeriodData,\r\n    Filter(\r\n        Daily_DB,\r\n        팀 = varMyTeam &&\r\n        작성일자 >= varPrevStartDate &&\r\n        작성일자 <= varPrevEndDate\r\n    )\r\n);\r\nClearCollect(\r\n    colAccAgg,\r\n    With(\r\n        { TotalH: Sum(colTeamPeriodData, 작업시간) },\r\n        With(\r\n            {\r\n                T: SortByColumns(\r\n                    AddColumns(\r\n                        GroupBy(\r\n                            colTeamPeriodData,\r\n                            OData__xc5c5__xbb34___xacc4__xc815_,\r\n                            G\r\n                        ),\r\n                        Label, OData__xc5c5__xbb34___xacc4__xc815_,\r\n                        Hours, Sum(G, 작업시간),\r\n                        Pct, If(TotalH > 0, Sum(G, 작업시간) / TotalH, 0)\r\n                    ),\r\n                    \"Hours\",\r\n                    SortOrder.Descending\r\n                )\r\n            },\r\n            ForAll(\r\n                Sequence(CountRows(T)),\r\n                With(\r\n                    { r: Last(FirstN(T, Value)) },\r\n                    {\r\n                        RowNo: Value,\r\n                        Label: r.Label,\r\n                        Hours: r.Hours,\r\n                        Pct:   r.Pct,\r\n                        Color:\r\n                        Switch(\r\n                            Value,\r\n                            1, RGBA(16, 94, 68, 1),\r\n                            2, RGBA(19, 128, 96, 1),\r\n                            3, RGBA(34, 197, 94, 1),\r\n                            4, RGBA(20, 184, 166, 1),\r\n                            5, RGBA(14, 116, 144, 1),\r\n                            6, RGBA(2, 132, 199, 1),\r\n                            7, RGBA(5, 150, 105, 1),\r\n                            8, RGBA(22, 163, 74, 1),\r\n                            9, RGBA(13, 148, 136, 1),\r\n                            10, RGBA(8, 145, 178, 1),\r\n                            RGBA(120,120,120,1)\r\n                        )\r\n                    }\r\n                )\r\n            )\r\n        )\r\n    )\r\n);\r\n\r\n// ===============================\r\n// 작성률 계산 (팀 자동: varMyTeam)\r\n// ===============================\r\n\r\n// (1) 기간 고정\r\n// Set(varStartDate, dpStart.SelectedDate);\r\n// Set(varEndDate, dpEnd.SelectedDate);\r\n\r\n// (2) 평일 날짜 목록(월~금) 만들기\r\n// Sequence()는 Value(숫자)만 주므로 DateAdd로 날짜를 생성해야 함\r\nClearCollect(\r\n    colWorkDates,\r\n    Filter(\r\n        AddColumns(\r\n            Sequence(DateDiff(varStartDate, varEndDate) + 1),\r\n            WorkDate,\r\n            DateAdd(varStartDate, Value - 1, TimeUnit.Days)\r\n        ),\r\n        Weekday(WorkDate, StartOfWeek.Monday) <= 5\r\n    )\r\n);\r\n\r\n// (3) 팀 인원 수 (UserInfo_DB 기준)\r\nSet(\r\n    varTeamCount,\r\n    CountRows(\r\n        Filter(UserInfo_DB, 팀 = varMyTeam)\r\n    )\r\n);\r\n\r\n// (4) 실제 작성된 인원-일 수 (하루 1건 이상 작성이면 1로 카운트)\r\nSet(\r\n    varWrittenManDays,\r\n    CountRows(\r\n        Distinct(\r\n            Filter(\r\n                Daily_DB,\r\n                팀 = varMyTeam &&\r\n                작성일자 >= varStartDate &&\r\n                작성일자 <= varEndDate\r\n            ),\r\n            작성자& \"-\" & Text(작성일자, \"yyyymmdd\")\r\n        )\r\n    )\r\n);\r\n\r\n// (5) 기준 인원-일\r\nSet(varBaseManDays, varTeamCount * CountRows(colWorkDates));\r\n\r\n// (6) 작성률(0~1)\r\nSet(\r\n    varWriteRate,\r\n    If(\r\n        varBaseManDays = 0,\r\n        0,\r\n        varWrittenManDays / varBaseManDays\r\n    )\r\n);\r\n"
                   Text: ="조회"
                   X: =160
                   Y: =8
-            - dpStart_1:
+            - dpStart:
                 Control: DatePicker@0.0.46
                 Properties:
                   DisplayMode: |+
                     =If(
-                        rdoPeriodMode_1.Selected.Value = "사용자 지정",
+                        rdoPeriodMode.Selected.Value = "사용자 지정",
                         DisplayMode.Edit,
                         DisplayMode.Disabled
                     )
                   Format: ='DatePickerCanvas.Format'.LongAbbreviated
+                  OnChange: |+
+                    =If(rdoPeriodMode.Selected.Value="사용자 지정", Set(varStartDate, dpStart.SelectedDate))
                   SelectedDate: =Today()
                   Width: =175
                   X: =136
                   Y: =73
-            - dpEnd_1:
+            - dpEnd:
                 Control: DatePicker@0.0.46
                 Properties:
                   DisplayMode: |-
                     =If(
-                        rdoPeriodMode_1.Selected.Value = "사용자 지정",
+                        rdoPeriodMode.Selected.Value = "사용자 지정",
                         DisplayMode.Edit,
                         DisplayMode.Disabled
                     )
+                  OnChange: |+
+                    =If(rdoPeriodMode.Selected.Value="사용자 지정", Set(varEndDate, dpEnd.SelectedDate))
                   SelectedDate: |+
                     =Today()
                   Width: =175
@@ -812,7 +827,7 @@ Screens:
                     ="최다 시간 프로젝트
                     "
                   Width: =137
-            - lblTotalHoursValue_5:
+            - lblTotalHoursValue:
                 Control: Text@0.0.51
                 Properties:
                   Height: =24
@@ -960,7 +975,7 @@ Screens:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
           Properties:
-            Height: =381
+            Height: =380
             Width: =1060
             X: =306
             Y: =377
@@ -971,11 +986,11 @@ Screens:
                   OnSelect: |
                     =Set(varSelectedAccount, Blank())
                   Text: ="전체보기"
-                  X: =481
-                  Y: =56
+                  X: =381
+                  Y: =55
             - Title4_2:
                 Control: Label@2.5.1
-                Group: chtHoursByAccount_2
+                Group: chtHoursByAccount
                 Properties:
                   Align: =Align.Center
                   BorderColor: =RGBA(0, 0, 0, 1)
@@ -986,11 +1001,11 @@ Screens:
                   Size: =14
                   Text: ="업무_계정별 작업시간 분포"
                   Width: =385
-                  X: =51
+                  X: =30
                   Y: =78
-            - PieChart1_2:
+            - PieChart1:
                 Control: PieChart@2.2.0
-                Group: chtHoursByAccount_2
+                Group: chtHoursByAccount
                 Properties:
                   BorderColor: =RGBA(0, 0, 0, 0)
                   BorderStyle: =BorderStyle.None
@@ -1011,40 +1026,18 @@ Screens:
                   PressedBorderColor: =RGBA(0, 0, 0, 0)
                   Size: =12
                   Width: =385
-                  X: =51
-                  Y: =88
-            - Legend2_2:
-                Control: Legend@2.1.0
-                Group: chtHoursByAccount_2
-                Properties:
-                  BorderColor: =RGBA(0, 0, 0, 0)
-                  BorderStyle: =BorderStyle.None
-                  BorderThickness: =2
-                  Color: =RGBA(37, 36, 35, 1)
-                  DisabledBorderColor: =RGBA(0, 0, 0, 0)
-                  DisabledColor: =RGBA(200, 198, 196, 1)
-                  DisabledFill: =RGBA(220, 220, 220, 1)
-                  Font: =Font.'Segoe UI'
-                  Height: =54
-                  HoverBorderColor: =RGBA(0, 0, 0, 0)
-                  ItemColorSet: =PieChart1_2.ItemColorSet
-                  Items: =PieChart1_2.SeriesLabels
-                  Items.Value: =Value
-                  PressedBorderColor: =RGBA(0, 0, 0, 0)
-                  Size: =10
-                  Width: =385
-                  X: =68
-                  Y: =313
+                  X: =15
+                  Y: =110
             - Title5_2:
                 Control: Label@2.5.1
-                Group: chtProjectDist_1
+                Group: chtProjectDist
                 Properties:
                   Align: =Align.Center
                   BorderColor: =RGBA(0, 0, 0, 1)
                   Color: =RGBA(37, 36, 35, 1)
                   DisabledColor: =RGBA(200, 198, 196, 1)
                   Font: =Font.'Segoe UI'
-                  Height: =61
+                  Height: =32
                   Size: =14
                   Text: |
                     =If(
@@ -1052,20 +1045,19 @@ Screens:
                         "프로젝트 분포 (전체 업무_계정)",
                         "프로젝트 분포 (" & varSelectedAccount & ")"
                     )
-                  Width: =244
-                  X: =792
-                  Y: =17
-            - ColumnChart2_2:
+                  Width: =286
+                  X: =682
+            - ColumnChart:
                 Control: BarChart@2.3.0
-                Group: chtProjectDist_1
+                Group: chtProjectDist
                 Properties:
                   BorderColor: =RGBA(0, 0, 0, 0)
                   BorderStyle: =BorderStyle.None
                   BorderThickness: =2
                   Color: =RGBA(37, 36, 35, 1)
                   DisabledBorderColor: =RGBA(0, 0, 0, 0)
-                  Font: =Font.'Segoe UI'
-                  Height: =278
+                  Font: =Font.Verdana
+                  Height: =371
                   HoverBorderColor: =RGBA(0, 0, 0, 0)
                   ItemColorSet: |
                     =[
@@ -1117,18 +1109,19 @@ Screens:
                   Items.Series8: =Pct
                   Items.Series9: =Pct
                   PressedBorderColor: =RGBA(0, 0, 0, 0)
-                  Size: =15
-                  Width: =244
-                  X: =792
-                  Y: =88
-            - galAccLegend_2:
+                  Size: =12
+                  Width: =391
+                  X: =612
+                  XLabelAngle: =40
+                  Y: =9
+            - galAccLegend:
                 Control: Gallery@2.15.0
                 Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
                 Properties:
                   BorderColor: =RGBA(243, 242, 241, 1)
                   FocusedBorderColor: =RGBA(98, 100, 167, 1)
                   FocusedBorderThickness: =2
-                  Height: =182
+                  Height: =137
                   Items: |
                     =colAccAgg
                   TemplateFill: |-
@@ -1138,26 +1131,22 @@ Screens:
                         RGBA(0, 0, 0, 0)
                     )
                   TemplateSize: =40
-                  Width: =237
-                  X: =470
-                  Y: =131
+                  Width: =195
+                  X: =51
+                  Y: =243
                 Children:
                   - Subtitle3_1:
                       Control: FluentV8/Label@1.8.6
                       Properties:
                         FontSize: =9
-                        FontWeight: |
-                          =If(
-                              ThisItem.OData__xc5c5__xbb34___xacc4__xc815_ = varSelectedAccount,
-                              FontWeight.Semibold,
-                              FontWeight.Normal
-                          )
+                        FontWeight: =
                         Height: =24
                         OnSelect: =Select(Parent)
                         TabIndex: =-1
                         Text: =ThisItem.Label
                         VerticalAlignment: =VerticalAlign.Top
                         Width: =50
+                        X: =49
                         Y: =8
                   - Subtitle3_5:
                       Control: FluentV8/Label@1.8.6
@@ -1168,12 +1157,18 @@ Screens:
                         OnSelect: =Select(Parent)
                         TabIndex: =-1
                         Text: |
-                          =Text(ThisItem.Hours, "0") & "h  (" & Text(ThisItem.Pct, "0.00%") & ")"
+                          =With(
+                              {
+                                  p: Text(Round(ThisItem.Pct * 100, 0), "0") & "%",
+                                  h: Text(ThisItem.Hours, "0") & "h"
+                              },
+                              p & " (" & h & ")"
+                          )
                         VerticalAlignment: =VerticalAlign.Top
                         Width: =105
-                        X: =66
+                        X: =115
                         Y: =8
-                  - Rectangle7_2:
+                  - Rectangle7:
                       Control: Rectangle@2.3.0
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
@@ -1182,31 +1177,90 @@ Screens:
                         FocusedBorderColor: =RGBA(98, 100, 167, 1)
                         Height: =Parent.TemplateHeight
                         HoverFill: =RGBA(0,0,0,0)
-                        OnSelect: |-
-                          =//Set(varSelectedAccount, ThisItem.OData__xc5c5__xbb34___xacc4__xc815_)
-                          If(
-                              varSelectedAccount = ThisItem.OData__xc5c5__xbb34___xacc4__xc815_,
-                              Set(varSelectedAccount, Blank()),
-                              Set(varSelectedAccount, ThisItem.OData__xc5c5__xbb34___xacc4__xc815_)
-                          )
+                        OnSelect: |
+                          =Set(varSelectedAccount, ThisItem.Label)
                         PressedFill: =RGBA(0,0,0,0)
                         TabIndex: =0
                         Width: =Parent.TemplateWidth
-                  - icoDot_1:
+                  - icoDot:
                       Control: Circle@2.3.0
                       Properties:
                         BorderColor: =RGBA(243, 242, 241, 1)
                         BorderStyle: =BorderStyle.None
                         BorderThickness: =2
-                        DisabledFill: =RGBA(98, 100, 167, 1)
-                        Fill: |
-                          =Coalesce(
-                              ThisItem.Color,
-                              RGBA(120, 120, 120, 1)   // Color가 없을 때 기본 회색
-                          )
-                        Height: =40
-                        HoverFill: =RGBA(98, 100, 167, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =ThisItem.Color
+                        Height: =25
+                        HoverFill: =RGBA(0, 0, 0, 0)
                         OnSelect: =Select(Parent)
-                        PressedFill: =RGBA(98, 100, 167, 1)
-                        Width: =66
-                        X: =171
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =25
+                        X: =3
+                        Y: =8
+            - lblWriteRate_3:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =24
+                  Text: |-
+                    ="작성(인원-일): " & varWrittenManDays
+                  Width: =144
+                  X: =262
+                  Y: =3
+            - lblWriteRate_4:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =24
+                  Text: |-
+                    ="작성(인원-일): " & varWrittenManDays
+                  Width: =144
+                  X: =282
+                  Y: =23
+      - Container16_3:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Height: =30
+            Width: =527
+            X: =549
+            Y: =283
+          Children:
+            - TextCanvas13_3:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =30
+                  Text: |-
+                    ="팀인원: " & varTeamCount
+                  Width: =137
+            - lblWriteRate:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =24
+                  Text: |+
+                    ="기준(인원-일): " & varBaseManDays
+                  Width: =144
+                  X: =137
+                  Y: =6
+            - lblWriteRate_1:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =24
+                  Text: |-
+                    ="작성(인원-일): " & varWrittenManDays
+                  Width: =144
+                  X: =262
+                  Y: =3
+            - lblWriteRate_2:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =24
+                  Text: =RoundDown(varWriteRate*100,0) & "%"
+                  Width: =55
+                  X: =471
+                  Y: =3
+      - TextCanvas11:
+          Control: Text@0.0.51
+          Properties:
+            Text: =Text(varStartDate,"yyyy-mm-dd") & " ~ " & Text(varEndDate,"yyyy-mm-dd")
+            Width: =220
+            X: =1054
+            Y: =235
