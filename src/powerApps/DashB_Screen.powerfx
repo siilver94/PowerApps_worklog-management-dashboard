@@ -699,7 +699,7 @@ Screens:
                   TabIndex: =-1
                   Text: =ThisItem.프로젝트명
                   VerticalAlignment: =VerticalAlign.Top
-                  Width: =140
+                  Width: =84
                   X: =6
             - Subtitle1_3:
                 Control: FluentV8/Label@1.8.6
@@ -760,6 +760,17 @@ Screens:
                   Width: =200
                   X: =12
                   Y: =46
+            - Title2_7:
+                Control: FluentV8/Label@1.8.6
+                Properties:
+                  FontWeight: =FontWeight.Semibold
+                  Height: =24
+                  OnSelect: =Select(Parent)
+                  TabIndex: =-1
+                  Text: =ThisItem.업무_계정
+                  VerticalAlignment: =VerticalAlign.Top
+                  Width: =84
+                  X: =72
       - Container15_1:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -1132,8 +1143,8 @@ Screens:
                     )
                   TemplateSize: =40
                   Width: =195
-                  X: =51
-                  Y: =243
+                  X: =314
+                  Y: =166
                 Children:
                   - Subtitle3_1:
                       Control: FluentV8/Label@1.8.6
@@ -1197,32 +1208,14 @@ Screens:
                         Width: =25
                         X: =3
                         Y: =8
-            - lblWriteRate_3:
-                Control: Text@0.0.51
-                Properties:
-                  Height: =24
-                  Text: |-
-                    ="작성(인원-일): " & varWrittenManDays
-                  Width: =144
-                  X: =262
-                  Y: =3
-            - lblWriteRate_4:
-                Control: Text@0.0.51
-                Properties:
-                  Height: =24
-                  Text: |-
-                    ="작성(인원-일): " & varWrittenManDays
-                  Width: =144
-                  X: =282
-                  Y: =23
       - Container16_3:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
           Properties:
             Height: =30
-            Width: =527
+            Width: =505
             X: =549
-            Y: =283
+            Y: =266
           Children:
             - TextCanvas13_3:
                 Control: Text@0.0.51
@@ -1230,7 +1223,8 @@ Screens:
                   Height: =30
                   Text: |-
                     ="팀인원: " & varTeamCount
-                  Width: =137
+                  Width: =73
+                  X: =63
             - lblWriteRate:
                 Control: Text@0.0.51
                 Properties:
@@ -1255,12 +1249,39 @@ Screens:
                   Height: =24
                   Text: =RoundDown(varWriteRate*100,0) & "%"
                   Width: =55
-                  X: =471
-                  Y: =3
-      - TextCanvas11:
-          Control: Text@0.0.51
+                  X: =406
+                  Y: =6
+            - TextCanvas12:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =30
+                  Text: |-
+                    ="작성률
+                    "
+                  Width: =63
+      - Export1:
+          Control: Export@2.1.0
           Properties:
-            Text: =Text(varStartDate,"yyyy-mm-dd") & " ~ " & Text(varEndDate,"yyyy-mm-dd")
-            Width: =220
-            X: =1054
-            Y: =235
+            BorderColor: =RGBA(98, 100, 167, 1)
+            BorderStyle: =BorderStyle.None
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(220, 220, 220, 1)
+            DisabledColor: =RGBA(200, 198, 196, 1)
+            DisabledFill: =RGBA(243, 242, 241, 1)
+            Fill: =RGBA(98, 100, 167, 1)
+            FocusedBorderThickness: =2
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Normal
+            HoverBorderColor: =ColorFade(RGBA(98, 100, 167, 1), 80%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(98, 100, 167, 1), -10%)
+            PressedBorderColor: =ColorFade(RGBA(98, 100, 167, 1), 80%)
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =ColorFade(RGBA(98, 100, 167, 1), -30%)
+            RadiusBottomLeft: =3
+            RadiusBottomRight: =3
+            RadiusTopLeft: =3
+            RadiusTopRight: =3
+            Size: =10.5
+            X: =1130
+            Y: =278
