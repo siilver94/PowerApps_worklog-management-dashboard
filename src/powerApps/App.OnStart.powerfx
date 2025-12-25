@@ -1,0 +1,179 @@
+//// ── 0. 날짜·상태 기본 변수 ─────────────────────
+//Set(varSelProject, "");
+Set(varYear,  Year(Today()));
+//Set(varMonth, Month(Today()));
+Set(varFirstDayOfMonth, Date(Year(Today()), Month(Today()), 1));
+Set(varSelectedDate, Today());
+//Set(FilterStatus,  "진행중");
+Set(FilterMode,    "All");
+Set(currentView,   "업무일지");
+Set(SelectedItem , {});
+Set(varFilterMode, "All");
+Set(varToastMessage, "");  Set(varShowToast , false);
+Set(varToastMessage2,"");  Set(varShowToast2, false);
+
+Set(varSelectedAccount, "");
+
+Concurrent(
+    /* 1) (굳이 필요 없다면) 변수를 없애도 OK */
+    Set(
+        varCutoffDate,
+        DateAdd(Today(), -365,TimeUnit.Days)
+    ),
+
+    /* 2) 날짜를 다시 계산해서 사용 (독립) */
+    ClearCollect(
+        colMyTasks,
+        ShowColumns(
+            Filter(
+                Task_DB,
+                작성자 = varMyName,
+                업무_시작일자 >= DateAdd(Today(), -365,TimeUnit.Days)
+            ),
+            업무제목, 업무_시작일자, 상태, 프로젝트명
+        )
+    )
+);
+
+
+
+/* 2) 상태 선택 컬렉션 – 기본 전부 선택 */
+ClearCollect(
+    colSelStatus,
+    Table( {Value:"시작전"}, {Value:"진행중"}, {Value:"완료"} )
+);
+
+
+/* ─── 기존 코드 위·아래 원하는 위치에 추가 ─── */
+Set(varShowPlanned,    false);   // 시작전(Planned)   → 기본 OFF
+Set(varShowInProgress, true );   // 진행중(InProgress)→ 기본 ON
+Set(varShowCompleted,  false);   // 완료(Completed)   → 기본 OFF
+ 
+//// ── 1. 사용자 정보 (회사 메일은 모두 소문자) ─────
+Set(varMyEmail, Lower(User().Email));
+ 
+/* 1-A) 팀 · 이름 */
+Set(
+    varMyTeam,
+    LookUp(
+        UserInfo_DB,
+        'e-mail' = varMyEmail,   // ← Email 컬럼
+        팀                        // ← 팀 컬럼
+    )
+);
+Set(
+    varMyName,
+    LookUp(
+        UserInfo_DB,
+        'e-mail' = varMyEmail,
+        이름_한글                  // ← 한글 이름 컬럼
+    )
+);
+Set(varDisplayName, varMyName);
+ 
+// ── 최근 365일 기준일 (이미 varCutoffDate 만들고 있으니 그걸 써도 됨)
+Set(varCutoffDate, DateAdd(Today(), -365, TimeUnit.Days));
+
+// (권장) 최신 데이터 보장
+Refresh(Daily_DB);
+
+//// ── 2. 최근 365일 팀 데이터 ▶ colDaily_365_Team ─────
+ClearCollect(
+    colDaily_365_Team,
+    ShowColumns(
+        Filter(
+            Daily_DB,
+            작성일자 >= varCutoffDate &&
+            팀 = varMyTeam
+        ),
+        ID,
+        작성일자,
+        작성자,
+        팀,
+        프로젝트명,
+        업무제목,
+        작업시간,
+        상태,
+        피드백
+    )
+);
+
+//// ── 2-B. 최근 365일 전체 데이터 ▶ colDaily_365_All ─────
+ClearCollect(
+    colDaily_365_All,
+    ShowColumns(
+        Filter(
+            Daily_DB,
+            작성일자 >= varCutoffDate
+        ),
+        ID,
+        작성일자,
+        작성자,
+        팀,
+        프로젝트명,
+        업무제목,
+        작업시간,
+        상태,
+        피드백
+    )
+);
+
+//// ── 3. 프로젝트 목록 (정규화 + Value 통일 + Blank 제거) ─────
+
+// 정규화: Trim + 공백문자(특수공백 포함) 제거까지 하고 싶으면 Substitute를 한 단계 더 쓸 수 있음
+// 일단 Trim만으로도 대부분 해결됨
+ClearCollect(
+    colProjectList,
+    SortByColumns(
+        RenameColumns(
+            Filter(
+                Distinct(
+                    AddColumns(colDaily_365_Team, ProjNorm, Trim(OData__xd504__xb85c__xc81d__xd2b8__xba0)),
+                    ProjNorm
+                ),
+                !IsBlank(Value)
+            ),
+            Value,
+            Value
+        ),
+        "Value",
+        SortOrder.Ascending
+    )
+);
+
+ClearCollect(
+    colAllProjects,
+    SortByColumns(
+        RenameColumns(
+            Filter(
+                Distinct(
+                    AddColumns(colDaily_365_All, ProjNorm, Trim(OData__xd504__xb85c__xc81d__xd2b8__xba0)),
+                    ProjNorm
+                ),
+                !IsBlank(Value)
+            ),
+           Value,
+            Value
+        ),
+        "Value",
+        SortOrder.Ascending
+    )
+);
+
+// 기본 선택: 팀별 전체 선택
+Clear(colSelProjects);
+Collect(colSelProjects, colProjectList.Value);
+
+
+Set(varShowDetail, false);   // 팝업 표시 여부
+//Set(varSelID,     Blank());  // 선택된 Daily_DB PK(ID)
+
+// 로그인 사용자 정보 캐싱
+Set(
+    varMyInfo,
+    LookUp(UserInfo_DB, '이름_한글' = name_label.Text)
+);
+Set(varMyRole, varMyInfo.'직급2');   // Choice 타입이면 .Value 필수
+Set(varMyDivision, varMyInfo.'부문');
+//Set(varMyTeam, varMyInfo.'팀');
+Set(varViewMode, "팀별");   // 🔸 새 전역 변수 (기본값: 팀별)
