@@ -129,6 +129,22 @@ Screens:
                   Width: =80
                   X: =284
                   Y: =5
+            - ButtonCanvas3_22:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =If(currentView = "대시보드", RGBA(150,153,255,1), RGBA(200,200,200,1))
+                  Font: =Font.Verdana
+                  FontSize: =10
+                  Height: =25
+                  OnSelect: |-
+                    =Set(currentView, "대시보드"); // '리스트'로 상태 업데이트
+
+                    Navigate(DashB_Screen, ScreenTransition.Fade); // Main_Screen으로 이동
+                    Set(varEditMode, false);
+                  Text: ="대시보드"
+                  Width: =80
+                  X: =368
+                  Y: =5
       - view_cal_con:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
@@ -177,7 +193,7 @@ Screens:
                         HasDaily,
                         CountRows(
                             Filter(
-                                colDaily_Year,                          /* 올해+내 팀 캐시 */
+                                colDaily_365_Team,                          /* 올해+내 팀 캐시 */
                                 DateValue(OData__xc791__xc131__xc77c__xc790_) = DateValue(Value)
                             )
                         ) > 0
@@ -286,7 +302,7 @@ Screens:
                           ClearCollect(
                               colWeek,
                               Filter(
-                                  colDaily_Year,                             // 로컬 1년 캐시
+                                  colDaily_365_Team,                             // 로컬 1년 캐시
                                   OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
                                   OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days)
                               )
@@ -378,7 +394,7 @@ Screens:
                     ClearCollect(
                         colWeek,
                         Filter(
-                            colDaily_Year,                              // 로컬 1년 캐시
+                            colDaily_365_Team,                              // 로컬 1년 캐시
                             OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
                             OData__xc791__xc131__xc77c__xc790_ <= DateAdd( vw_StartOfWeek, 4, TimeUnit.Days )
                         )//,ID
@@ -465,7 +481,7 @@ Screens:
                     Set(vw_StartOfWeek, DateAdd(vw_StartOfWeek, -7, TimeUnit.Days));
                     ClearCollect(
                         colWeek,
-                        Filter(colDaily_Year,
+                        Filter(colDaily_365_Team,
                             OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
                             OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days))
                     );
@@ -497,7 +513,7 @@ Screens:
                     Set(vw_StartOfWeek, DateAdd(vw_StartOfWeek, 7, TimeUnit.Days));
                     ClearCollect(
                         colWeek,
-                        Filter(colDaily_Year,
+                        Filter(colDaily_365_Team,
                             OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
                             OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days))
                     );
