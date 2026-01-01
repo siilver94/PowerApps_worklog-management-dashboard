@@ -1436,3 +1436,10 @@ Screens:
                   LayoutMaxWidth: =0
                   LayoutMinHeight: =16
                   LayoutMinWidth: =16
+            - ButtonCanvas6:
+                Control: Button@0.0.45
+                Properties:
+                  LayoutMaxHeight: =0
+                  LayoutMaxWidth: =0
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
