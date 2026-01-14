@@ -3227,7 +3227,7 @@ Screens:
                   Start: |+
                     =varShowToast
                   Visible: =false
-                  X: =50
+                  X: =5012
             - Icon5:
                 Control: Classic/Icon@2.5.0
                 Properties:
