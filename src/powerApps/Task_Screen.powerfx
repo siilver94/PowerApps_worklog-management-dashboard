@@ -2520,6 +2520,19 @@ Screens:
                         PressedFill: =RGBA(0,0,0,0)
                         TabIndex: =0
                         Width: =Parent.TemplateWidth
+                  - Subtitle3_3:
+                      Control: FluentV8/Label@1.8.6
+                      Properties:
+                        FontSize: =9
+                        FontWeight: =FontWeight.Normal
+                        Height: =24
+                        OnSelect: =Select(Parent)
+                        TabIndex: =-1
+                        Text: =ThisItem.시작날짜
+                        VerticalAlignment: =VerticalAlign.Top
+                        Width: =98
+                        X: =190
+                        Y: =12
             - Icon1_1:
                 Control: Classic/Icon@2.5.0
                 Properties:
@@ -2608,7 +2621,7 @@ Screens:
                     =If(varProjectMode="View", RGBA(220,220,220,1), RGBA(0,120,212,0.4))
                   BorderThickness: =If(varProjectMode="View", 1, 2)
                   Fill: |+
-                    =If(varProjectMode="View", RGBA(255,255,255,1), RGBA(240,248,255,0.4))
+                    =If(varProjectMode="View", RGBA(255,255,255,1), RGBA(240,248,255,0.2))
                   Height: =555
                   Width: =580
                   X: =492
@@ -3000,7 +3013,6 @@ Screens:
                         - 비고_DataCard3:
                             Control: TypedDataCard@1.0.7
                             Variant: TextualEdit
-                            IsLocked: true
                             Properties:
                               BorderColor: =RGBA(243, 242, 241, 1)
                               DataField: ="OData__xbe44__xace0_"
@@ -3017,6 +3029,12 @@ Screens:
                                   Control: Text@0.0.51
                                   MetadataKey: FieldName
                                   Properties:
+                                    DisplayMode: |-
+                                      =If(
+                                          varProjectMode = "View",
+                                          DisplayMode.View,
+                                          DisplayMode.Edit
+                                      )
                                     Height: =22
                                     Text: =Parent.DisplayName
                                     Weight: ='TextCanvas.Weight'.Semibold
@@ -3227,7 +3245,7 @@ Screens:
                   Start: |+
                     =varShowToast
                   Visible: =false
-                  X: =5012
+                  X: =50
             - Icon5:
                 Control: Classic/Icon@2.5.0
                 Properties:
