@@ -6,7 +6,7 @@ Screens:
       OnVisible: "=\r\n\r\n//--- 30년 01월 01일까지 공휴일//\r\n\r\nClearCollect(\r\n    colKoreaHolidays,\r\n\r\n    // ===== 2025년 =====\r\n    // 설날 (음력 1/1 → 추정 2025-01-29 본행사)\r\n    {HolidayDate: Date(2025,1,28)}, // 설 전날\r\n    {HolidayDate: Date(2025,1,29)}, // 설 당일\r\n    {HolidayDate: Date(2025,1,30)}, // 설 다음날\r\n\r\n    // 3.1절\r\n    {HolidayDate: Date(2025,3,1)},\r\n    // 어린이날 (5/5), 예시: (5/6) 추가 가능 (사용자 예시)\r\n    {HolidayDate: Date(2025,5,1)},\r\n    {HolidayDate: Date(2025,5,5)},\r\n    {HolidayDate: Date(2025,5,6)},\r\n    // 부처님오신날(음력 4/8 → 양력 2025-5-6 추정) \r\n    // 주의: 5/5~5/6와 겹칠 가능성 높음 -> 정확 발표 참고\r\n    \r\n    // 대통령 선거일\r\n    {HolidayDate: Date(2025,6,3)},\r\n    // 현충일\r\n    {HolidayDate: Date(2025,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2025,8,15)},\r\n    // 추석(음력 8/15 → 추정 2025-10-5 당일)\r\n    {HolidayDate: Date(2025,10,3)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,4)}, // 추석 전날\r\n    {HolidayDate: Date(2025,10,5)}, // 추석 당일\r\n    {HolidayDate: Date(2025,10,6)}, // 추석 다음날\r\n{HolidayDate: Date(2025,10,7)},\r\n{HolidayDate: Date(2025,10,8)},\r\n\r\n   \r\n    {HolidayDate: Date(2025,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2025,12,25)},\r\n\r\n    // ===== 2026년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2026,1,1)},\r\n    // 설날 (음력 1/1 → 추정 2026-02-17)\r\n    {HolidayDate: Date(2026,2,16)},\r\n    {HolidayDate: Date(2026,2,17)},\r\n    {HolidayDate: Date(2026,2,18)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2026,3,1)},\r\n    {HolidayDate: Date(2026,3,2)},\r\n    // 어린이날\r\n\r\n    {HolidayDate: Date(2026,5,1)},\r\n    {HolidayDate: Date(2026,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2026-5-25 정도)\r\n    {HolidayDate: Date(2026,5,25)},\r\n    // 현충일\r\n    {HolidayDate: Date(2026,6,6)},\r\n    // 광복절\r\n    {HolidayDate: Date(2026,8,15)},\r\n    // 추석 (음력 8/15 → 추정 2026-9-25)\r\n    {HolidayDate: Date(2026,9,24)},\r\n    {HolidayDate: Date(2026,9,25)},\r\n    {HolidayDate: Date(2026,9,26)},\r\n    // 개천절\r\n    {HolidayDate: Date(2026,10,3)},\r\n    // 한글날\r\n    {HolidayDate: Date(2026,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2026,12,25)},\r\n\r\n    // ===== 2027년 =====\r\n    // 신정\r\n    {HolidayDate: Date(2027,1,1)},\r\n    // 설날(추정 2027-2-6)\r\n   \r\n    {HolidayDate: Date(2027,2,6)},\r\n    {HolidayDate: Date(2027,2,7)},\r\n    {HolidayDate: Date(2027,2,8)},\r\n    // 3.1절\r\n    {HolidayDate: Date(2027,3,1)},\r\n    // 어린이날\r\n    {HolidayDate: Date(2027,5,1)},\r\n    {HolidayDate: Date(2027,5,5)},\r\n    // 부처님오신날(음력 4/8 → 추정 2027-5-14)\r\n    {HolidayDate: Date(2027,5,13)},\r\n    // 현충일\r\n    {HolidayDate: Date(2027,6,7)},\r\n    // 광복절\r\n    {HolidayDate: Date(2027,8,16)},\r\n    // 추석(추정 2027-9-15)\r\n    {HolidayDate: Date(2027,9,14)},\r\n    {HolidayDate: Date(2027,9,15)},\r\n    {HolidayDate: Date(2027,9,16)},\r\n    // 개천절\r\n    {HolidayDate: Date(2027,10,4)},\r\n    // 한글날\r\n    {HolidayDate: Date(2027,10,9)},\r\n    // 성탄절\r\n    {HolidayDate: Date(2027,12,25)},\r\n    {HolidayDate: Date(2027,12,27)},\r\n\r\n    // ===== 2028년 =====\r\n    {HolidayDate: Date(2028,1,1)},\r\n    // 설날(추정 2028-1-26)\r\n \r\n    {HolidayDate: Date(2028,1,26)},\r\n    {HolidayDate: Date(2028,1,27)},\r\n    {HolidayDate: Date(2028,1,28)},\r\n    {HolidayDate: Date(2028,3,1)},\r\n    {HolidayDate: Date(2028,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2028-5-2)\r\n    {HolidayDate: Date(2028,5,1)},\r\n    {HolidayDate: Date(2028,5,2)},\r\n    {HolidayDate: Date(2028,6,6)},\r\n    {HolidayDate: Date(2028,8,15)},\r\n    // 추석(추정 2028-10-4)\r\n    {HolidayDate: Date(2028,10,2)},\r\n    {HolidayDate: Date(2028,10,3)},\r\n    {HolidayDate: Date(2028,10,4)},\r\n    {HolidayDate: Date(2028,10,5)},\r\n\r\n    {HolidayDate: Date(2028,10,9)}, // 한글날\r\n    {HolidayDate: Date(2028,12,25)},// 성탄절\r\n\r\n    // ===== 2029년 =====\r\n    {HolidayDate: Date(2029,1,1)},\r\n    // 설날(추정 2029-2-13)\r\n    {HolidayDate: Date(2029,2,12)},\r\n    {HolidayDate: Date(2029,2,13)},\r\n    {HolidayDate: Date(2029,2,14)},\r\n    {HolidayDate: Date(2029,3,1)},\r\n    {HolidayDate: Date(2029,5,5)}, // 어린이날\r\n    // 부처님오신날(음력 4/8 → 추정 2029-5-21)\r\n    {HolidayDate: Date(2029,5,21)},\r\n    {HolidayDate: Date(2029,6,6)},\r\n    {HolidayDate: Date(2029,8,15)},\r\n    // 추석(추정 2029-9-24)\r\n    {HolidayDate: Date(2029,9,21)},\r\n    {HolidayDate: Date(2029,9,22)},\r\n    {HolidayDate: Date(2029,9,24)},\r\n    \r\n    {HolidayDate: Date(2029,10,3)},\r\n    {HolidayDate: Date(2029,10,9)},\r\n    {HolidayDate: Date(2029,12,25)},\r\n\r\n    // ===== 2030년 =====\r\n    {HolidayDate: Date(2030,1,1)}\r\n);\r\n"
     Children:
       - Container1_1:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(207, 202, 196, 0.2)
@@ -14,7 +14,7 @@ Screens:
             Width: =1366
             Y: =35
       - Header_con_2:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(34, 35, 58, 1)
@@ -161,7 +161,7 @@ Screens:
                   X: =368
                   Y: =5
       - Container6:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -521,6 +521,12 @@ Screens:
                   Width: =76
                   X: =143
                   Y: =20
+            - ButtonCanvas10:
+                Control: Button@0.0.45
+                Properties:
+                  OnSelect: =Reset(tglRepeat)
+                  X: =17
+                  Y: =12
       - OuterRactangle_1:
           Control: Rectangle@2.3.0
           Properties:
@@ -538,7 +544,7 @@ Screens:
             Visible: =varShowFB
             Width: =1366
       - Container10:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -575,7 +581,7 @@ Screens:
                   Height: =25
                   Icon: ="Send"
                   IconStyle: ='ButtonCanvas.IconStyle'.Filled
-                  OnSelect: "=// 0) 이번 저장 시도에서 저장 성공 여부 초기화\r\nSet(varSaveSuccess, false);\r\n\r\n// 1) Daily_Gallery에서 사용자 입력(작업시간/내용)을 colDailyTasks에 반영\r\nForAll(\r\n    Daily_Gallery.AllItems,\r\n    Patch(\r\n        colDailyTasks,\r\n        ThisRecord,\r\n        {\r\n            작업시간: Value(txtWorkHour.Value),\r\n            작업내용: txtWorkContent.Value\r\n        }\r\n    )\r\n);\r\n\r\n// 2) colDailyTasks ➜ Daily_DB  (반복 제한 + 안내 + 단일/기간 분기)\r\nWith(\r\n    {\r\n        _isRepeat: tglRepeat.Checked,\r\n        _start:    dpRepeatStart.SelectedDate,\r\n        _end:      dpRepeatEnd.SelectedDate,\r\n        _days:     DateDiff(dpRepeatStart.SelectedDate, dpRepeatEnd.SelectedDate) + 1\r\n    },\r\n    \r\n    // 2-1) 반복 모드 + 15일 초과면 → 에러 알림 후 종료 (저장 안 함)\r\n    If(\r\n        _isRepeat && _days > 15,\r\n        Notify(\r\n            \"기간 반복 입력은 최대 15일까지 가능합니다. 현재 선택: \" & Text(_days) & \"일\",\r\n            NotificationType.Error\r\n        ),\r\n        \r\n        // 2-2) 15일 이내라면 → (반복/단일 모드에 따라 처리)\r\n        If(\r\n            _isRepeat,\r\n            \r\n            /* ===================================================================\r\n               \U0001F7E3 기간 반복 입력 모드 (tglRepeat = On, 15일 이하)\r\n               =================================================================== */\r\n\r\n            // 저장 전 안내 메시지\r\n            Notify(\r\n                Text(_start, \"yyyy년 m월 d일\") & \" ~ \" &\r\n                Text(_end, \"yyyy년 m월 d일\") &\r\n                \" (\" & Text(_days) & \"일) 동안 동일한 업무가 등록됩니다.\",\r\n                NotificationType.Information\r\n            );\r\n\r\n            // 2-2-1) 대상 날짜 컬렉션 생성\r\n            ClearCollect(\r\n                colTargetDates,\r\n                AddColumns(\r\n                    Sequence(_days),\r\n                    TargetDate,\r\n                    DateAdd(_start, Value - 1, TimeUnit.Days)\r\n                )\r\n            );\r\n            \r\n            // 2-2-2) 각 날짜 × 각 업무(colDailyTasks)를 Daily_DB에 Insert (항상 추가, 기존 데이터 보존)\r\n            ForAll(\r\n                colTargetDates As dt,\r\n                ForAll(\r\n                    colDailyTasks As d,\r\n                    With(\r\n                        {\r\n                            newRec: Patch(\r\n                                Daily_DB,\r\n                                Defaults(Daily_DB),\r\n                                {\r\n                                    작성자:          name_label.Text,\r\n                                    프로젝트명:      d.c프로젝트명,\r\n                                    업무_계정:       d.c업무_계정,\r\n                                    업무_시작일자:   d.c업무_시작일자,\r\n                                    업무_종료일자:   d.c업무_종료일자,\r\n                                    업무제목:        d.c업무제목,\r\n                                    상세_업무내용:   d.c상세_업무내용,\r\n                                    상태:            d.c상태,\r\n                                    작업내용:        d.작업내용,\r\n                                    작업시간:        d.작업시간,\r\n                                    작성일자:        dt.TargetDate,     // ★ 날짜만 TargetDate로\r\n                                    팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                                }\r\n                            )\r\n                        },\r\n                        // 새 ID를 colDailyTasks에 반영 (다음 저장 시 중복 Insert 방지용, 원래 로직 유지)\r\n                        Patch(\r\n                            colDailyTasks,\r\n                            d,\r\n                            { ID: newRec.ID }\r\n                        )\r\n                    )\r\n                )\r\n            );\r\n\r\n            // 반복 모드에서 실제로 저장 완료 → 성공 플래그 세팅\r\n            Set(varSaveSuccess, true),\r\n\r\n            /* ===================================================================\r\n               \U0001F535 단일 날짜 모드 (tglRepeat = Off)\r\n               =================================================================== */\r\n            ForAll(\r\n                colDailyTasks As d,\r\n                With(\r\n                    {\r\n                        existingRec: If(\r\n                            !IsBlank(d.ID),\r\n                            LookUp(Daily_DB, ID = d.ID),\r\n                            LookUp(\r\n                                Daily_DB,\r\n                                프로젝트명      = d.c프로젝트명 &&\r\n                                작성일자        = varSelectedDate &&\r\n                                작성자          = name_label.Text &&\r\n                                업무제목        = d.c업무제목\r\n                            )\r\n                        )\r\n                    },\r\n                    If(\r\n                        !IsBlank(existingRec),\r\n                        Patch(\r\n                            Daily_DB,\r\n                            existingRec,\r\n                            {\r\n                                작업내용: d.작업내용,\r\n                                작업시간: d.작업시간\r\n                            }\r\n                        ),\r\n                        With(\r\n                            {\r\n                                newRec: Patch(\r\n                                    Daily_DB,\r\n                                    Defaults(Daily_DB),\r\n                                    {\r\n                                        작성자:          name_label.Text,\r\n                                        프로젝트명:      d.c프로젝트명,\r\n                                        업무_계정:       d.c업무_계정,\r\n                                        업무_시작일자:   DateTimeValue(d.c업무_시작일자),\r\n                                        업무_종료일자:   DateTimeValue(d.c업무_종료일자),\r\n                                        업무제목:        d.c업무제목,\r\n                                        상세_업무내용:   d.c상세_업무내용,\r\n                                        상태:            d.c상태,\r\n                                        작업내용:        d.작업내용,\r\n                                        작업시간:        d.작업시간,\r\n                                        작성일자:        varSelectedDate,\r\n                                        팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀\r\n                                    }\r\n                                )\r\n                            },\r\n                            Patch(\r\n                                colDailyTasks,\r\n                                d,\r\n                                { ID: newRec.ID }\r\n                            )\r\n                        )\r\n                    )\r\n                )\r\n            );\r\n\r\n            // 단일 모드에서도 Patch까지 끝나면 성공 플래그 세팅\r\n            Set(varSaveSuccess, true)\r\n        )\r\n    )\r\n);\r\n\r\n// 3) 토스트 & 편집모드 종료 (저장 성공일 때만 실행)\r\nIf(\r\n    varSaveSuccess,\r\n    Set(varToastMessage2, \"저장이 완료되었습니다 \");\r\n    Set(varShowToast2, true);\r\n    Set(varEditMode, false);\r\n    toastTimer2.Start\r\n);\r\n"
+                  OnSelect: "=// 0) 이번 저장 시도에서 저장 성공 여부 초기화\r\nSet(varSaveSuccess, false);\r\n\r\n// 1) Daily_Gallery에서 사용자 입력(작업시간/내용)을 colDailyTasks에 반영\r\nForAll(\r\n    Daily_Gallery.AllItems,\r\n    Patch(\r\n        colDailyTasks,\r\n        ThisRecord,\r\n        {\r\n            작업시간: Value(txtWorkHour.Value),\r\n            작업내용: txtWorkContent.Value,\r\n\r\n            // ✅ 작업_분류도 저장 시점에만 반영\r\n            작업_분류: If(\r\n                ddWorkTag.Selected.Tag = \"— 미선택 —\",\r\n                Blank(),\r\n                ddWorkTag.Selected.Tag\r\n            )\r\n        }\r\n    )\r\n);\r\n\r\n// 2) colDailyTasks ➜ Daily_DB  (반복 제한 + 안내 + 단일/기간 분기)\r\nWith(\r\n    {\r\n        _isRepeat: tglRepeat.Checked,\r\n        _start:    dpRepeatStart.SelectedDate,\r\n        _end:      dpRepeatEnd.SelectedDate,\r\n        _days:     DateDiff(dpRepeatStart.SelectedDate, dpRepeatEnd.SelectedDate) + 1\r\n    },\r\n    \r\n    // 2-1) 반복 모드 + 15일 초과면 → 에러 알림 후 종료 (저장 안 함)\r\n    If(\r\n        _isRepeat && _days > 15,\r\n        Notify(\r\n            \"기간 반복 입력은 최대 15일까지 가능합니다. 현재 선택: \" & Text(_days) & \"일\",\r\n            NotificationType.Error\r\n        ),\r\n        \r\n        // 2-2) 15일 이내라면 → (반복/단일 모드에 따라 처리)\r\n        If(\r\n            _isRepeat,\r\n            \r\n            /* ===================================================================\r\n               \U0001F7E3 기간 반복 입력 모드 (tglRepeat = On, 15일 이하)\r\n               =================================================================== */\r\n\r\n            // 저장 전 안내 메시지\r\n            Notify(\r\n                Text(_start, \"yyyy년 m월 d일\") & \" ~ \" &\r\n                Text(_end, \"yyyy년 m월 d일\") &\r\n                \" (\" & Text(_days) & \"일) 동안 동일한 업무가 등록됩니다.\",\r\n                NotificationType.Information\r\n            );\r\n\r\n            // 2-2-1) 대상 날짜 컬렉션 생성\r\n            ClearCollect(\r\n                colTargetDates,\r\n                AddColumns(\r\n                    Sequence(_days),\r\n                    TargetDate,\r\n                    DateAdd(_start, Value - 1, TimeUnit.Days)\r\n                )\r\n            );\r\n            \r\n            // 2-2-2) 각 날짜 × 각 업무(colDailyTasks)를 Daily_DB에 Insert (항상 추가, 기존 데이터 보존)\r\n            ForAll(\r\n                colTargetDates As dt,\r\n                ForAll(\r\n                    colDailyTasks As d,\r\n                    With(\r\n                        {\r\n                            newRec: Patch(\r\n                                Daily_DB,\r\n                                Defaults(Daily_DB),\r\n                                {\r\n                                    작성자:          name_label.Text,\r\n                                    프로젝트명:      d.c프로젝트명,\r\n                                    업무_계정:       d.c업무_계정,\r\n                                    업무_시작일자:   d.c업무_시작일자,\r\n                                    업무_종료일자:   d.c업무_종료일자,\r\n                                    업무제목:        d.c업무제목,\r\n                                    상세_업무내용:   d.c상세_업무내용,\r\n                                    상태:            d.c상태,\r\n                                    작업내용:        d.작업내용,\r\n                                    작업시간:        d.작업시간,\r\n                                    작성일자:        dt.TargetDate,     // ★ 날짜만 TargetDate로\r\n                                    팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀,\r\n                                    작업_분류: d.작업_분류\r\n                                }\r\n                            )\r\n                        },\r\n                        // 새 ID를 colDailyTasks에 반영 (다음 저장 시 중복 Insert 방지용, 원래 로직 유지)\r\n                        Patch(\r\n                            colDailyTasks,\r\n                            d,\r\n                            { ID: newRec.ID }\r\n                        )\r\n                    )\r\n                )\r\n            );\r\n\r\n            // 반복 모드에서 실제로 저장 완료 → 성공 플래그 세팅\r\n            Set(varSaveSuccess, true),\r\n\r\n            /* ===================================================================\r\n               \U0001F535 단일 날짜 모드 (tglRepeat = Off)\r\n               =================================================================== */\r\n            ForAll(\r\n                colDailyTasks As d,\r\n                With(\r\n                    {\r\n                        existingRec: If(\r\n                            !IsBlank(d.ID),\r\n                            LookUp(Daily_DB, ID = d.ID),\r\n                            LookUp(\r\n                                Daily_DB,\r\n                                프로젝트명      = d.c프로젝트명 &&\r\n                                작성일자        = varSelectedDate &&\r\n                                작성자          = name_label.Text &&\r\n                                업무제목        = d.c업무제목\r\n                            )\r\n                        )\r\n                    },\r\n                    If(\r\n                        !IsBlank(existingRec),\r\n                        Patch(\r\n                            Daily_DB,\r\n                            existingRec,\r\n                            {\r\n                                작업내용: d.작업내용,\r\n                                작업시간: d.작업시간,\r\n                                작업_분류: d.작업_분류\r\n                            }\r\n                        ),\r\n                        With(\r\n                            {\r\n                                newRec: Patch(\r\n                                    Daily_DB,\r\n                                    Defaults(Daily_DB),\r\n                                    {\r\n                                        작성자:          name_label.Text,\r\n                                        프로젝트명:      d.c프로젝트명,\r\n                                        업무_계정:       d.c업무_계정,\r\n                                        업무_시작일자:   DateTimeValue(d.c업무_시작일자),\r\n                                        업무_종료일자:   DateTimeValue(d.c업무_종료일자),\r\n                                        업무제목:        d.c업무제목,\r\n                                        상세_업무내용:   d.c상세_업무내용,\r\n                                        상태:            d.c상태,\r\n                                        작업내용:        d.작업내용,\r\n                                        작업시간:        d.작업시간,\r\n                                        작성일자:        varSelectedDate,\r\n                                        팀: LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀,\r\n                                        작업_분류: d.작업_분류\r\n                                    }\r\n                                )\r\n                            },\r\n                            Patch(\r\n                                colDailyTasks,\r\n                                d,\r\n                                { ID: newRec.ID }\r\n                            )\r\n                        )\r\n                    )\r\n                )\r\n            );\r\n\r\n            // 단일 모드에서도 Patch까지 끝나면 성공 플래그 세팅\r\n            Set(varSaveSuccess, true)\r\n        )\r\n    )\r\n);\r\n\r\n// 3) 토스트 & 편집모드 종료 (저장 성공일 때만 실행)\r\nIf(\r\n    varSaveSuccess,\r\n    Set(varToastMessage2, \"저장이 완료되었습니다 \");\r\n    Set(varShowToast2, true);\r\n    Set(varEditMode, false);\r\n    toastTimer2.Start\r\n);\r\n\r\n//다중 입력 토글 리셋\r\nReset(tglRepeat)"
                   Text: |+
                     =If(
                         tglRepeat.Checked,
@@ -641,7 +647,7 @@ Screens:
                   X: =278
                   Y: =7
       - Con_right:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Height: =651
@@ -774,17 +780,6 @@ Screens:
                         Width: =70
                         X: =12
                         Y: =150
-                  - TextCanvas1_7:
-                      Control: Text@0.0.51
-                      Properties:
-                        Font: =Font.Verdana
-                        Height: =20
-                        Size: =10.5
-                        Text: ="작업내용"
-                        Weight: ='TextCanvas.Weight'.Semibold
-                        Width: =76
-                        X: =549
-                        Y: =44
                   - txtWorkContent:
                       Control: FluentV8/TextBox@1.7.2
                       Properties:
@@ -802,6 +797,7 @@ Screens:
                         FontSize: =8
                         Height: =133
                         Mode: ='TextBox.Mode'.Multiline
+                        OnChange: =
                         OnSelect: =Select(Parent)
                         Placeholder: ="작업 내용을 입력해주세요"
                         Value: |+
@@ -809,6 +805,17 @@ Screens:
                         Width: =365
                         X: =549
                         Y: =66
+                  - TextCanvas1_7:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =20
+                        Size: =10.5
+                        Text: ="작업내용"
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =76
+                        X: =549
+                        Y: =44
                   - TextCanvas1_8:
                       Control: Text@0.0.51
                       Properties:
@@ -867,15 +874,22 @@ Screens:
                         FontSize: =8
                         Height: =20
                         Mode: ='TextBox.Mode'.SingleLine
+                        OnChange: |-
+                          =// 사용자가 직접 시간을 만지면 자동세팅 해제
+                          UpdateContext({ locAutoHour: Blank() });
                         OnSelect: =Select(Parent)
-                        Placeholder: ="0"
+                        Placeholder: |-
+                          =If(
+                              IsBlank(ThisItem.작업시간),
+                              "",
+                              Text(ThisItem.작업시간)
+                          )
                         Value: |-
-                          =//If(
-                           //   Not IsBlank(ThisItem.작업시간),
-                           //   ThisItem.작업시간,
-                          //    ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
-                          //)
-                          ThisItem.작업시간
+                          =If(
+                              !IsBlank(locAutoHour),
+                              locAutoHour,
+                              ThisItem.작업시간
+                          )
                         Width: =36
                         X: =598
                         Y: =10
@@ -1140,8 +1154,91 @@ Screens:
                         Width: =70
                         X: =648
                         Y: =10
+                  - ddWorkTag:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        Appearance: ='DropdownCanvas.Appearance'.FilledDarker
+                        BorderColor: =RGBA(12, 59, 94, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        DefaultSelectedItems: |-
+                          =With(
+                              { cur: Coalesce(ThisItem.작업_분류, "— 미선택 —") },
+                              Filter(
+                                  colWorkTagsMap,
+                                  Account = ThisItem.c업무_계정 &&
+                                  Tag = cur
+                              )
+                          )
+                        DisplayMode: =If(varEditMode , DisplayMode.Edit, DisplayMode.View)
+                        FontSize: =14
+                        Items: |+
+                          =SortByColumns(
+                              Filter(
+                                  colWorkTagsMap,
+                                  Account = ThisItem.c업무_계정
+                              ),
+                              "Order",
+                              SortOrder.Ascending
+                          )
+                        OnChange: |+
+                          =// ✅ 연차(반차)일 때만 작업시간 자동 세팅
+                          If(
+                              ThisItem.c업무_계정 = "연차(반차)",
+                              Switch(
+                                  ddWorkTag.Selected.Tag,
+                                  "연차",      Set(varAutoHour, 8),
+                                  "오전반차",  Set(varAutoHour, 4),
+                                  "오후반차",  Set(varAutoHour, 4),
+                                  Set(varAutoHour, Blank())
+                              )
+                          );
+
+                          // ✅ 자동값이 있으면 작업시간 입력칸에만 반영 (Reset 대신 SetFocus/Reset 없이 값만 바꾸는 방식은 어려워서, 최소 Reset 1회만)
+                          // 여기서는 txtWorkHour에 "Default"를 쓰고 있다면 Reset이 필요할 수 있음.
+                          // 단, Reset은 '연차/반차' 선택일 때만! (아래 If로 제한)
+                          If(
+                              ThisItem.c업무_계정 = "연차(반차)" &&
+                              ddWorkTag.Selected.Tag in ["연차","오전반차","오후반차"],
+                              UpdateContext({ locAutoHour: varAutoHour });
+                              Reset(txtWorkHour)
+                          );
+                        Visible: |+
+                          =varEditMode
+                        Width: =130
+                        X: =784
+                        Y: =26
+                      Children:
+                        - Tag1:
+                            Control: DropDownDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="Tag"
+                              FieldName: ="Tag"
+                              FieldType: ="s"
+                              Order: =1
+                  - opWorkTag:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        Font: =Font.Verdana
+                        FontColor: =RGBA(17, 61, 15, 1)
+                        Height: =18
+                        Size: =10.5
+                        Text: |+
+                          ="[" &
+                          Coalesce(
+                              If(ddWorkTag.Selected.Tag = "— 미선택 —", Blank(), ddWorkTag.Selected.Tag),
+                              ThisItem.작업_분류
+                          ) &
+                          "]"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =105
+                        X: =598
+                        Y: =42
       - Con_left:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Height: =347
@@ -1217,7 +1314,7 @@ Screens:
                   Width: =382
                 Children:
                   - Container2:
-                      Control: GroupContainer@1.3.0
+                      Control: GroupContainer@1.4.0
                       Variant: ManualLayout
                       Properties:
                         Fill: =RGBA(255, 255, 255, 1)
@@ -1258,7 +1355,7 @@ Screens:
                         Font: =Font.Verdana
                         FontSize: =7.5
                         Height: =20
-                        OnSelect: "=If(\r\n    Not IsBlank(LookUp(colDailyTasks, ID = ThisItem.ID)),\r\n    Notify(\"이미 해당 업무가 지정되었습니다.\", NotificationType.Warning),\r\n    \r\n    With(\r\n        {\r\n            taskRec: First(Filter(Task_DB, ID = ThisItem.ID)),\r\n            dailyRec: First(Filter(Daily_DB, ID = ThisItem.ID, 작성자 = name_label.Text))\r\n        },\r\n        Collect(\r\n            colDailyTasks,\r\n            If(\r\n                Not IsBlank(dailyRec),\r\n                // [A] 이미 Daily_DB 레코드가 존재하는 경우\r\n                {\r\n                    // => colDailyTasks에 ID= dailyRec.ID (기존 Daily_DB 식별자)\r\n                    ID: dailyRec.ID, \r\n                    HasDaily: true,\r\n\r\n                    c업무_계정: taskRec.업무_계정,\r\n                    c프로젝트명: taskRec.프로젝트명,\r\n                    c업무제목: taskRec.업무제목,\r\n                    c업무_시작일자: taskRec.업무_시작일자,\r\n                    c업무_종료일자: taskRec.업무_종료일자,\r\n                    c상태: taskRec.상태,\r\n                    c상세_업무내용: taskRec.상세_업무내용,\r\n\r\n                    작업내용: dailyRec.작업내용,\r\n                    작업시간: dailyRec.작업시간\r\n                },\r\n                // [B] Daily_DB 기록이 없는 경우 => 새 항목\r\n                {\r\n                    // => colDailyTasks에 ID= Blank() (아직 Daily_DB 상 레코드가 없으므로)\r\n                    ID: Blank(),\r\n                    HasDaily: false,\r\n\r\n                    c업무_계정: taskRec.업무_계정,\r\n                    c프로젝트명: taskRec.프로젝트명,\r\n                    c업무제목: taskRec.업무제목,\r\n                    c업무_시작일자: taskRec.업무_시작일자,\r\n                    c업무_종료일자: taskRec.업무_종료일자,\r\n                    c상태: taskRec.상태,\r\n                    c상세_업무내용: taskRec.상세_업무내용,\r\n\r\n                    작업내용: \"\",\r\n                    작업시간: 0\r\n                }\r\n            )\r\n        )\r\n    )\r\n);\r\n"
+                        OnSelect: "=\r\nIf(\r\n    Not IsBlank(LookUp(colDailyTasks, ID = ThisItem.ID)),\r\n    Notify(\"이미 해당 업무가 지정되었습니다.\", NotificationType.Warning),\r\n    \r\n    With(\r\n        {\r\n            taskRec: First(Filter(Task_DB, ID = ThisItem.ID)),\r\n            dailyRec: First(Filter(Daily_DB, ID = ThisItem.ID, 작성자 = name_label.Text))\r\n        },\r\n        Collect(\r\n            colDailyTasks,\r\n            If(\r\n                Not IsBlank(dailyRec),\r\n                // [A] 이미 Daily_DB 레코드가 존재하는 경우\r\n                {\r\n                    // => colDailyTasks에 ID= dailyRec.ID (기존 Daily_DB 식별자)\r\n                    ID: dailyRec.ID, \r\n                    HasDaily: true,\r\n\r\n                    c업무_계정: taskRec.업무_계정,\r\n                    c프로젝트명: taskRec.프로젝트명,\r\n                    c업무제목: taskRec.업무제목,\r\n                    c업무_시작일자: taskRec.업무_시작일자,\r\n                    c업무_종료일자: taskRec.업무_종료일자,\r\n                    c상태: taskRec.상태,\r\n                    c상세_업무내용: taskRec.상세_업무내용,\r\n                    \r\n\r\n                    작업내용: dailyRec.작업내용,\r\n                    작업시간: dailyRec.작업시간\r\n                },\r\n                // [B] Daily_DB 기록이 없는 경우 => 새 항목\r\n                {\r\n                    // => colDailyTasks에 ID= Blank() (아직 Daily_DB 상 레코드가 없으므로)\r\n                    ID: Blank(),\r\n                    HasDaily: false,\r\n\r\n                    c업무_계정: taskRec.업무_계정,\r\n                    c프로젝트명: taskRec.프로젝트명,\r\n                    c업무제목: taskRec.업무제목,\r\n                    c업무_시작일자: taskRec.업무_시작일자,\r\n                    c업무_종료일자: taskRec.업무_종료일자,\r\n                    c상태: taskRec.상태,\r\n                    c상세_업무내용: taskRec.상세_업무내용,\r\n\r\n                    작업내용: \"\",\r\n                    작업시간: 0\r\n                }\r\n            )\r\n        )\r\n    )\r\n    \r\n);"
                         Text: ="+ 추가"
                         Width: =52
                         X: =314
@@ -1301,7 +1398,7 @@ Screens:
                         X: =126
                         Y: =44
       - Container5:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -1415,7 +1512,7 @@ Screens:
                   X: =82
                   Y: =6
       - con_ShowDelPopup:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -1479,7 +1576,7 @@ Screens:
                   X: =187
                   Y: =83
       - cntFeedbackPopup:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -1542,7 +1639,7 @@ Screens:
                   X: =22
                   Y: =59
       - Con_Repeat:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -1623,7 +1720,7 @@ Screens:
                   X: =281
                   Y: =9
       - Con_Notify:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(159, 227, 171, 1)
