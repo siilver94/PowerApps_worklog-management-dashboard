@@ -521,12 +521,6 @@ Screens:
                   Width: =76
                   X: =143
                   Y: =20
-            - ButtonCanvas10:
-                Control: Button@0.0.45
-                Properties:
-                  OnSelect: =Reset(tglRepeat)
-                  X: =17
-                  Y: =12
       - OuterRactangle_1:
           Control: Rectangle@2.3.0
           Properties:
