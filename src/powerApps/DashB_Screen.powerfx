@@ -308,44 +308,13 @@ Screens:
             )
         );
 
-        // 프로젝트 집계
-        ClearCollect(
-            colProjAgg,
-            With(
-                {
-                    Base: Filter(
-                        colTeamPeriodData,
-                        IsBlank(varSelectedAccount) || Trim(업무_계정) = Trim(varSelectedAccount)
-                    ),
-                    TotalH: Sum(
-                        Filter(
-                            colTeamPeriodData,
-                            IsBlank(varSelectedAccount) || Trim(업무_계정) = Trim(varSelectedAccount)
-                        ),
-                        작업시간
-                    )
-                },
-                Sort(
-                    AddColumns(
-                        GroupBy(Base, 프로젝트명, G),
-                        Label, OData__xd504__xb85c__xc81d__xd2b8__xba0,
-                        Hours, Sum(G, 작업시간),
-                        Pct, If(TotalH > 0, Sum(G, 작업시간)/TotalH, 0)
-                    ),
-                    Hours,
-                    SortOrder.Descending
-                )
-            )
-        );
-
-
         // ===============================
         // H) 컨트롤 초기화
         // ===============================
         Reset(ddMember);
 
         // ✅ OnVisible에서는 btnRecalcDash를 굳이 누르지 않아도 됨(이미 집계함)
-        // Select(btnRecalcDash);
+         Select(btnRecalcDash);
     Children:
       - Header_con_6:
           Control: GroupContainer@1.4.0
@@ -840,23 +809,27 @@ Screens:
                         Font: =Font.Verdana
                         Height: =349
                         HoverBorderColor: =RGBA(0, 0, 0, 0)
-                        ItemColorSet: |
-                          =colProjColors
+                        ItemColorSet: |-
+                          =ShowColumns(colProjColors
+                             ,Color
+                              )
                         Items: =colProjAgg
                         Items.Labels: =Label
-                        Items.Series1: =Hours
-                        Items.Series2: =Pct
-                        Items.Series3: =Pct
-                        Items.Series4: =Pct
-                        Items.Series5: =Pct
-                        Items.Series6: =Pct
-                        Items.Series7: =Pct
-                        Items.Series8: =Pct
-                        Items.Series9: =Pct
+                        Items.Series1: =Pct
+                        Items.Series2: =RowNo
+                        Items.Series3: =RowNo
+                        Items.Series4: =RowNo
+                        Items.Series5: =RowNo
+                        Items.Series6: =RowNo
+                        Items.Series7: =RowNo
+                        Items.Series8: =RowNo
+                        Items.Series9: =RowNo
                         ItemsGap: =5
                         MarkerSuffix: ="%"
                         OnSelect: =
                         PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        SeriesAxisMax: =Blank()
+                        SeriesAxisMin: =Blank()
                         Size: =12
                         Width: =375
                         XLabelAngle: =40
@@ -963,7 +936,7 @@ Screens:
                               Width: =85
                               X: =91
                               Y: =12
-                        - icoDot_1:
+                        - icoDot2:
                             Control: Circle@2.3.0
                             Properties:
                               BorderColor: =RGBA(243, 242, 241, 1)
@@ -1702,108 +1675,47 @@ Screens:
           Control: Button@0.0.45
           Properties:
             OnSelect: |+
-              =With(
-                  {
-                      baseData: Filter(
-                          colTeamPeriodData,
-                          If(
-                              IsBlank(varSelectedMember),
-                              true,
+              =// ========================================
+              // btnRecalcDash.OnSelect (괄호 꼬임 방지 버전)
+              // ========================================
+
+              // 1) 작업_분류
+              ClearCollect(
+                  colWorkTagAgg,
+                  With(
+                      {
+                          Base: Filter(
+                              colTeamPeriodData,
+                              (IsBlank(varSelectedAccount) || 업무_계정 = varSelectedAccount) &&
                               If(
-                                  varMyRole = "팀장",
-                                  작성자 = varSelectedMember,   // 팀장: 사람 필터
-                                  팀 = varSelectedMember        // 부문장/소장: 팀 필터
-                              )
+                                  IsBlank(varSelectedMember),
+                                  true,
+                                  If(
+                                      varMyRole = "팀장",
+                                      작성자 = varSelectedMember,
+                                      팀 = varSelectedMember
+                                  )
+                              ) &&
+                              (IsBlank(varSelProject) || 프로젝트명 = varSelProject) &&
+                              (IsBlank(varSelTaskType) || 작업_분류 = varSelTaskType)
                           )
-                      )
-                  },
-
-                  // =========================
-                  // 1) 작업_분류 집계
-                  // =========================
-                  ClearCollect(
-                      colWorkTagAgg,
+                      },
                       With(
-                          {
-                              Base: Filter(
-                                  baseData,
-                                  (IsBlank(varSelectedAccount) || 업무_계정 = varSelectedAccount) &&
-                                  (IsBlank(varSelProject) || 프로젝트명 = varSelProject) &&
-                                  (IsBlank(varSelTaskType) || 작업_분류 = varSelTaskType)
-                              )
-                          },
-                          With(
-                              { TotalH: Sum(Base, 작업시간) },
-                              Sort(
-                                  AddColumns(
-                                      GroupBy(
-                                          AddColumns(
-                                              Base,
-                                              TagText,
-                                              If(IsBlank(작업_분류), "미분류", 작업_분류)
-                                          ),
+                          { TotalH: Sum(Base, 작업시간) },
+                          Sort(
+                              AddColumns(
+                                  GroupBy(
+                                      AddColumns(
+                                          Base,
                                           TagText,
-                                          G
+                                          If(IsBlank(작업_분류), "미분류", 작업_분류)
                                       ),
-                                      Tag,   TagText,
-                                      Hours, Sum(G, 작업시간),
-                                      Pct,   If(TotalH > 0, Sum(G, 작업시간)/TotalH, 0)
+                                      TagText,
+                                      G
                                   ),
-                                  Hours,
-                                  SortOrder.Descending
-                              )
-                          )
-                      )
-                  );
-
-                  // =========================
-                  // 2) 업무_계정 집계
-                  // =========================
-                  ClearCollect(
-                      colAccAgg,
-                      With(
-                          {
-                              Base: baseData,
-                              TotalH: Sum(baseData, 작업시간)
-                          },
-                          Sort(
-                              AddColumns(
-                                  GroupBy(Base, 업무_계정, G),
-                                  Label, OData__xc5c5__xbb34___xacc4__xc815_,
+                                  Tag,   TagText,
                                   Hours, Sum(G, 작업시간),
-                                  Pct, If(TotalH > 0, Sum(G, 작업시간) / TotalH, 0)
-                              ),
-                              Hours,
-                              SortOrder.Descending
-                          )
-                      )
-                  );
-
-                  // =========================
-                  // 3) 프로젝트 집계
-                  // =========================
-                  ClearCollect(
-                      colProjAgg,
-                      With(
-                          {
-                              Base: Filter(
-                                  baseData,
-                                  (IsBlank(varSelectedAccount) || 업무_계정 = varSelectedAccount)
-                              ),
-                              TotalH: Sum(
-                                  Filter(
-                                      baseData,
-                                      (IsBlank(varSelectedAccount) || 업무_계정 = varSelectedAccount)
-                                  ),
-                                  작업시간
-                              )
-                          },
-                          Sort(
-                              AddColumns(
-                                  GroupBy(Base, 프로젝트명, G),
-                                  Label, OData__xd504__xb85c__xc81d__xd2b8__xba0,
-                                  Hours, Sum(G, 작업시간),
-                                  Pct, If(TotalH > 0, Sum(G, 작업시간)/TotalH, 0)
+                                  Pct,   If(TotalH > 0, Sum(G, 작업시간)/TotalH, 0)
                               ),
                               Hours,
                               SortOrder.Descending
@@ -1811,16 +1723,175 @@ Screens:
                       )
                   )
               );
-            X: =420
-            Y: =48
-      - TextCanvas11_3:
-          Control: Text@0.0.51
-          Properties:
-            Text: ="sel=" & Coalesce(varSelectedAccount,"(Blank)")
-            VerticalAlign: =VerticalAlign.Middle
-            Width: =98
-            X: =767
-            Y: =64
+
+              // 2) 업무_계정
+              ClearCollect(
+                  colAccAgg,
+                  With(
+                      {
+                          Base: Filter(
+                              colTeamPeriodData,
+                              If(
+                                  IsBlank(varSelectedMember),
+                                  true,
+                                  If(
+                                      varMyRole = "팀장",
+                                      작성자 = varSelectedMember,
+                                      팀 = varSelectedMember
+                                  )
+                              )
+                          ),
+                          TotalH: Sum(
+                              Filter(
+                                  colTeamPeriodData,
+                                  If(
+                                      IsBlank(varSelectedMember),
+                                      true,
+                                      If(
+                                          varMyRole = "팀장",
+                                          작성자 = varSelectedMember,
+                                          팀 = varSelectedMember
+                                      )
+                                  )
+                              ),
+                              작업시간
+                          )
+                      },
+                      With(
+                          {
+                              T: SortByColumns(
+                                  AddColumns(
+                                      GroupBy(
+                                          AddColumns(Base, AccKey, Trim(업무_계정)),
+                                          AccKey,
+                                          G
+                                      ),
+                                      Label, AccKey,
+                                      Hours, Sum(G, 작업시간),
+                                      Pct, If(TotalH > 0, Sum(G, 작업시간)/TotalH, 0)
+                                  ),
+                                  "Hours",
+                                  SortOrder.Descending
+                              )
+                          },
+                          ForAll(
+                              Sequence(CountRows(T)) As S,
+                              With(
+                                  { r: Last(FirstN(T, S.Value)) },
+                                  {
+                                      RowNo: S.Value,
+                                      Label: r.Label,
+                                      Hours: r.Hours,
+                                      Pct:   r.Pct,
+                                      Color: Switch(
+                                          S.Value,
+                                          1,  RGBA(27, 94, 32, 1),
+                                          2,  RGBA(30, 136, 229, 1),
+                                          3,  RGBA(239, 108, 0, 1),
+                                          4,  RGBA(56, 142, 60, 1),
+                                          5,  RGBA(0, 137, 123, 1),
+                                          6,  RGBA(142, 36, 170, 1),
+                                          7,  RGBA(124, 179, 66, 1),
+                                          8,  RGBA(3, 155, 229, 1),
+                                          9,  RGBA(251, 192, 45, 1),
+                                          10, RGBA(144, 164, 174, 1),
+                                          11, RGBA(189, 189, 189, 1),
+                                          12, RGBA(224, 224, 224, 1)
+                                      )
+                                  }
+                              )
+                          )
+                      )
+                  )
+              );
+
+              // =========================
+              // 3) 프로젝트 (Color 포함) - Base0 스코프 이슈 해결 ✅
+              // =========================
+              ClearCollect(
+                  colProjAgg,
+                  With(
+                      {
+                          Base0: Filter(
+                              colTeamPeriodData,
+                              If(
+                                  IsBlank(varSelectedMember),
+                                  true,
+                                  If(
+                                      varMyRole = "팀장",
+                                      작성자 = varSelectedMember,
+                                      팀 = varSelectedMember
+                                  )
+                              ) &&
+                              (IsBlank(varSelectedAccount) || 업무_계정 = varSelectedAccount)
+                          )
+                      },
+                      With(
+                          { TotalH: Sum(Base0, 작업시간) },
+                          With(
+                              {
+                                  T: SortByColumns(
+                                      AddColumns(
+                                          GroupBy(Base0, 프로젝트명, G),
+                                          Label, OData__xd504__xb85c__xc81d__xd2b8__xba0,
+                                          Hours, Sum(G, 작업시간),
+                                          Pct, If(TotalH > 0, Sum(G, 작업시간)/TotalH, 0)
+                                      ),
+                                      "Hours",
+                                      SortOrder.Descending
+                                  )
+                              },
+                              ForAll(
+                                  Sequence(CountRows(T)) As S,
+                                  With(
+                                      { r: Last(FirstN(T, S.Value)) },
+                                      {
+                                          RowNo: S.Value,
+                                          Label: r.Label,
+                                          Hours: r.Hours,
+                                          Pct:   r.Pct,
+                                          Color: Switch(
+                                              S.Value,
+                                              1,  RGBA(27, 94, 32, 1),
+                                              2,  RGBA(30, 136, 229, 1),
+                                              3,  RGBA(239, 108, 0, 1),
+                                              4,  RGBA(56, 142, 60, 1),
+                                              5,  RGBA(0, 137, 123, 1),
+                                              6,  RGBA(142, 36, 170, 1),
+                                              7,  RGBA(124, 179, 66, 1),
+                                              8,  RGBA(3, 155, 229, 1),
+                                              9,  RGBA(251, 192, 45, 1),
+                                              10, RGBA(144, 164, 174, 1),
+                                              11, RGBA(189, 189, 189, 1),
+                                              12, RGBA(224, 224, 224, 1)
+                                          )
+                                      }
+                                  )
+                              )
+                          )
+                      )
+                  )
+              );
+
+              // 4) 차트용 퍼센트 계산용 총합을 변수로 고정(스코프 꼬임 방지)
+              Set(varProjTotalHours, Sum(colProjAgg, Hours));
+
+              // 5) 차트 전용 컬렉션
+              ClearCollect(
+                  colProjChart,
+                  ForAll(
+                      colProjAgg As R,
+                      {
+                          Label:   R.Label,
+                          Value:   R.Hours,
+                          PctNum:  If(varProjTotalHours > 0, R.Hours / varProjTotalHours, 0),
+                          PctText: Text(If(varProjTotalHours > 0, R.Hours / varProjTotalHours, 0), "0%"),
+                          Color:   R.Color
+                      }
+                  )
+              );
+            X: =439
+            Y: =46
       - TextCanvas11_4:
           Control: Text@0.0.51
           Properties:
@@ -1834,7 +1905,7 @@ Screens:
             VerticalAlign: =VerticalAlign.Middle
             Width: =98
             X: =767
-            Y: =97
+            Y: =90
       - TextCanvas11_5:
           Control: Text@0.0.51
           Properties:
@@ -1844,4 +1915,23 @@ Screens:
             VerticalAlign: =VerticalAlign.Middle
             Width: =308
             X: =767
-            Y: =128
+            Y: =58
+      - TextCanvas14:
+          Control: Text@0.0.51
+          Properties:
+            Height: =76
+            Text: |+
+              ="Rows=" & CountRows(colProjAgg) &
+              " / MaxHours=" & Max(colProjAgg, Hours) &
+              " / MaxPct=" & Max(colProjAgg, Pct)
+            Width: =140
+            X: =1067
+            Y: =220
+      - TextCanvas17:
+          Control: Text@0.0.51
+          Properties:
+            Height: =53
+            Text: =Text(varProjTotalHours,"0.0") & " / " & First(colProjChart).PctText
+            Width: =159
+            X: =769
+            Y: =125
