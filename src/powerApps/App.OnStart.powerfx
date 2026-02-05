@@ -14,11 +14,20 @@ Set(varToastMessage2,"");  Set(varShowToast2, false);
 
 Set(varSelectedAccount, "");
 
+// 타입 고정용 (업무_계정은 텍스트니까 문자열로)
+Set(varSelAccount, "");
+
+// 이후부터 Blank() 사용 가능
+Set(varSelAccount, Blank());
+
+// 프로젝트 모드도 같이
+Set(varProjectMode, "View");
+
 Concurrent(
     /* 1) (굳이 필요 없다면) 변수를 없애도 OK */
     Set(
         varCutoffDate,
-        DateAdd(Today(), -365,TimeUnit.Days)
+        DateAdd(Today(), -400,TimeUnit.Days)
     ),
 
     /* 2) 날짜를 다시 계산해서 사용 (독립) */
@@ -28,7 +37,7 @@ Concurrent(
             Filter(
                 Task_DB,
                 작성자 = varMyName,
-                업무_시작일자 >= DateAdd(Today(), -365,TimeUnit.Days)
+                업무_시작일자 >= DateAdd(Today(), -400,TimeUnit.Days)
             ),
             업무제목, 업무_시작일자, 상태, 프로젝트명
         )
@@ -70,9 +79,85 @@ Set(
     )
 );
 Set(varDisplayName, varMyName);
+
+//// ── 작업_분류(키워드) 매핑 테이블 (업무_계정별) ───────────────
+// - Account: 업무_계정 값 (colDailyTasks의 c업무_계정과 동일한 값이어야 함)
+// - Tag:     드롭다운에 보여줄 키워드
+// - Order:   0이면 미선택(항상 최상단), 나머지는 1부터
+
+ClearCollect(
+    colWorkTagsMap,
+    Table(
+        // ── 제품개발 / 기술개발 / 원가절감 / 설계변경 : 세트 A ──
+        {Account:"제품개발", Tag:"— 미선택 —", Order:0},
+        {Account:"제품개발", Tag:"조립(제작)", Order:1},
+        {Account:"제품개발", Tag:"설계_Modeling", Order:2},
+        {Account:"제품개발", Tag:"설계_Drawing", Order:3},
+        {Account:"제품개발", Tag:"시험", Order:4},
+        {Account:"제품개발", Tag:"회의", Order:5},
+        {Account:"제품개발", Tag:"기획", Order:6},
+        {Account:"제품개발", Tag:"기타", Order:7},
+
+        {Account:"기술개발", Tag:"— 미선택 —", Order:0},
+        {Account:"기술개발", Tag:"조립(제작)", Order:1},
+        {Account:"기술개발", Tag:"설계_Modeling", Order:2},
+        {Account:"기술개발", Tag:"설계_Drawing", Order:3},
+        {Account:"기술개발", Tag:"시험", Order:4},
+        {Account:"기술개발", Tag:"회의", Order:5},
+        {Account:"기술개발", Tag:"기획", Order:6},
+        {Account:"기술개발", Tag:"기타", Order:7},
+
+        {Account:"원가절감", Tag:"— 미선택 —", Order:0},
+        {Account:"원가절감", Tag:"조립(제작)", Order:1},
+        {Account:"원가절감", Tag:"설계_Modeling", Order:2},
+        {Account:"원가절감", Tag:"설계_Drawing", Order:3},
+        {Account:"원가절감", Tag:"시험", Order:4},
+        {Account:"원가절감", Tag:"회의", Order:5},
+        {Account:"원가절감", Tag:"기획", Order:6},
+        {Account:"원가절감", Tag:"기타", Order:7},
+
+        {Account:"설계변경", Tag:"— 미선택 —", Order:0},
+        {Account:"설계변경", Tag:"조립(제작)", Order:1},
+        {Account:"설계변경", Tag:"설계_Modeling", Order:2},
+        {Account:"설계변경", Tag:"설계_Drawing", Order:3},
+        {Account:"설계변경", Tag:"시험", Order:4},
+        {Account:"설계변경", Tag:"회의", Order:5},
+        {Account:"설계변경", Tag:"기획", Order:6},
+        {Account:"설계변경", Tag:"기타", Order:7},
+
+        // ── TF : 세트 C ──
+        {Account:"TF", Tag:"— 미선택 —", Order:0},
+        {Account:"TF", Tag:"회의", Order:1},
+        {Account:"TF", Tag:"기획", Order:2},
+        {Account:"TF", Tag:"문서/보고", Order:3},
+        {Account:"TF", Tag:"기타", Order:4},
+
+        // ── 교육 : 세트 D ──
+        {Account:"교육", Tag:"— 미선택 —", Order:0},
+        {Account:"교육", Tag:"교육수강", Order:1},
+        {Account:"교육", Tag:"교육자료작성", Order:2},
+        {Account:"교육", Tag:"시험/평가", Order:3},
+        {Account:"교육", Tag:"기타", Order:5},
+
+        // ── 기타업무 : 세트 E ──
+        {Account:"기타업무", Tag:"— 미선택 —", Order:0},
+        {Account:"기타업무", Tag:"회의", Order:1},
+        {Account:"기타업무", Tag:"문서/보고", Order:2},
+        {Account:"기타업무", Tag:"행정", Order:3},
+        {Account:"기타업무", Tag:"지원업무", Order:4},
+        {Account:"기타업무", Tag:"기타", Order:5},
+
+        // ── 연차(반차) : 세트 B ──
+        {Account:"연차(반차)", Tag:"— 미선택 —", Order:0},
+        {Account:"연차(반차)", Tag:"연차", Order:1},
+        {Account:"연차(반차)", Tag:"오전반차", Order:2},
+        {Account:"연차(반차)", Tag:"오후반차", Order:3}
+    )
+);
+ 
  
 // ── 최근 365일 기준일 (이미 varCutoffDate 만들고 있으니 그걸 써도 됨)
-Set(varCutoffDate, DateAdd(Today(), -365, TimeUnit.Days));
+Set(varCutoffDate, DateAdd(Today(), -400, TimeUnit.Days));
 
 // (권장) 최신 데이터 보장
 Refresh(Daily_DB);
@@ -177,3 +262,10 @@ Set(varMyRole, varMyInfo.'직급2');   // Choice 타입이면 .Value 필수
 Set(varMyDivision, varMyInfo.'부문');
 //Set(varMyTeam, varMyInfo.'팀');
 Set(varViewMode, "팀별");   // 🔸 새 전역 변수 (기본값: 팀별)
+
+// 업무_계정 선택 시 작업_구분 보이게 하기
+Set(varSelTaskType, "");   // 타입(텍스트) 고정용 1회 초기화
+Set(varSelTaskType, Blank());
+
+Set(varSelProject, "");    // (권장) 이것도 동일하게 타입 고정
+Set(varSelProject, Blank());
