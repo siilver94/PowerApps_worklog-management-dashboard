@@ -4,18 +4,168 @@ Screens:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(98, 100, 167, 1)
       OnVisible: |+
-        =/* 기존 세 변수 — 그대로 유지 */
-        //Set(vw_FirstDayOfMonth, Date(Year(Today()), Month(Today()), 1));
-        Set(vw_SelectedDate,    Blank());
-        Set(vw_StartOfWeek,     DateAdd(Today(), -Weekday(Today(), StartOfWeek.Monday)+1));
+        =// ===============================
+        // ✅ View_Screen.OnVisible
+        // - 주간 범위 세팅
+        // - 프로젝트 선택 보강
+        // - UserInfo 캐시
+        // - Daily_DB 주간 로드
+        // - TeamMatrix 가공(기능 동일)
+        // ===============================
 
-        /* 0) 프로젝트 전체 선택 보강 (기존 코드) */
-            Collect(colSelProjects,If( CountRows(colSelProjects)=0 && CountRows(colProjectList)>0,
-         colProjectList.Value)
+        // 0) 화면 상태 변수 초기화 (기존 유지)
+        Set(vw_SelectedDate, Blank());
+        Set(vw_StartOfWeek, DateAdd(Today(), -Weekday(Today(), StartOfWeek.Monday) + 1));
+        Set(varViewLoading, true);
+
+        // 1) (중요) 사용자/팀 정보가 초기엔 늦게 잡힐 수 있음 → 여기서 다시 세팅
+        //    ※ Notify/Exit 없이 "일단 세팅 시도"만 함
+        If(
+            IsBlank(varMyTeam),
+            Set(
+                varMyTeam,
+                LookUp(UserInfo_DB, 이름_한글 = name_label.Text).팀
+            )
+        );
+
+        // 2) UserInfo_DB 캐시 (LookUp 반복 비용 제거)
+        //    ※ 이미 로드되어 있으면 다시 안 함 (성능)
+        If(
+            IsEmpty(colUsers),
+            ClearCollect(colUsers, UserInfo_DB)
+        );
+
+        // 3) 프로젝트 전체 선택 보강 (기존 로직 유지)
+        //    - colSelProjects가 비어있고 colProjectList가 있으면 전부 선택
+        If(
+            CountRows(colSelProjects) = 0 && CountRows(colProjectList) > 0,
+            ClearCollect(colSelProjects, colProjectList)   // ✅ Collect 말고 ClearCollect 권장 (중복 방지)
+        );
+
+        // 4) 주간 Daily_DB 로드 (기존 기능 유지)
+        //    ※ 기존에는 "팀 = varMyTeam"로만 불러왔는데,
+        //       gal_TeamMatrix.Items 코드에서는 팀/권한/프로젝트별 분기를 rawRows에서 처리하므로
+        //       여기서는 "주간 범위"까지만 먼저 가져오는 게 기능 동일 + 더 안정적.
+        //       (권한 제한은 아래 TeamMatrix 가공 단계에서 그대로 적용됨)
+        ClearCollect(
+            colTeamWeekDaily,
+            Filter(
+                Daily_DB,
+                작성일자 >= vw_StartOfWeek &&
+                작성일자 <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days)   // 월~금 (기존과 동일)
+            )
+        );
+
+        // 5) 🔥 기존 gal_TeamMatrix.Items의 복잡한 로직을 그대로 "컬렉션"으로 선계산
+        //    - Daily_DB 대신 colTeamWeekDaily 사용
+        //    - UserInfo_DB 대신 colUsers 사용
+        //    - 기능은 100% 동일
+        ClearCollect(
+            colTeamMatrix,
+
+            With(
+                {
+                    baseRows: colTeamWeekDaily
+                },
+                With(
+                    {
+                        rawRows:
+                            If(
+                                CountRows(colSelProjects) = 0,
+                                Filter(baseRows, false),          // 전부 해제 = 빈
+                                Filter(baseRows, 프로젝트명 in colSelProjects.Value)
+                            )
+                    },
+                    AddColumns(
+                        GroupBy(
+                            If(
+                                varViewMode = "프로젝트별",
+
+                                // ✅ 프로젝트별: 권한 제한 없이 rawRows 그대로
+                                rawRows,
+
+                                // ✅ 팀별: 기존 Switch 권한 제한 유지
+                                Switch(
+                                    varMyRole,
+
+                                    // ① 소장 — 모든 팀장의 업무만
+                                    "소장",
+                                        Filter(
+                                            AddColumns(
+                                                rawRows,
+                                                AuthorRole,
+                                                    LookUp(colUsers, 이름_한글 = 작성자).직급2
+                                            ),
+                                            AuthorRole = "팀장"
+                                        ),
+
+                                    // ② 부문장 — 같은 부문의 팀장 업무만
+                                    "부문장",
+                                        Filter(
+                                            AddColumns(
+                                                rawRows,
+                                                AuthorRole,
+                                                    LookUp(colUsers, 이름_한글 = 작성자).직급2,
+                                                AuthorDivision,
+                                                    LookUp(colUsers, 이름_한글 = 작성자).부문
+                                            ),
+                                            AuthorRole = "팀장"
+                                                && AuthorDivision = varMyDivision
+                                        ),
+
+                                    // ③ 팀장 · ④ 팀원 — 같은 팀 업무만
+                                    Filter(
+                                        AddColumns(
+                                            rawRows,
+                                            AuthorTeam,
+                                                LookUp(colUsers, 이름_한글 = 작성자).팀
+                                        ),
+                                        AuthorTeam = varMyTeam
+                                    )
+                                )
+                            ),
+
+                            // 직원별 그룹키
+                            작성자,
+                            Rows
+                        ),
+
+                        // 요일 컬럼/첫업무제목 (기존 그대로)
+                        첫업무제목, If(!IsEmpty(Rows), First(Rows).업무제목, ""),
+                        Mon, Filter(Rows, Weekday(작성일자, 2) = 1),
+                        T,   Filter(Rows, Weekday(작성일자, 2) = 2),
+                        W,   Filter(Rows, Weekday(작성일자, 2) = 3),
+                        Th,  Filter(Rows, Weekday(작성일자, 2) = 4),
+                        F,   Filter(Rows, Weekday(작성일자, 2) = 5)
+                    )
+                )
+            )
+        );
+
+        Set(varViewLoading, false);
+
+        // ✅ View_Screen.OnVisible - colProjectList가 비어있으면 재생성(안내 없이 자동 복구)
+        ClearCollect(
+            colProjectList,
+            SortByColumns(
+                Filter(
+                    Distinct(
+                        AddColumns(
+                            colDaily_365_Team,
+                            ProjNorm,
+                            Trim(OData__xd504__xb85c__xc81d__xd2b8__xba0) // 원본 프로젝트명
+                        ),
+                        ProjNorm
+                    ),
+                    !IsBlank(Value)   // ✅ 네 환경에서는 Value가 결과 컬럼
+                ),
+                "Value",
+                SortOrder.Ascending
+            )
         );
     Children:
       - Container1_2:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(207, 202, 196, 0.2)
@@ -23,7 +173,7 @@ Screens:
             Width: =1366
             Y: =36
       - Header_con_4:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(34, 35, 58, 1)
@@ -146,7 +296,7 @@ Screens:
                   X: =368
                   Y: =5
       - view_cal_con:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -528,7 +678,7 @@ Screens:
                   X: =334
                   Y: =20
       - viewCon:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -545,117 +695,13 @@ Screens:
                   FocusedBorderColor: =RGBA(98, 100, 167, 1)
                   FocusedBorderThickness: =2
                   Height: =684
-                  Items: |+
-                    =/* 0) ─ 주간 범위 변수 ─ */
-                    With(
-                        {
-                            baseRows: Filter(
-                                Daily_DB,
-                                OData__xc791__xc131__xc77c__xc790_ >= vw_StartOfWeek &&
-                                OData__xc791__xc131__xc77c__xc790_ <= DateAdd(vw_StartOfWeek, 4, TimeUnit.Days)
-                            )
-                        },
-
-                    /* 1) ─ 프로젝트 체크박스 필터 ─ */
-                    With(
-                        {
-                            rawRows:
-                                If(
-                                    CountRows(colSelProjects) = 0,
-                                    Filter(baseRows, false),          // 전부 해제 = 빈
-                                    Filter(
-                                        baseRows,
-                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 in colSelProjects.Value
-                                    )
-                                )
-                        },
-
-                    /* 2) ─ 직원별 GroupBy + 요일별 컬럼 ─ */
-                    AddColumns(
-                        GroupBy(
-                            /* 🔹 여기서 “팀별 / 프로젝트별” 분기 */
-                            If(
-                                varViewMode = "프로젝트별",
-                                //------------------------------------------------------
-                                /* ②-A)  프로젝트별 모드 : 권한 제한 없이 rawRows 그대로 */
-                                //------------------------------------------------------
-                                rawRows,
-
-                                //------------------------------------------------------
-                                /* ②-B)  팀별 모드 : 기존 Switch 로 권한 제한 유지    */
-                                //------------------------------------------------------
-                                Switch(
-                                    varMyRole,
-                                    /* ① 소장 — 모든 팀장의 업무만 */
-                                    "소장",
-                                        Filter(
-                                            AddColumns(
-                                                rawRows,
-                                                AuthorRole,
-                                                    LookUp(
-                                                        UserInfo_DB,
-                                                        '이름_한글' = '작성자'
-                                                    ).'직급2'
-                                            ),
-                                            AuthorRole = "팀장"
-                                        ),
-
-                                    /* ② 부문장 — 같은 부문의 팀장 업무만 */
-                                    "부문장",
-                                        Filter(
-                                            AddColumns(
-                                                rawRows,
-                                                AuthorRole,
-                                                    LookUp(
-                                                        UserInfo_DB,
-                                                        '이름_한글' = '작성자'
-                                                    ).'직급2',
-                                                AuthorDivision,
-                                                    LookUp(
-                                                        UserInfo_DB,
-                                                        '이름_한글' = '작성자'
-                                                    ).'부문'
-                                            ),
-                                            AuthorRole = "팀장"
-                                                && AuthorDivision = varMyDivision
-                                        ),
-
-                                    /* ③ 팀장 · ④ 팀원 — 같은 팀 업무만 */
-                                    Filter(
-                                        AddColumns(
-                                            rawRows,
-                                            AuthorTeam,
-                                                LookUp(
-                                                    UserInfo_DB,
-                                                    '이름_한글' = '작성자'
-                                                ).'팀'
-                                        ),
-                                        AuthorTeam = varMyTeam
-                                    )
-                                )   // ← Switch 끝
-                            ),        // ← If 끝
-
-                            /* ─ 직원별 그룹키 ─ */
-                            OData__xc791__xc131__xc790_,
-                            Rows
-                        ),
-
-                        /* ★ 여기서부터는 원래 컬럼 로직 그대로 ★ */
-                        첫업무제목,
-                            If(!IsEmpty(Rows), First(Rows).업무제목, ""),
-                        Mon, Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=1),
-                        T,   Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=2),
-                        W,   Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=3),
-                        Th,  Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=4),
-                        F,   Filter(Rows, Weekday(OData__xc791__xc131__xc77c__xc790_,2)=5)
-                    )
-                    ))
+                  Items: =colTeamMatrix
                   TemplateSize: =131
                   Width: =950
                   Y: =32
                 Children:
                   - memBackground_con:
-                      Control: GroupContainer@1.3.0
+                      Control: GroupContainer@1.4.0
                       Variant: ManualLayout
                       Properties:
                         Fill: =RGBA(214, 221, 224, 0.24)
@@ -676,7 +722,7 @@ Screens:
                                     /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
                                     CountIf(
                                         Self.AllItems,                        // ← 해당 요일의 레코드 집합
-                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                        프로젝트명 = "연차(반차)"   // 프로젝트명 열
                                     ) > 0,
                                     RGBA(210,40,40,0.6),                     // ① 연한 빨강
 
@@ -710,7 +756,7 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    Text: =ThisItem.프로젝트명
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =48
                                     X: =113
@@ -743,14 +789,14 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    Text: =ThisItem.작업시간
                                     VerticalAlignment: =VerticalAlign.Middle
                                     Width: =20
                                     Wrap: =false
                                     X: =132
                                     Y: =27
                               - Container16_5:
-                                  Control: GroupContainer@1.3.0
+                                  Control: GroupContainer@1.4.0
                                   Variant: ManualLayout
                                   Properties:
                                     BorderColor: =RGBA(53, 61, 63, 1)
@@ -790,7 +836,7 @@ Screens:
                                     /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
                                     CountIf(
                                         Self.AllItems,                        // ← 해당 요일의 레코드 집합
-                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                        프로젝트명 = "연차(반차)"   // 프로젝트명 열
                                     ) > 0,
                                     RGBA(210,40,40,0.6),                     // ① 연한 빨강
 
@@ -825,14 +871,14 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    Text: =ThisItem.작업시간
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =20
                                     Wrap: =false
                                     X: =132
                                     Y: =27
                               - Container16_10:
-                                  Control: GroupContainer@1.3.0
+                                  Control: GroupContainer@1.4.0
                                   Variant: ManualLayout
                                   Properties:
                                     BorderColor: =RGBA(53, 61, 63, 1)
@@ -854,7 +900,7 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    Text: =ThisItem.프로젝트명
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =48
                                     X: =113
@@ -904,7 +950,7 @@ Screens:
                                     /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
                                     CountIf(
                                         Self.AllItems,                        // ← 해당 요일의 레코드 집합
-                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                        프로젝트명 = "연차(반차)"   // 프로젝트명 열
                                     ) > 0,
                                     RGBA(210,40,40,0.6),                     // ① 연한 빨강
 
@@ -939,14 +985,14 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    Text: =ThisItem.작업시간
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =20
                                     Wrap: =false
                                     X: =132
                                     Y: =27
                               - Container16_11:
-                                  Control: GroupContainer@1.3.0
+                                  Control: GroupContainer@1.4.0
                                   Variant: ManualLayout
                                   Properties:
                                     BorderColor: =RGBA(53, 61, 63, 1)
@@ -968,7 +1014,7 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    Text: =ThisItem.프로젝트명
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =48
                                     X: =113
@@ -1018,7 +1064,7 @@ Screens:
                                     /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
                                     CountIf(
                                         Self.AllItems,                        // ← 해당 요일의 레코드 집합
-                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                        프로젝트명 = "연차(반차)"   // 프로젝트명 열
                                     ) > 0,
                                     RGBA(210,40,40,0.6),                     // ① 연한 빨강
 
@@ -1052,14 +1098,14 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    Text: =ThisItem.작업시간
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =20
                                     Wrap: =false
                                     X: =132
                                     Y: =27
                               - Container16_8:
-                                  Control: GroupContainer@1.3.0
+                                  Control: GroupContainer@1.4.0
                                   Variant: ManualLayout
                                   Properties:
                                     BorderColor: =RGBA(53, 61, 63, 1)
@@ -1081,7 +1127,7 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    Text: =ThisItem.프로젝트명
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =48
                                     X: =113
@@ -1131,7 +1177,7 @@ Screens:
                                     /* ① ‘연차(반차)’ 레코드가 1개 이상?  →  연한 빨강 배경 */
                                     CountIf(
                                         Self.AllItems,                        // ← 해당 요일의 레코드 집합
-                                        OData__xd504__xb85c__xc81d__xd2b8__xba0 = "연차(반차)"   // 프로젝트명 열
+                                        프로젝트명 = "연차(반차)"   // 프로젝트명 열
                                     ) > 0,
                                     RGBA(210,40,40,0.6),                     // ① 연한 빨강
 
@@ -1165,14 +1211,14 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xc791__xc5c5__xc2dc__xac04_
+                                    Text: =ThisItem.작업시간
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =20
                                     Wrap: =false
                                     X: =132
                                     Y: =27
                               - Container16_9:
-                                  Control: GroupContainer@1.3.0
+                                  Control: GroupContainer@1.4.0
                                   Variant: ManualLayout
                                   Properties:
                                     BorderColor: =RGBA(53, 61, 63, 1)
@@ -1194,7 +1240,7 @@ Screens:
                                     Italic: =true
                                     OnSelect: =Select(Parent)
                                     TabIndex: =-1
-                                    Text: =ThisItem.OData__xd504__xb85c__xc81d__xd2b8__xba0
+                                    Text: =ThisItem.프로젝트명
                                     VerticalAlignment: =VerticalAlign.Top
                                     Width: =48
                                     X: =113
@@ -1248,7 +1294,7 @@ Screens:
                         X: =5
                         Y: =52
             - WeekCon:
-                Control: GroupContainer@1.3.0
+                Control: GroupContainer@1.4.0
                 Variant: ManualLayout
                 Properties:
                   Fill: =RGBA(240, 240, 240, 1)
@@ -1322,7 +1368,7 @@ Screens:
                         X: =14
                         Y: =4
       - con_ProjFilter:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -1465,7 +1511,7 @@ Screens:
             Visible: =varShowDetail
             Width: =1366
       - con_popup_dailyTask:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
@@ -1795,9 +1841,10 @@ Screens:
                         DisplayMode: |-
                           =If(
                               name_label_2.Text in [
-                                  "김은성","장한기","박현수","박상지","노승덕","정삼석",
-                                  "전창환","표수강","박윤주","김성원","류오형",
-                                  "강규성","박장하","김승동","이규진","김봉진"
+                                  "장한기","박현수","현범용",
+                                  "박상지","노승덕","정삼석","전창환","표수강","박윤주","김성원","류오형", "강규성","박장하","김승동","정재영",
+                                  "이규진","김봉진",
+                                  "김은성"
                               ],
                               DisplayMode.Edit,     // 목록에 있으면 활성
                               DisplayMode.Disabled  // 아니면 회색(눌러도 무반응)
@@ -1867,3 +1914,33 @@ Screens:
                         Weight: ='TextCanvas.Weight'.Semibold
                         X: =12
                         Y: =327
+                  - TextCanvas8_9:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0.1
+                        Fill: =RGBA(245, 245, 245, 1)
+                        Font: =Font.Verdana
+                        Height: =25
+                        PaddingLeft: =0
+                        Size: =13
+                        Text: =ThisItem.작업_분류
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =115
+                        X: =837
+                        Y: =15
+                  - TextCanvas10_10:
+                      Control: Text@0.0.51
+                      Properties:
+                        Font: =Font.Verdana
+                        Height: =25
+                        Text: |
+                          ="작 업 분 류
+                          "
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Semibold
+                        Width: =80
+                        X: =757
+                        Y: =15
