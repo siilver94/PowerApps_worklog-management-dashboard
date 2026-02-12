@@ -1,3 +1,8 @@
+// ✅ App.OnStart (최상단) - 초기 준비 플래그만
+// name_label.Text는 초기엔 Blank일 수 있어, 여기서 팀을 확정하지 않음.
+Set(varAppReady, true);
+
+
 //// ── 0. 날짜·상태 기본 변수 ─────────────────────
 //Set(varSelProject, "");
 Set(varYear,  Year(Today()));
@@ -205,26 +210,42 @@ ClearCollect(
 
 //// ── 3. 프로젝트 목록 (정규화 + Value 통일 + Blank 제거) ─────
 
-// 정규화: Trim + 공백문자(특수공백 포함) 제거까지 하고 싶으면 Substitute를 한 단계 더 쓸 수 있음
-// 일단 Trim만으로도 대부분 해결됨
+// ✅ App.OnStart - 프로젝트 목록 캐시 생성 (Value 컬럼 테이블)
+// - colDaily_365_Team에서 프로젝트명(원본 컬럼)을 Trim 후 중복 제거
+// - 빈 값 제외
+// - Value 기준 정렬
+
+// ✅ App.OnStart - 프로젝트 목록 캐시 생성 (Value 컬럼 테이블)
+// - colDaily_365_Team에서 프로젝트명(원본 컬럼)을 Trim 후 중복 제거
+// - 빈 값 제외
+// - Value 기준 정렬
+
+// ✅ App.OnStart - 프로젝트 목록 캐시 생성 (Value 컬럼 테이블)
+// - colDaily_365_Team에서 프로젝트명(원본 컬럼)을 Trim 후 중복 제거
+// - 빈 값 제외
+// - Value 기준 정렬
+
 ClearCollect(
     colProjectList,
     SortByColumns(
-        RenameColumns(
-            Filter(
-                Distinct(
-                    AddColumns(colDaily_365_Team, ProjNorm, Trim(OData__xd504__xb85c__xc81d__xd2b8__xba0)),
-                    ProjNorm
+        Filter(
+            Distinct(
+                AddColumns(
+                    colDaily_365_Team,
+                    ProjNorm,
+                    Trim(OData__xd504__xb85c__xc81d__xd2b8__xba0) // 원본 프로젝트명
                 ),
-                !IsBlank(Value)
+                ProjNorm
             ),
-            Value,
-            Value
+            !IsBlank(Value)   // ✅ 네 환경에서는 Value가 결과 컬럼
         ),
         "Value",
         SortOrder.Ascending
     )
 );
+
+
+
 
 ClearCollect(
     colAllProjects,
@@ -269,3 +290,97 @@ Set(varSelTaskType, Blank());
 
 Set(varSelProject, "");    // (권장) 이것도 동일하게 타입 고정
 Set(varSelProject, Blank());
+
+
+// ========================================
+// ★★★★★★★★★★ 대시보드 화면App.OnStart  (1회성 준비 영역) ★★★★★★★★★★
+// ========================================
+
+// 0) 앱 준비 플래그 (옵션)
+Set(varAppReady, false);
+
+// 1) 숨김 팀 목록(필요한 만큼 추가)
+Set(
+    varHiddenTeams,
+    ["연구관리팀2", "엔진개발팀2", "제품개발DX팀"]
+);
+
+// 2) 팔레트(대분류 차트/legend 색 유지용) ✅
+Set(
+    varAccPalette,
+    [
+        RGBA(27, 94, 32, 1),
+        RGBA(30, 136, 229, 1),
+        RGBA(239, 108, 0, 1),
+        RGBA(56, 142, 60, 1),
+        RGBA(0, 137, 123, 1),
+        RGBA(142, 36, 170, 1),
+        RGBA(124, 179, 66, 1),
+        RGBA(3, 155, 229, 1),
+        RGBA(251, 192, 45, 1),
+        RGBA(144, 164, 174, 1),
+        RGBA(189, 189, 189, 1),
+        RGBA(224, 224, 224, 1)
+    ]
+);
+
+// 3) 로그인 사용자 이름(기본값)
+Set(varLoginName, Coalesce(User().FullName, ""));
+
+// 4) 사용자 정보 1회 조회
+Set(
+    varMe,
+    LookUp(UserInfo_DB, 이름_한글 = varLoginName)
+);
+
+// (선택) 만약 FullName이 DB와 안 맞는 경우가 많으면,
+// 이메일 컬럼이 UserInfo_DB에 있을 때만 아래 백업을 쓰세요.
+// If(IsBlank(varMe), Set(varMe, LookUp(UserInfo_DB, 이메일 = User().Email)));
+
+Set(varMyRole, varMe.직급2);
+Set(varMyTeam, varMe.팀);
+Set(varMyDivision, varMe.부문);
+
+// 5) ddMember용 리스트 2종 생성(1회)
+//    - colMemberList: 팀장 전용(팀원)
+//    - colTeamList: 부문장/소장 전용(팀)
+ClearCollect(colMemberList, {Label:"전체"});
+ClearCollect(colTeamList, {Label:"전체"});
+
+// 팀장(또는 팀원)일 때: 팀원 리스트 준비
+If(
+    varMyRole = "팀장",
+    ForAll(
+        Filter(UserInfo_DB, 팀 = varMyTeam) As U,
+        Collect(colMemberList, {Label: U.이름_한글})
+    )
+);
+
+// 부문장/소장일 때: 팀 리스트 준비
+If(
+    varMyRole = "부문장" || varMyRole = "소장",
+    With(
+        {
+            t: If(
+                varMyRole = "소장",
+                UserInfo_DB,
+                Filter(UserInfo_DB, 부문 = varMyDivision)
+            )
+        },
+        ForAll(
+            t As U,
+            With(
+                { teamName: Trim(Coalesce(U.팀, "")) },
+                If(
+                    !IsBlank(teamName) &&
+                    teamName <> "전체" &&
+                    !(teamName in varHiddenTeams) &&
+                    IsBlank(LookUp(colTeamList, Label = teamName)),
+                    Collect(colTeamList, {Label: teamName})
+                )
+            )
+        )
+    )
+);
+
+Set(varAppReady, true);
