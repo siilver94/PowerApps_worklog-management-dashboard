@@ -455,7 +455,7 @@ Screens:
                     Select(btnRecalcDash);
                   Visible: =varMyRole <> "팀원"
                   Width: =143
-                  X: =207
+                  X: =168
                   Y: =19
                 Children:
                   - Label1:
@@ -470,15 +470,15 @@ Screens:
             - TextCanvas14:
                 Control: Text@0.0.51
                 Properties:
-                  Align: ='TextCanvas.Align'.Center
+                  Align: ='TextCanvas.Align'.End
                   Font: =Font.Verdana
                   Height: =28
                   Size: =13
                   Text: ="맴버"
                   VerticalAlign: =VerticalAlign.Middle
                   Visible: =varMyRole <> "팀원"
-                  Width: =50
-                  X: =157
+                  Width: =33
+                  X: =127
                   Y: =19
             - btnRefresh:
                 Control: Button@0.0.45
@@ -651,16 +651,6 @@ Screens:
                   Width: =90
                   X: =376
                   Y: =18
-      - TextCanvas11:
-          Control: Text@0.0.51
-          Properties:
-            Height: =20
-            Size: =5
-            Text: =varMyRole & " / " & varMyDivision & " / " & varMyTeam
-            VerticalAlign: =VerticalAlign.Middle
-            Width: =98
-            X: =9
-            Y: =202
       - btnRecalcDash:
           Control: Button@0.0.45
           Properties:
@@ -1314,8 +1304,8 @@ Screens:
                               TabIndex: =-1
                               Text: =ThisItem.PctText & " (" & Text(ThisItem.Hours, "0") & "h)"
                               VerticalAlignment: =VerticalAlign.Top
-                              Width: =66
-                              X: =121
+                              Width: =73
+                              X: =118
                               Y: =6
                         - Title2:
                             Control: FluentV8/Label@1.8.6
@@ -1524,8 +1514,8 @@ Screens:
                     =RGBA(214, 221, 224, 0.5
                     )
                   Height: =32
-                  Width: =403
-                  X: =939
+                  Width: =436
+                  X: =905
                   Y: =6
       - ButtonCanvas6:
           Control: Button@0.0.45
@@ -1558,7 +1548,7 @@ Screens:
 
             VerticalAlign: =VerticalAlign.Middle
             Width: =100
-            X: =1082
+            X: =1052
             Y: =270
       - lblContextTitle_2:
           Control: Text@0.0.51
@@ -1576,8 +1566,8 @@ Screens:
               )
 
             VerticalAlign: =VerticalAlign.Middle
-            Width: =170
-            X: =1181
+            Width: =197
+            X: =1151
             Y: =270
       - lblContextTitle:
           Control: Text@0.0.51
@@ -1595,16 +1585,17 @@ Screens:
               )
             VerticalAlign: =VerticalAlign.Middle
             Width: =120
-            X: =956
+            X: =926
             Y: =270
       - conNotesPanel:
           Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(247, 247, 247, 1)
-            Height: =If(varShowNotes, 580, 4)
+            Height: =If(varShowNotes, 370, 4)
             Width: |+
-              =550
+              =530
+
             X: =If(varShowNotes, Parent.Width - conNotesPanel.Width, Parent.Width)
             Y: =68
           Children:
@@ -1613,13 +1604,17 @@ Screens:
                 Variant: ManualLayout
                 Properties:
                   Height: =34
-                  Width: =223
+                  Width: =200
+                  X: =3
+                  Y: =3
                 Children:
                   - lblTotalHoursValue_3:
                       Control: Text@0.0.51
                       Properties:
-                        Height: =28
-                        Text: |
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =12
+                        Text: |+
                           =With(
                               {
                                   Base: Filter(
@@ -1635,34 +1630,39 @@ Screens:
                                       (IsBlank(varSelTaskType) || 작업_분류 = varSelTaskType)
                                   )
                               },
-                              Text("총 작업 시간 : " & Sum(Base, 작업시간), "") & " 시간"
-                          )
-                        Width: =163
-                        X: =6
-                        Y: =3
+                              Text("총 작업 시간             " & Sum(Base, 작업시간), "") & " 시간" )
+
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =188
+                        X: =9
+                        Y: =6
             - conKPI_AvgPerPerson_1:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
                 Properties:
                   Height: =30
-                  Width: =223
-                  Y: =38
+                  Width: =200
+                  X: =3
+                  Y: =41
                 Children:
                   - TextCanvas12_4:
                       Control: Text@0.0.51
                       Properties:
                         Font: =Font.Verdana
-                        Height: =30
+                        Height: =25
+                        Size: =12
                         Text: ="1인 평균 작업시간"
                         VerticalAlign: =VerticalAlign.Middle
                         Width: =132
                         X: =6
+                        Y: =2
                   - lblAvgHoursValue_3:
                       Control: Text@0.0.51
                       Properties:
-                        Align: ='TextCanvas.Align'.Start
+                        Align: ='TextCanvas.Align'.End
                         Font: =Font.Verdana
-                        Height: =30
+                        Height: =25
+                        Size: =12
                         Text: |
                           =With(
                               {
@@ -1701,26 +1701,35 @@ Screens:
                               )
                           )
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =85
-                        X: =138
+                        Width: =55
+                        X: =137
             - conKPI_InProgress_1:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
                 Properties:
                   Height: =30
-                  Width: =223
-                  Y: =116
+                  Width: =200
+                  X: =3
+                  Y: =113
                 Children:
                   - TextCanvas12_5:
                       Control: Text@0.0.51
                       Properties:
-                        Height: =30
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =12
                         Text: ="진행중 업무 개수"
+                        VerticalAlign: =VerticalAlign.Middle
                         Width: =132
+                        X: =7
+                        Y: =3
                   - lblAvgHoursValue_4:
                       Control: Text@0.0.51
                       Properties:
-                        Height: =30
+                        Align: ='TextCanvas.Align'.End
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =12
                         Text: |
                           =With(
                               {
@@ -1741,20 +1750,26 @@ Screens:
                                   "0"
                               ) & " 건"
                           )
-                        Width: =99
-                        X: =124
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =54
+                        X: =138
+                        Y: =3
             - conKPI_ActiveProjects_1:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
                 Properties:
                   Height: =30
-                  Width: =223
+                  Width: =200
+                  X: =3
                   Y: =77
                 Children:
                   - lblAvgHoursValue_5:
                       Control: Text@0.0.51
                       Properties:
-                        Height: =23
+                        Align: ='TextCanvas.Align'.End
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =12
                         Text: |
                           =With(
                               {
@@ -1776,73 +1791,29 @@ Screens:
                               ) & " 개"
                           )
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =85
-                        X: =132
+                        Width: =48
+                        X: =143
                         Y: =4
                   - TextCanvas12_6:
                       Control: Text@0.0.51
                       Properties:
-                        Height: =30
+                        Font: =Font.Verdana
+                        Height: =25
+                        Size: =12
                         Text: ="활성 프로젝트 수"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =132
-            - Container16_3:
-                Control: GroupContainer@1.4.0
-                Variant: ManualLayout
-                Properties:
-                  Height: =30
-                  X: =200
-                  Y: =535
-                Children:
-                  - TextCanvas13_3:
-                      Control: Text@0.0.51
-                      Properties:
-                        Height: =30
-                        Text: |-
-                          ="팀인원 : " & varTeamCount
-                        Width: =73
-                        X: =123
-                  - lblWriteRate:
-                      Control: Text@0.0.51
-                      Properties:
-                        Height: =24
-                        Text: |
-                          ="기준(인원-일): " & varBaseManDays
-                        Width: =144
-                        X: =257
-                        Y: =3
-                  - lblWriteRate_1:
-                      Control: Text@0.0.51
-                      Properties:
-                        Height: =24
-                        Text: |-
-                          ="작성(인원-일): " & varWrittenManDays
-                        Width: =144
-                        X: =356
-                        Y: =6
-                  - lblWriteRate_2:
-                      Control: Text@0.0.51
-                      Properties:
-                        Height: =24
-                        Text: =RoundDown(varWriteRate*100,0) & "%"
-                        Width: =55
-                        X: =63
-                  - TextCanvas12:
-                      Control: Text@0.0.51
-                      Properties:
-                        Height: =30
-                        Text: |-
-                          ="작성률
-                          "
-                        Width: =63
+                        Width: =103
+                        X: =6
+                        Y: =4
             - conTrendTop3_1:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
                 Properties:
                   ContentLanguage: =
                   Height: =191
-                  Width: =223
-                  Y: =159
+                  Width: =200
+                  X: =3
+                  Y: =156
                 Children:
                   - TextCanvas11_1:
                       Control: Text@0.0.51
@@ -1952,7 +1923,7 @@ Screens:
                                   )
                               )
                           )
-                        Width: =242
+                        Width: =176
                         Y: =35
                       Children:
                         - Rectangle6_1:
@@ -2059,8 +2030,8 @@ Screens:
                 Control: HtmlViewer@2.1.0
                 Properties:
                   DisabledBorderColor: =RGBA(200, 198, 196, 1)
-                  Font: =Font.'Segoe UI'
-                  Height: =276
+                  Font: =Font.Verdana
+                  Height: =270
                   HtmlText: |+
                     =With(
                         {
@@ -2124,7 +2095,17 @@ Screens:
                             )
                         )
                     )
-                  Size: =10.5
-                  Width: =303
-                  X: =234
-                  Y: =147
+                  Size: =8
+                  Width: =329
+                  X: =200
+      - member_detail:
+          Control: Text@0.0.51
+          Properties:
+            Height: =20
+            Size: =5
+            Text: =varMyRole & " / " & varMyDivision & " / " & varMyTeam
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =false
+            Width: =98
+            X: =9
+            Y: =202
