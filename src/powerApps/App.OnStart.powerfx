@@ -32,7 +32,7 @@ Concurrent(
     /* 1) (굳이 필요 없다면) 변수를 없애도 OK */
     Set(
         varCutoffDate,
-        DateAdd(Today(), -400,TimeUnit.Days)
+        DateAdd(Today(), -365,TimeUnit.Days)
     ),
 
     /* 2) 날짜를 다시 계산해서 사용 (독립) */
@@ -42,7 +42,7 @@ Concurrent(
             Filter(
                 Task_DB,
                 작성자 = varMyName,
-                업무_시작일자 >= DateAdd(Today(), -400,TimeUnit.Days)
+                업무_시작일자 >= DateAdd(Today(), -365,TimeUnit.Days)
             ),
             업무제목, 업무_시작일자, 상태, 프로젝트명
         )
@@ -162,7 +162,7 @@ ClearCollect(
  
  
 // ── 최근 365일 기준일 (이미 varCutoffDate 만들고 있으니 그걸 써도 됨)
-Set(varCutoffDate, DateAdd(Today(), -400, TimeUnit.Days));
+Set(varCutoffDate, DateAdd(Today(), -365, TimeUnit.Days));
 
 // (권장) 최신 데이터 보장
 Refresh(Daily_DB);
@@ -225,24 +225,7 @@ ClearCollect(
 // - 빈 값 제외
 // - Value 기준 정렬
 
-ClearCollect(
-    colProjectList,
-    SortByColumns(
-        Filter(
-            Distinct(
-                AddColumns(
-                    colDaily_365_Team,
-                    ProjNorm,
-                    Trim(OData__xd504__xb85c__xc81d__xd2b8__xba0) // 원본 프로젝트명
-                ),
-                ProjNorm
-            ),
-            !IsBlank(Value)   // ✅ 네 환경에서는 Value가 결과 컬럼
-        ),
-        "Value",
-        SortOrder.Ascending
-    )
-);
+
 
 
 
@@ -384,3 +367,34 @@ If(
 );
 
 Set(varAppReady, true);
+
+// Daily_DB와 Project_DB를 결합하여 프로젝트 목록 생성
+ClearCollect(
+    colProjectList,
+    Sort(
+        Distinct(
+            AddColumns(
+                Collect(
+                    UnionProjects,
+                    // Daily_DB에서 추출한 프로젝트명
+                    AddColumns(
+                        Filter(Daily_DB, !IsBlank(프로젝트명)),
+                        Value,
+                        Trim(프로젝트명)
+                    ),
+                    // Project_DB에서 추출한 프로젝트명
+                    AddColumns(
+                        Filter(Project_DB, !IsBlank(프로젝트명)),
+                        Value,
+                        Trim(프로젝트명)
+                    )
+                ),
+                ProjNorm,
+                Value
+            ),
+            ProjNorm
+        ),
+        "ProjNorm",
+        SortOrder.Ascending
+    )
+);
