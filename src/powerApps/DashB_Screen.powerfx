@@ -169,7 +169,7 @@ Screens:
         Select(btnRecalcDash);
     Children:
       - Header_con_6:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(34, 35, 58, 1)
@@ -316,7 +316,7 @@ Screens:
                   X: =727
                   Y: =10
       - Con_Filter_1:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255,255,255,1)
@@ -402,7 +402,7 @@ Screens:
                   X: =294
                   Y: =82
             - Container19:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Fill: |-
@@ -949,7 +949,7 @@ Screens:
             X: =16
             Y: =230
       - Container14:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             BorderColor: =RGBA(214, 221, 224, 1)
@@ -963,7 +963,7 @@ Screens:
             Y: =259
           Children:
             - Container15:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Fill: |+
@@ -989,7 +989,7 @@ Screens:
                         X: =157
                         Y: =7
                   - PieChart1:
-                      Control: PieChart@2.2.0
+                      Control: PieChart@2.3.0
                       Group: chtHoursByAccount
                       Properties:
                         BorderColor: =RGBA(0, 0, 0, 0)
@@ -1200,7 +1200,7 @@ Screens:
                         X: =203
                         Y: =43
             - Container12:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Fill: |+
@@ -1226,7 +1226,7 @@ Screens:
                         X: =192
                         Y: =12
                   - ColumnChart:
-                      Control: BarChart@2.3.0
+                      Control: BarChart@2.4.0
                       Group: chtProjectDist
                       Properties:
                         BorderColor: =RGBA(0, 0, 0, 0)
@@ -1388,7 +1388,7 @@ Screens:
                         X: =248
                         Y: =42
             - Container17:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Fill: |+
@@ -1507,7 +1507,7 @@ Screens:
                   X: =8
                   Y: =8
             - Container19_1:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Fill: |-
@@ -1588,7 +1588,7 @@ Screens:
             X: =926
             Y: =270
       - conNotesPanel:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(247, 247, 247, 1)
@@ -1600,7 +1600,7 @@ Screens:
             Y: =68
           Children:
             - conKPI_TotalHours_1:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Height: =34
@@ -1637,7 +1637,7 @@ Screens:
                         X: =9
                         Y: =6
             - conKPI_AvgPerPerson_1:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Height: =30
@@ -1704,7 +1704,7 @@ Screens:
                         Width: =55
                         X: =137
             - conKPI_InProgress_1:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Height: =30
@@ -1755,7 +1755,7 @@ Screens:
                         X: =138
                         Y: =3
             - conKPI_ActiveProjects_1:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   Height: =30
@@ -1806,7 +1806,7 @@ Screens:
                         X: =6
                         Y: =4
             - conTrendTop3_1:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
                   ContentLanguage: =
