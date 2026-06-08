@@ -178,6 +178,7 @@ Project_DB (프로젝트 마스터)
 | B-03 | Task_Screen | 프로젝트별 선택 필터 안됨 | `colSelectedProjects` 컬렉션 타입 불일치 가능성 |
 | B-04 | Task_Screen | 프로젝트 관리 신규 저장 오류 | `업무_계정_DataCard3`의 `Update` 속성 누락 (`cmbAccount` 미연결) |
 | B-05 | Task_Screen | 프로젝트 관리 상태 수정 안됨 | `상태_DataCard3`가 `TextInput` 자유입력 — 드롭다운 필요 |
+| B-06 | 전체 화면 | 특정 1명 이름 파싱 깨짐 | `User().FullName`이 `"서현 입 / 연구관리팀 / 주임"` 형식인 계정 존재 → `name_label` 파싱 로직이 슬래시 포함 케이스 미처리 → `Daily_DB` 작성자가 이상한 값으로 저장됨. 근본 해결: 모든 화면 `name_label.Text`를 `varMyName`(이메일 LookUp 방식)으로 교체 필요 |
 
 ---
 
