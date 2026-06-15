@@ -100,8 +100,10 @@ ClearCollect(
         {Account:"제품개발", Tag:"설계_Drawing", Order:3},
         {Account:"제품개발", Tag:"시험", Order:4},
         {Account:"제품개발", Tag:"회의", Order:5},
-        {Account:"제품개발", Tag:"기획", Order:6},
-        {Account:"제품개발", Tag:"기타", Order:7},
+        {Account:"제품개발", Tag:"기획/검토", Order:6},
+        {Account:"제품개발", Tag:"CAE", Order:7},
+        {Account:"제품개발", Tag:"문서/보고", Order:8},
+        {Account:"제품개발", Tag:"기타", Order:9},
 
         {Account:"기술개발", Tag:"— 미선택 —", Order:0},
         {Account:"기술개발", Tag:"조립(제작)", Order:1},
@@ -109,8 +111,10 @@ ClearCollect(
         {Account:"기술개발", Tag:"설계_Drawing", Order:3},
         {Account:"기술개발", Tag:"시험", Order:4},
         {Account:"기술개발", Tag:"회의", Order:5},
-        {Account:"기술개발", Tag:"기획", Order:6},
-        {Account:"기술개발", Tag:"기타", Order:7},
+        {Account:"기술개발", Tag:"기획/검토", Order:6},
+        {Account:"기술개발", Tag:"CAE", Order:7},
+        {Account:"기술개발", Tag:"문서/보고", Order:8},
+        {Account:"기술개발", Tag:"기타", Order:9},
 
         {Account:"원가절감", Tag:"— 미선택 —", Order:0},
         {Account:"원가절감", Tag:"조립(제작)", Order:1},
@@ -118,8 +122,10 @@ ClearCollect(
         {Account:"원가절감", Tag:"설계_Drawing", Order:3},
         {Account:"원가절감", Tag:"시험", Order:4},
         {Account:"원가절감", Tag:"회의", Order:5},
-        {Account:"원가절감", Tag:"기획", Order:6},
-        {Account:"원가절감", Tag:"기타", Order:7},
+        {Account:"원가절감", Tag:"기획/검토", Order:6},
+        {Account:"원가절감", Tag:"CAE", Order:7},
+        {Account:"원가절감", Tag:"문서/보고", Order:8},
+        {Account:"원가절감", Tag:"기타", Order:9},
 
         {Account:"설계변경", Tag:"— 미선택 —", Order:0},
         {Account:"설계변경", Tag:"조립(제작)", Order:1},
@@ -127,13 +133,15 @@ ClearCollect(
         {Account:"설계변경", Tag:"설계_Drawing", Order:3},
         {Account:"설계변경", Tag:"시험", Order:4},
         {Account:"설계변경", Tag:"회의", Order:5},
-        {Account:"설계변경", Tag:"기획", Order:6},
-        {Account:"설계변경", Tag:"기타", Order:7},
+        {Account:"설계변경", Tag:"기획/검토", Order:6},
+        {Account:"설계변경", Tag:"CAE", Order:7},
+        {Account:"설계변경", Tag:"문서/보고", Order:8},
+        {Account:"원가절감", Tag:"기타", Order:9},
 
         // ── TF : 세트 C ──
         {Account:"TF", Tag:"— 미선택 —", Order:0},
         {Account:"TF", Tag:"회의", Order:1},
-        {Account:"TF", Tag:"기획", Order:2},
+        {Account:"TF", Tag:"기획/검토", Order:2},
         {Account:"TF", Tag:"문서/보고", Order:3},
         {Account:"TF", Tag:"기타", Order:4},
 
@@ -142,7 +150,7 @@ ClearCollect(
         {Account:"교육", Tag:"교육수강", Order:1},
         {Account:"교육", Tag:"교육자료작성", Order:2},
         {Account:"교육", Tag:"시험/평가", Order:3},
-        {Account:"교육", Tag:"기타", Order:5},
+        {Account:"교육", Tag:"기타", Order:4},
 
         // ── 기타업무 : 세트 E ──
         {Account:"기타업무", Tag:"— 미선택 —", Order:0},
@@ -150,13 +158,63 @@ ClearCollect(
         {Account:"기타업무", Tag:"문서/보고", Order:2},
         {Account:"기타업무", Tag:"행정", Order:3},
         {Account:"기타업무", Tag:"지원업무", Order:4},
-        {Account:"기타업무", Tag:"기타", Order:5},
+        {Account:"기타업무", Tag:"CAE", Order:5},
+        {Account:"기타업무", Tag:"기타", Order:6},
 
         // ── 연차(반차) : 세트 B ──
         {Account:"연차(반차)", Tag:"— 미선택 —", Order:0},
         {Account:"연차(반차)", Tag:"연차", Order:1},
         {Account:"연차(반차)", Tag:"오전반차", Order:2},
-        {Account:"연차(반차)", Tag:"오후반차", Order:3}
+        {Account:"연차(반차)", Tag:"오후반차", Order:3},
+
+        // ── 연구관리 : 회계 ──
+        {Account:"연구관리_회계", Tag:"— 미선택 —", Order:0},
+        {Account:"연구관리_회계", Tag:"행정", Order:1},
+        {Account:"연구관리_회계", Tag:"지원업무", Order:2},
+        {Account:"연구관리_회계", Tag:"회의", Order:3},
+        {Account:"연구관리_회계", Tag:"문서/보고", Order:4},
+        {Account:"연구관리_회계", Tag:"기타", Order:5},
+
+        // ── 연구관리 : 관리 ──
+        {Account:"연구관리_관리", Tag:"— 미선택 —", Order:0},
+        {Account:"연구관리_관리", Tag:"행정", Order:1},
+        {Account:"연구관리_관리", Tag:"지원업무", Order:2},
+        {Account:"연구관리_관리", Tag:"회의", Order:3},
+        {Account:"연구관리_관리", Tag:"문서/보고", Order:4},
+        {Account:"연구관리_관리", Tag:"기타", Order:5},
+
+        // ── 연구관리 : 검정/인증 ──
+        {Account:"연구관리_검정/인증", Tag:"— 미선택 —", Order:0},
+        {Account:"연구관리_검정/인증", Tag:"행정", Order:1},
+        {Account:"연구관리_검정/인증", Tag:"지원업무", Order:2},
+        {Account:"연구관리_검정/인증", Tag:"회의", Order:3},
+        {Account:"연구관리_검정/인증", Tag:"문서/보고", Order:4},
+        {Account:"연구관리_검정/인증", Tag:"기타", Order:5},
+
+        // ── 연구관리 : S/W ──
+        {Account:"연구관리_S/W", Tag:"— 미선택 —", Order:0},
+        {Account:"연구관리_S/W", Tag:"기획/설계", Order:1},
+        {Account:"연구관리_S/W", Tag:"개발/코딩", Order:2},
+        {Account:"연구관리_S/W", Tag:"문서/보고", Order:3},
+        {Account:"연구관리_S/W", Tag:"회의", Order:4},
+        {Account:"연구관리_S/W", Tag:"기타", Order:5},
+
+        // ── 연구관리 : 데이터분석 ──
+        {Account:"연구관리_데이터분석", Tag:"— 미선택 —", Order:0},
+        {Account:"연구관리_데이터분석", Tag:"데이터처리", Order:1},
+        {Account:"연구관리_데이터분석", Tag:"분석/모델링", Order:2},
+        {Account:"연구관리_데이터분석", Tag:"문서/보고", Order:3},
+        {Account:"연구관리_데이터분석", Tag:"회의", Order:4},
+        {Account:"연구관리_데이터분석", Tag:"기타", Order:5},
+
+         // ── 출장 ──
+        {Account:"출장", Tag:"필드 클레임", Order:0},
+        {Account:"출장", Tag:"테스트", Order:1},
+        {Account:"출장", Tag:"업체 방문", Order:2},
+        {Account:"출장", Tag:"회의", Order:3},
+        {Account:"출장", Tag:"세미나", Order:4},
+        {Account:"출장", Tag:"교육", Order:5},
+        {Account:"출장", Tag:"기타", Order:6}
     )
 );
  
@@ -170,42 +228,13 @@ Refresh(Daily_DB);
 //// ── 2. 최근 365일 팀 데이터 ▶ colDaily_365_Team ─────
 ClearCollect(
     colDaily_365_Team,
-    ShowColumns(
-        Filter(
-            Daily_DB,
-            작성일자 >= varCutoffDate &&
-            팀 = varMyTeam
-        ),
-        ID,
-        작성일자,
-        작성자,
-        팀,
-        프로젝트명,
-        업무제목,
-        작업시간,
-        상태,
-        피드백
-    )
+    Filter(Daily_DB, 작성일자 >= varCutoffDate && 팀 = varMyTeam)
 );
 
 //// ── 2-B. 최근 365일 전체 데이터 ▶ colDaily_365_All ─────
 ClearCollect(
     colDaily_365_All,
-    ShowColumns(
-        Filter(
-            Daily_DB,
-            작성일자 >= varCutoffDate
-        ),
-        ID,
-        작성일자,
-        작성자,
-        팀,
-        프로젝트명,
-        업무제목,
-        작업시간,
-        상태,
-        피드백
-    )
+    Filter(Daily_DB, 작성일자 >= varCutoffDate)
 );
 
 //// ── 3. 프로젝트 목록 (정규화 + Value 통일 + Blank 제거) ─────
@@ -230,40 +259,54 @@ ClearCollect(
 
 
 
+// ── colAllProjects: 프로젝트별 모드 (Project_DB 전체 — 68건, delegation 문제 없음) ──
 ClearCollect(
     colAllProjects,
-    SortByColumns(
-        RenameColumns(
-            Filter(
-                Distinct(
-                    AddColumns(colDaily_365_All, ProjNorm, Trim(OData__xd504__xb85c__xc81d__xd2b8__xba0)),
-                    ProjNorm
-                ),
-                !IsBlank(Value)
+    Sort(
+        Distinct(
+            AddColumns(
+                Filter(Project_DB, !IsBlank(프로젝트명)),
+                Value,
+                Trim(프로젝트명)
             ),
-           Value,
             Value
         ),
-        "Value",
+        Value,
         SortOrder.Ascending
     )
 );
 
-// 기본 선택: 팀별 전체 선택
-Clear(colSelProjects);
-Collect(colSelProjects, colProjectList.Value);
+// ── colProjectList: 팀별 모드 (우리 팀 작성자가 Task_DB에 등록한 프로젝트) ──
+ClearCollect(
+    colProjectList,
+    Sort(
+        Distinct(
+            AddColumns(
+                Filter(
+                    Task_DB,
+                    작성자 in colTargetAuthors.이름_한글 &&
+                    !IsBlank(프로젝트명)
+                ),
+                Value,
+                Trim(프로젝트명)
+            ),
+            Value
+        ),
+        Value,
+        SortOrder.Ascending
+    )
+);
 
 
 Set(varShowDetail, false);   // 팝업 표시 여부
 //Set(varSelID,     Blank());  // 선택된 Daily_DB PK(ID)
 
-// 로그인 사용자 정보 캐싱
-Set(
-    varMyInfo,
-    LookUp(UserInfo_DB, '이름_한글' = name_label.Text)
-);
-Set(varMyRole, varMyInfo.'직급2');   // Choice 타입이면 .Value 필수
-Set(varMyDivision, varMyInfo.'부문');
+
+// 이메일 기준으로 매칭 (name_label.Text 파싱 불안정 문제 우회)
+Set(varMyRole, LookUp(UserInfo_DB, 'e-mail' = varMyEmail, 직급2));
+Set(varMyDivision, LookUp(UserInfo_DB, 'e-mail' = varMyEmail, 부문));
+
+
 //Set(varMyTeam, varMyInfo.'팀');
 Set(varViewMode, "팀별");   // 🔸 새 전역 변수 (기본값: 팀별)
 
@@ -316,14 +359,6 @@ Set(
     LookUp(UserInfo_DB, 이름_한글 = varLoginName)
 );
 
-// (선택) 만약 FullName이 DB와 안 맞는 경우가 많으면,
-// 이메일 컬럼이 UserInfo_DB에 있을 때만 아래 백업을 쓰세요.
-// If(IsBlank(varMe), Set(varMe, LookUp(UserInfo_DB, 이메일 = User().Email)));
-
-Set(varMyRole, varMe.직급2);
-Set(varMyTeam, varMe.팀);
-Set(varMyDivision, varMe.부문);
-
 // 5) ddMember용 리스트 2종 생성(1회)
 //    - colMemberList: 팀장 전용(팀원)
 //    - colTeamList: 부문장/소장 전용(팀)
@@ -368,33 +403,38 @@ If(
 
 Set(varAppReady, true);
 
-// Daily_DB와 Project_DB를 결합하여 프로젝트 목록 생성
+// ── colUsers 캐시 (역할별 필터링에 사용) ──
+ClearCollect(colUsers, UserInfo_DB);
+
+// ── colTargetAuthors: 역할별 조회 대상 작성자 목록 ──
+ClearCollect(
+    colTargetAuthors,
+    Switch(
+        varMyRole,
+        "소장",   Filter(colUsers, 직급2 = "팀장"),
+        "부문장", Filter(colUsers, 직급2 = "팀장" && 부문 = varMyDivision),
+        "팀장",   Filter(colUsers, 팀 = varMyTeam),
+                  Filter(colUsers, 이름_한글 = varMyName)
+    )
+);
+
+
+// ── colProjectList: 팀별 모드용 (Project_DB 기반 — delegation 문제 없음) ──
 ClearCollect(
     colProjectList,
     Sort(
         Distinct(
             AddColumns(
-                Collect(
-                    UnionProjects,
-                    // Daily_DB에서 추출한 프로젝트명
-                    AddColumns(
-                        Filter(Daily_DB, !IsBlank(프로젝트명)),
-                        Value,
-                        Trim(프로젝트명)
-                    ),
-                    // Project_DB에서 추출한 프로젝트명
-                    AddColumns(
-                        Filter(Project_DB, !IsBlank(프로젝트명)),
-                        Value,
-                        Trim(프로젝트명)
-                    )
+                Filter(
+                    Project_DB,
+                    !IsBlank(프로젝트명)
                 ),
-                ProjNorm,
-                Value
+                Value,
+                Trim(프로젝트명)
             ),
-            ProjNorm
+            Value
         ),
-        "ProjNorm",
+        Value,
         SortOrder.Ascending
     )
 );
