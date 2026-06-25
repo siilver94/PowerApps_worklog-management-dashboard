@@ -11,15 +11,9 @@ Screens:
         Set(varShowDeleteConfirm, false);
 
         // 처음 열릴 때 모든 프로젝트를 선택 상태로 만듦
-        ClearCollect(
-          colSelectedProjects,
-          AddColumns(
-            Distinct(Task_DB, 프로젝트명),
-            프로젝트명, 
-            Value
-          )
-        );
-        // 그리고 chkSelectAll 의 Default = true 로 표시
+        // colProjectList에서 직접 복사 → Trim 일치 보장
+        // 갤러리와 동일한 소스 (작성자 = 텍스트 비교 → Delegation 가능)
+        Clear(colDeselectedProjects);
     Children:
       - Container1:
           Control: GroupContainer@1.5.0
@@ -155,7 +149,6 @@ Screens:
                     =Refresh(Project_DB);
                     Set(varShowProjectModal, true);
                     Set(varProjectMode, "View");
-                    ResetForm(frmProject);
                   Text: ="프로젝트 관리"
                   Width: =113
                   X: =6
@@ -268,19 +261,18 @@ Screens:
                                   },
 
                                   With(
-                                      /* 2) 프로젝트 다중 선택 필터 (로컬) */
-                                      {
-                                          projRows :
-                                              If(
-                                                  IsEmpty( colSelectedProjects ),
-                                                  baseRows,
-                                                  Filter(
-                                                      baseRows,
-                                                      프로젝트명 in colSelectedProjects.Value
-                                                  )
-                                              )
-                                      },
-
+                          /* 2) 프로젝트 다중 선택 필터 (로컬) — colDeselectedProjects 방식 */
+                          {
+                              projRows :
+                                  If(
+                                      IsEmpty(colDeselectedProjects),
+                                      baseRows,                              // 해제된 것 없으면 전체 표시
+                                      Filter(
+                                          baseRows,
+                                          !(프로젝트명 in colDeselectedProjects.Value)  // 해제된 프로젝트 제외
+                                      )
+                                  )
+                          },
                                       /* 3) 상태 필터 + 정렬 (로컬) */
                                       SortByColumns(
                                           Filter(
@@ -387,16 +379,17 @@ Screens:
                   FocusedBorderThickness: =2
                   Height: =541
                   Items: |-
-                    =AddColumns(
+                    =Sort(
                         Distinct(
-                            Filter(
-                                Task_DB, 
-                                작성자 = name_label_1.Text
+                            AddColumns(
+                                Filter(Task_DB, 작성자 = name_label_1.Text),
+                                Value,
+                                Trim(프로젝트명)
                             ),
-                            프로젝트명
+                            Value
                         ),
-                        프로젝트명,
-                        Value
+                        Value,
+                        SortOrder.Ascending
                     )
                   Width: =Parent.Width
                   Y: =41
@@ -418,37 +411,29 @@ Screens:
                   - chkProject:
                       Control: CheckBox@0.0.30
                       Properties:
-                        Checked: =ThisItem.Value in colSelectedProjects.Value
+                        Checked: =IsBlank(LookUp(colDeselectedProjects, Value = ThisItem.Value))
                         Font: =Font.Verdana
                         FontSize: =10
                         Label: =ThisItem.Value
-                        OnCheck: |-
-                          =Collect(colSelectedProjects, { Value: ThisItem.Value })
+                        OnCheck: =RemoveIf(colDeselectedProjects, Value = ThisItem.Value)
                         OnSelect: =
-                        OnUncheck: =RemoveIf(colSelectedProjects, Value = ThisItem.Value)
+                        OnUncheck: |-
+                          =Collect(colDeselectedProjects, {Value: ThisItem.Value})
                         Width: =260
                         X: =4
                         Y: =7
             - chkSelectAll:
                 Control: CheckBox@0.0.30
                 Properties:
-                  Checked: =true
+                  Checked: =IsEmpty(colDeselectedProjects)
                   Font: =Font.Verdana
                   FontSize: =9
                   FontWeight: =FontWeight.Semibold
                   Height: =20
                   Label: ="전체 선택/해제"
-                  OnCheck: |-
-                    =ClearCollect(
-                        colSelectedProjects,
-                        AddColumns(
-                            Distinct(Task_DB, 프로젝트명),
-                            프로젝트명,
-                            Value
-                        )
-                    );
+                  OnCheck: =Clear(colDeselectedProjects)
                   OnSelect: =
-                  OnUncheck: =Clear(colSelectedProjects);
+                  OnUncheck: =ClearCollect(colDeselectedProjects,'GalleryProjects(Vertical)'.AllItems)
                   Width: =120
                   X: =4
                   Y: =8
@@ -537,18 +522,18 @@ Screens:
                                   },
 
                                   With(
-                                      /* 2) 프로젝트 다중 선택 필터 (로컬) */
-                                      {
-                                          projRows :
-                                              If(
-                                                  IsEmpty( colSelectedProjects ),
-                                                  baseRows,
-                                                  Filter(
-                                                      baseRows,
-                                                      프로젝트명 in colSelectedProjects.Value
-                                                  )
-                                              )
-                                      },
+                          /* 2) 프로젝트 다중 선택 필터 (로컬) — colDeselectedProjects 방식 */
+                          {
+                              projRows :
+                                  If(
+                                      IsEmpty(colDeselectedProjects),
+                                      baseRows,                              // 해제된 것 없으면 전체 표시
+                                      Filter(
+                                          baseRows,
+                                          !(프로젝트명 in colDeselectedProjects.Value)  // 해제된 프로젝트 제외
+                                      )
+                                  )
+                          },
 
                                       /* 3) 상태 필터 + 정렬 (로컬) */
                                       SortByColumns(
@@ -744,18 +729,18 @@ Screens:
                                   },
 
                                   With(
-                                      /* 2) 프로젝트 다중 선택 필터 (로컬) */
-                                      {
-                                          projRows :
-                                              If(
-                                                  IsEmpty( colSelectedProjects ),
-                                                  baseRows,
-                                                  Filter(
-                                                      baseRows,
-                                                      프로젝트명 in colSelectedProjects.Value
-                                                  )
-                                              )
-                                      },
+                          /* 2) 프로젝트 다중 선택 필터 (로컬) — colDeselectedProjects 방식 */
+                          {
+                              projRows :
+                                  If(
+                                      IsEmpty(colDeselectedProjects),
+                                      baseRows,                              // 해제된 것 없으면 전체 표시
+                                      Filter(
+                                          baseRows,
+                                          !(프로젝트명 in colDeselectedProjects.Value)  // 해제된 프로젝트 제외
+                                      )
+                                  )
+                          },
 
                                       /* 3) 상태 필터 + 정렬 (로컬) */
                                       SortByColumns(
@@ -905,15 +890,7 @@ Screens:
                   Font: =Font.Verdana
                   FontSize: =8
                   Height: =20
-                  Text: |+
-                    =If(
-                        IsBlank(Find("(", User().FullName)), // 괄호가 없는 경우 (이름 양식 2)
-                        Concatenate(
-                            Trim(Right(User().FullName, Len(User().FullName) - Find(" ", User().FullName))), // 공백 이후 성
-                            Trim(Left(User().FullName, Find(" ", User().FullName))) // 공백 이전 이름
-                        ),
-                        Trim(Left(User().FullName, Find("(", User().FullName) - 1)) // 괄호가 있는 경우 (이름 양식 1)
-                    )
+                  Text: =varMyName
                   Width: =35
                   X: =1310
                   Y: =4
@@ -2462,12 +2439,115 @@ Screens:
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
-            Height: =663
+            Height: =720
             Visible: =varShowProjectModal
-            Width: =1115
-            X: =105
-            Y: =74
+            Width: =1280
+            X: =43
+            Y: =29
           Children:
+            - recLeftBg:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =2
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Fill: |+
+                    =RGBA(248, 249, 252, 1)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  Height: =720
+                  HoverFill: =RGBA(0, 0, 0, 0)
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Width: =380
+            - OuterRactangle_2:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =2
+                  DisabledFill: =RGBA(0, 0, 0, 0)
+                  Fill: =RGBA(0, 0, 0, 0.5)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  Height: =667
+                  HoverFill: =
+                  OnSelect: |-
+                    =Set(ShowPopup, false);
+                    Set(editMode, false);
+                    Set(varShowProjectModal, false);
+                    ResetForm(Form1_1);
+                    Set(SelectedItem,{});
+                  PressedFill: =RGBA(0, 0, 0, 0)
+                  Visible: =varShowDeleteConfirm
+                  Width: =1119
+                  X: =-1
+                  Y: =-1
+            - conProjDetail:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: |+
+                    =If(varProjectMode="View", RGBA(220,220,220,1), RGBA(0,120,212,0.4))
+                  BorderThickness: =If(varProjectMode="View", 1, 2)
+                  Fill: |+
+                    =If(varProjectMode="View", RGBA(255,255,255,1), RGBA(240,248,255,0.2))
+                  Height: =720
+                  Width: =899
+                  X: =381
+                Children:
+                  - recHeader:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(220, 220, 220, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(248, 249, 252, 1)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        Height: =72
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =899
+                  - lblProjName:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        Font: =Font.Verdana
+                        FontWeight: =FontWeight.Semibold
+                        Height: =36
+                        Size: =18
+                        Text: =galProjectList.Selected.프로젝트명
+                        Visible: =varProjectMode = "View"
+                        Width: =580
+                        X: =32
+                        Y: =20
+                  - Text2:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        X: =125
+                        Y: =519
+                  - recHeaderDivider:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(243, 242, 241, 1)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledFill: =RGBA(200, 198, 196, 1)
+                        Fill: =RGBA(220, 220, 220, 1)
+                        FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                        Height: =1
+                        HoverFill: =RGBA(98, 100, 167, 1)
+                        PressedFill: =RGBA(98, 100, 167, 1)
+                        Width: =899
+                        Y: =72
+                  - txtProjName:
+                      Control: ModernTextInput@1.1.0
+                      Properties:
+                        Default: =galProjectList.Selected.프로젝트명
+                        Height: =40
+                        Placeholder: ="프로젝트명을 입력하세요"
+                        Visible: =varProjectMode = "Edit" || varProjectMode = "New"
+                        Width: =540
+                        X: =32
+                        Y: =16
             - galProjectList:
                 Control: Gallery@2.15.0
                 Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_pcfCore
@@ -2475,19 +2555,21 @@ Screens:
                   BorderColor: =RGBA(243, 242, 241, 1)
                   FocusedBorderColor: =RGBA(98, 100, 167, 1)
                   FocusedBorderThickness: =2
-                  Height: =534
+                  Height: =648
                   Items: |-
                     =SortByColumns(
                         Filter(
                             Project_DB,
-                            IsBlank(ddAccount.Selected.Value) || 업무_계정 = ddAccount.Selected.Value
+                            // 업무_계정 필터
+                            IsBlank(ddAccount.Selected.Value) || 업무_계정 = ddAccount.Selected.Value,
+                            // 상태 필터 (전체면 조건 없음)
+                            ddStatus.Selected.Value = "전체" || 상태 = ddStatus.Selected.Value
                         ),
-                        "OData__xd504__xb85c__xc81d__xd2b8__xba" ,
+                        "OData__xd504__xb85c__xc81d__xd2b8__xba",
                         SortOrder.Ascending
                     )
-                  Width: =326
-                  X: =40
-                  Y: =89
+                  Width: =380
+                  Y: =64
                 Children:
                   - Title4:
                       Control: FluentV8/Label@1.8.6
@@ -2540,8 +2622,24 @@ Screens:
                         Text: =ThisItem.시작날짜
                         VerticalAlignment: =VerticalAlign.Top
                         Width: =98
-                        X: =226
-                        Y: =12
+                        X: =12
+                        Y: =28
+                  - BadgeCanvas2:
+                      Control: Badge@0.0.24
+                      Properties:
+                        BasePaletteColor: |-
+                          =Switch(
+                              ThisItem.상태,
+                              "시작전",  RGBA(158, 158, 158, 1),
+                              "진행중",  RGBA(30, 136, 229, 1),
+                              "완료",    RGBA(56, 142, 60, 1),
+                              RGBA(200, 200, 200, 1)
+                          )
+                        Content: =ThisItem.상태
+                        Height: =20
+                        Width: =52
+                        X: =268
+                        Y: =14
             - Icon1_1:
                 Control: Classic/Icon@2.5.0
                 Properties:
@@ -2559,7 +2657,7 @@ Screens:
                   OnSelect: |-
                     =Set(varShowProjectModal, false);
                     Set(varProjectMode, "View");
-                    ResetForm(frmProject);
+                    //ResetForm(frmProject);
                   PaddingBottom: =3
                   PaddingLeft: =3
                   PaddingRight: =3
@@ -2568,7 +2666,7 @@ Screens:
                   PressedColor: =ColorFade(RGBA(98, 100, 167, 1), -30%)
                   PressedFill: =RGBA(0, 0, 0, 0)
                   Width: =32
-                  X: =1072
+                  X: =1240
                   Y: =8
             - btnNewProject:
                 Control: Button@0.0.45
@@ -2577,8 +2675,8 @@ Screens:
                     =Set(varProjectMode, "New");
                     NewForm(frmProject);
                   Text: ="New"
-                  X: =642
-                  Y: =603
+                  X: =857
+                  Y: =666
             - btnSaveProject:
                 Control: Button@0.0.45
                 Properties:
@@ -2601,6 +2699,7 @@ Screens:
                   DefaultSelectedItems: |-
                     =
                     ["기술개발"]
+                  Height: =36
                   Items: |-
                     =Sort(
                         Distinct(Project_DB, 업무_계정),
@@ -2608,9 +2707,9 @@ Screens:
                         SortOrder.Ascending
                     )
                   OnChange: =Reset(galProjectList);
-                  Width: =132
-                  X: =40
-                  Y: =40
+                  Width: =168
+                  X: =16
+                  Y: =16
             - btnEdit:
                 Control: Button@0.0.45
                 Properties:
@@ -2620,529 +2719,8 @@ Screens:
                   Text: ="편집"
                   Visible: |+
                     =varProjectMode = "View" && !IsBlank(galProjectList.Selected)
-                  X: =744
-                  Y: =603
-            - Container16:
-                Control: GroupContainer@1.5.0
-                Variant: ManualLayout
-                Properties:
-                  BorderColor: |+
-                    =If(varProjectMode="View", RGBA(220,220,220,1), RGBA(0,120,212,0.4))
-                  BorderThickness: =If(varProjectMode="View", 1, 2)
-                  Fill: |+
-                    =If(varProjectMode="View", RGBA(255,255,255,1), RGBA(240,248,255,0.2))
-                  Height: =555
-                  Width: =580
-                  X: =492
-                  Y: =8
-                Children:
-                  - frmProject:
-                      Control: Form@2.4.4
-                      Layout: Vertical
-                      Properties:
-                        BorderColor: =RGBA(243, 242, 241, 1)
-                        DataSource: =Project_DB
-                        DefaultMode: |-
-                          =Switch(
-                              varProjectMode,
-                              "New",  FormMode.New,
-                              "Edit", FormMode.Edit,
-                              FormMode.View
-                          )
-                        Item: =galProjectList.Selected
-                        OnSuccess: |+
-                          =Refresh(Project_DB);
-                          Set(varProjectMode, "View");
-                          ViewForm(frmProject);
-
-                          // ✅ 토스트
-                          Set(varShowToast, false);
-                          Set(varToastMessage, "프로젝트가 저장되었습니다.");
-                          Set(varShowToast, true);
-                        Width: =548
-                        Y: =40
-                      Children:
-                        - 프로젝트명_DataCard3:
-                            Control: TypedDataCard@1.0.7
-                            Variant: TextualEdit
-                            IsLocked: true
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="OData__xd504__xb85c__xc81d__xd2b8__xba"
-                              Default: =ThisItem.프로젝트명
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'OData__xd504__xb85c__xc81d__xd2b8__xba')
-                              MaxLength: =DataSourceInfo([@Project_DB], DataSourceInfo.MaxLength, 'OData__xd504__xb85c__xc81d__xd2b8__xba')
-                              Required: =true
-                              Update: =DataCardValue22.Value
-                              Width: =200
-                              X: =0
-                              Y: =0
-                            Children:
-                              - DataCardKey22:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - DataCardValue22:
-                                  Control: TextInput@0.0.54
-                                  MetadataKey: FieldValue
-                                  Properties:
-                                    AccessibleLabel: =Parent.DisplayName
-                                    DisplayMode: =Parent.DisplayMode
-                                    Mode: ="'TextInputCanvas.Mode'.TextInputModeSingleLine"
-                                    Required: =Parent.Required
-                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
-                                    Value: =Parent.Default
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardKey22.Y + DataCardKey22.Height + 4
-                              - ErrorMessage22:
-                                  Control: Text@0.0.51
-                                  MetadataKey: ErrorMessage
-                                  Properties:
-                                    Height: =30
-                                    Text: =Parent.Error
-                                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardValue22.Y + DataCardValue22.Height
-                              - StarVisible22:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldRequired
-                                  Properties:
-                                    Align: ='TextCanvas.Align'.Center
-                                    Height: =30
-                                    Text: ="*"
-                                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =30
-                                    Y: =DataCardKey22.Y
-                        - PM_DataCard3:
-                            Control: TypedDataCard@1.0.7
-                            Variant: TextualEdit
-                            IsLocked: true
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="PM"
-                              Default: =ThisItem.PM
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'PM')
-                              MaxLength: =DataSourceInfo([@Project_DB], DataSourceInfo.MaxLength, 'PM')
-                              Required: =false
-                              Update: =DataCardValue23.Value
-                              Width: =200
-                              X: =1
-                              Y: =0
-                            Children:
-                              - DataCardKey23:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - DataCardValue23:
-                                  Control: TextInput@0.0.54
-                                  MetadataKey: FieldValue
-                                  Properties:
-                                    AccessibleLabel: =Parent.DisplayName
-                                    DisplayMode: =Parent.DisplayMode
-                                    Mode: ="'TextInputCanvas.Mode'.TextInputModeSingleLine"
-                                    Required: =Parent.Required
-                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
-                                    Value: =Parent.Default
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardKey23.Y + DataCardKey23.Height + 4
-                              - ErrorMessage23:
-                                  Control: Text@0.0.51
-                                  MetadataKey: ErrorMessage
-                                  Properties:
-                                    Height: =30
-                                    Text: =Parent.Error
-                                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardValue23.Y + DataCardValue23.Height
-                              - StarVisible23:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldRequired
-                                  Properties:
-                                    Align: ='TextCanvas.Align'.Center
-                                    Height: =30
-                                    Text: ="*"
-                                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =30
-                                    Y: =DataCardKey23.Y
-                        - 시작날짜_DataCard3:
-                            Control: TypedDataCard@1.0.7
-                            Variant: DateEdit
-                            IsLocked: true
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="OData__xc2dc__xc791__xb0a0__xc9dc_"
-                              Default: =ThisItem.시작날짜
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'OData__xc2dc__xc791__xb0a0__xc9dc_')
-                              Required: =true
-                              Update: =DataCardValue24.SelectedDate
-                              Width: =200
-                              X: =2
-                              Y: =0
-                            Children:
-                              - DataCardKey24:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - DataCardValue24:
-                                  Control: DatePicker@0.0.46
-                                  MetadataKey: FieldValue
-                                  Properties:
-                                    AccessibleLabel: =Parent.DisplayName
-                                    DisplayMode: =Parent.DisplayMode
-                                    EndDate: =Date(Year(Today())+100, 12, 31)
-                                    SelectedDate: =Parent.Default
-                                    StartDate: =Date(1900, 1, 1)
-                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardKey24.Y + DataCardKey24.Height + 4
-                              - ErrorMessage24:
-                                  Control: Text@0.0.51
-                                  MetadataKey: ErrorMessage
-                                  Properties:
-                                    Height: =30
-                                    Text: =Parent.Error
-                                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardValue24.Y + DataCardValue24.Height
-                              - StarVisible24:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldRequired
-                                  Properties:
-                                    Align: ='TextCanvas.Align'.Center
-                                    Height: =30
-                                    Text: ="*"
-                                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =30
-                                    Y: =DataCardKey24.Y
-                        - 종료날짜_DataCard3:
-                            Control: TypedDataCard@1.0.7
-                            Variant: DateEdit
-                            IsLocked: true
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="OData__xc885__xb8cc__xb0a0__xc9dc_"
-                              Default: =ThisItem.종료날짜
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'OData__xc885__xb8cc__xb0a0__xc9dc_')
-                              Required: =true
-                              Update: =DataCardValue25.SelectedDate
-                              Width: =200
-                              X: =0
-                              Y: =1
-                            Children:
-                              - DataCardKey25:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - DataCardValue25:
-                                  Control: DatePicker@0.0.46
-                                  MetadataKey: FieldValue
-                                  Properties:
-                                    AccessibleLabel: =Parent.DisplayName
-                                    DisplayMode: =Parent.DisplayMode
-                                    EndDate: =Date(Year(Today())+100, 12, 31)
-                                    SelectedDate: =Parent.Default
-                                    StartDate: =Date(1900, 1, 1)
-                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardKey25.Y + DataCardKey25.Height + 4
-                              - ErrorMessage25:
-                                  Control: Text@0.0.51
-                                  MetadataKey: ErrorMessage
-                                  Properties:
-                                    Height: =30
-                                    Text: =Parent.Error
-                                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardValue25.Y + DataCardValue25.Height
-                              - StarVisible25:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldRequired
-                                  Properties:
-                                    Align: ='TextCanvas.Align'.Center
-                                    Height: =30
-                                    Text: ="*"
-                                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =30
-                                    Y: =DataCardKey25.Y
-                        - 상태_DataCard3:
-                            Control: TypedDataCard@1.0.7
-                            Variant: TextualEdit
-                            IsLocked: true
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="OData__xc0c1__xd0dc_"
-                              Default: =ThisItem.상태
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'OData__xc0c1__xd0dc_')
-                              MaxLength: =DataSourceInfo([@Project_DB], DataSourceInfo.MaxLength, 'OData__xc0c1__xd0dc_')
-                              Required: =true
-                              Update: =DataCardValue26.Value
-                              Width: =200
-                              X: =1
-                              Y: =1
-                            Children:
-                              - DataCardKey26:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - DataCardValue26:
-                                  Control: TextInput@0.0.54
-                                  MetadataKey: FieldValue
-                                  Properties:
-                                    AccessibleLabel: =Parent.DisplayName
-                                    DisplayMode: =Parent.DisplayMode
-                                    Mode: ="'TextInputCanvas.Mode'.TextInputModeSingleLine"
-                                    Required: =Parent.Required
-                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
-                                    Value: =Parent.Default
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardKey26.Y + DataCardKey26.Height + 4
-                              - ErrorMessage26:
-                                  Control: Text@0.0.51
-                                  MetadataKey: ErrorMessage
-                                  Properties:
-                                    Height: =30
-                                    Text: =Parent.Error
-                                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardValue26.Y + DataCardValue26.Height
-                              - StarVisible26:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldRequired
-                                  Properties:
-                                    Align: ='TextCanvas.Align'.Center
-                                    Height: =30
-                                    Text: ="*"
-                                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =30
-                                    Y: =DataCardKey26.Y
-                        - 업무_계정_DataCard3:
-                            Control: TypedDataCard@1.0.7
-                            Variant: TextualEdit
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="OData__xad6c__xbd84___xc5c5__xbb34_"
-                              Default: =ThisItem.업무_계정
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'OData__xad6c__xbd84___xc5c5__xbb34_')
-                              MaxLength: =DataSourceInfo([@Project_DB], DataSourceInfo.MaxLength, 'OData__xad6c__xbd84___xc5c5__xbb34_')
-                              Required: =true
-                              Width: =200
-                              X: =2
-                              Y: =1
-                            Children:
-                              - DataCardKey28:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - ErrorMessage28:
-                                  Control: Text@0.0.51
-                                  MetadataKey: ErrorMessage
-                                  Properties:
-                                    Height: =30
-                                    Text: =Parent.Error
-                                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =
-                              - StarVisible28:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldRequired
-                                  Properties:
-                                    Align: ='TextCanvas.Align'.Center
-                                    Height: =30
-                                    Text: ="*"
-                                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =30
-                                    Y: =DataCardKey28.Y
-                              - cmbAccount:
-                                  Control: DropDown@0.0.45
-                                  Properties:
-                                    Items: |-
-                                      =Sort(
-                                          Distinct(Project_DB, 업무_계정),
-                                          Value,
-                                          SortOrder.Ascending
-                                      )
-                                    Width: =152
-                                    X: =24
-                                    Y: =40
-                                  Children:
-                                    - Value2:
-                                        Control: DropDownDataField@1.5.0
-                                        Variant: textualColumn
-                                        IsLocked: true
-                                        Properties:
-                                          FieldDisplayName: ="Value"
-                                          FieldName: ="Value"
-                                          FieldType: ="s"
-                                          Order: =1
-                        - 비고_DataCard3:
-                            Control: TypedDataCard@1.0.7
-                            Variant: TextualEdit
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="OData__xbe44__xace0_"
-                              Default: =ThisItem.비고
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'OData__xbe44__xace0_')
-                              MaxLength: =DataSourceInfo([@Project_DB], DataSourceInfo.MaxLength, 'OData__xbe44__xace0_')
-                              Required: =false
-                              Update: =DataCardValue30.Value
-                              Width: =200
-                              X: =0
-                              Y: =2
-                            Children:
-                              - DataCardKey30:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    DisplayMode: |-
-                                      =If(
-                                          varProjectMode = "View",
-                                          DisplayMode.View,
-                                          DisplayMode.Edit
-                                      )
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - DataCardValue30:
-                                  Control: TextInput@0.0.54
-                                  MetadataKey: FieldValue
-                                  Properties:
-                                    AccessibleLabel: =Parent.DisplayName
-                                    DisplayMode: =Parent.DisplayMode
-                                    Mode: ="'TextInputCanvas.Mode'.TextInputModeSingleLine"
-                                    Required: =Parent.Required
-                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
-                                    Value: =Parent.Default
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardKey30.Y + DataCardKey30.Height + 4
-                              - ErrorMessage30:
-                                  Control: Text@0.0.51
-                                  MetadataKey: ErrorMessage
-                                  Properties:
-                                    Height: =30
-                                    Text: =Parent.Error
-                                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardValue30.Y + DataCardValue30.Height
-                              - StarVisible30:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldRequired
-                                  Properties:
-                                    Align: ='TextCanvas.Align'.Center
-                                    Height: =30
-                                    Text: ="*"
-                                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                                    Width: =30
-                                    Y: =DataCardKey30.Y
-                        - 만든 날짜_DataCard1:
-                            Control: TypedDataCard@1.0.7
-                            Variant: TextualView
-                            IsLocked: true
-                            Properties:
-                              BorderColor: =RGBA(243, 242, 241, 1)
-                              DataField: ="Created"
-                              Default: =ThisItem.'만든 날짜'
-                              DisplayName: =DataSourceInfo([@Project_DB],DataSourceInfo.DisplayName,'Created')
-                              Required: =false
-                              Width: =182
-                              X: =1
-                              Y: =2
-                            Children:
-                              - DataCardKey31:
-                                  Control: Text@0.0.51
-                                  MetadataKey: FieldName
-                                  Properties:
-                                    Height: =22
-                                    Text: =Parent.DisplayName
-                                    Weight: ='TextCanvas.Weight'.Semibold
-                                    Width: =Parent.Width - 48
-                                    Wrap: =false
-                                    X: =24
-                                    Y: =10
-                              - DataCardValue31:
-                                  Control: TextInput@0.0.54
-                                  MetadataKey: FieldValue
-                                  Properties:
-                                    AccessibleLabel: =Parent.DisplayName
-                                    DisplayMode: =DisplayMode.View
-                                    Mode: ="'TextInputCanvas.Mode'.TextInputModeSingleLine"
-                                    Required: =Parent.Required
-                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
-                                    Value: =Parent.Default
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =DataCardKey31.Y + DataCardKey31.Height + 4
-                  - lblMode:
-                      Control: Text@0.0.51
-                      Properties:
-                        Text: |+
-                          =Switch(
-                              varProjectMode,
-                              "New", "신규 등록 중",
-                              "Edit","편집 중",
-                              "보기"
-                          )
-                        Width: =131
-                        X: =54
-                        Y: =8
+                  X: =959
+                  Y: =666
             - btnCancleProject:
                 Control: Button@0.0.45
                 Properties:
@@ -3151,28 +2729,6 @@ Screens:
                   Visible: =varProjectMode = "New" || varProjectMode = "Edit"
                   X: =744
                   Y: =603
-            - OuterRactangle_2:
-                Control: Rectangle@2.3.0
-                Properties:
-                  BorderColor: =RGBA(243, 242, 241, 1)
-                  BorderStyle: =BorderStyle.None
-                  BorderThickness: =2
-                  DisabledFill: =RGBA(0, 0, 0, 0)
-                  Fill: =RGBA(0, 0, 0, 0.5)
-                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
-                  Height: =667
-                  HoverFill: =
-                  OnSelect: |-
-                    =Set(ShowPopup, false);
-                    Set(editMode, false);
-                    Set(varShowProjectModal, false);
-                    ResetForm(Form1_1);
-                    Set(SelectedItem,{});
-                  PressedFill: =RGBA(0, 0, 0, 0)
-                  Visible: =varShowDeleteConfirm
-                  Width: =1119
-                  X: =-1
-                  Y: =-1
             - conDeleteConfirm:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout
@@ -3214,6 +2770,30 @@ Screens:
                         Text: ="아니오"
                         X: =251
                         Y: =123
+            - ddStatus:
+                Control: ModernDropdown@1.0.1
+                Properties:
+                  ItemDisplayText: =ThisItem.Value
+                  Items: =["전체", "시작전", "진행중", "완료"]
+                  OnChange: =Reset(galProjectList)
+                  Width: =180
+                  X: =180
+                  Y: =40
+            - recPanelDivider:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(243, 242, 241, 1)
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =2
+                  DisabledFill: =RGBA(200, 198, 196, 1)
+                  Fill: |+
+                    =RGBA(220, 220, 220, 1)
+                  FocusedBorderColor: =RGBA(98, 100, 167, 1)
+                  Height: =720
+                  HoverFill: =RGBA(98, 100, 167, 1)
+                  PressedFill: =RGBA(98, 100, 167, 1)
+                  Width: =1
+                  X: =380
       - conNotice:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
