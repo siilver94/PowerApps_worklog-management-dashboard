@@ -103,7 +103,8 @@ ClearCollect(
         {Account:"제품개발", Tag:"기획/검토", Order:6},
         {Account:"제품개발", Tag:"CAE", Order:7},
         {Account:"제품개발", Tag:"문서/보고", Order:8},
-        {Account:"제품개발", Tag:"기타", Order:9},
+        {Account:"제품개발", Tag:"인증", Order:9},
+        {Account:"제품개발", Tag:"기타", Order:10},
 
         {Account:"기술개발", Tag:"— 미선택 —", Order:0},
         {Account:"기술개발", Tag:"조립(제작)", Order:1},
@@ -114,7 +115,8 @@ ClearCollect(
         {Account:"기술개발", Tag:"기획/검토", Order:6},
         {Account:"기술개발", Tag:"CAE", Order:7},
         {Account:"기술개발", Tag:"문서/보고", Order:8},
-        {Account:"기술개발", Tag:"기타", Order:9},
+        {Account:"기술개발", Tag:"인증", Order:9},
+        {Account:"기술개발", Tag:"기타", Order:10},
 
         {Account:"원가절감", Tag:"— 미선택 —", Order:0},
         {Account:"원가절감", Tag:"조립(제작)", Order:1},
@@ -125,7 +127,8 @@ ClearCollect(
         {Account:"원가절감", Tag:"기획/검토", Order:6},
         {Account:"원가절감", Tag:"CAE", Order:7},
         {Account:"원가절감", Tag:"문서/보고", Order:8},
-        {Account:"원가절감", Tag:"기타", Order:9},
+        {Account:"원가절감", Tag:"인증", Order:9},
+        {Account:"원가절감", Tag:"기타", Order:10},
 
         {Account:"설계변경", Tag:"— 미선택 —", Order:0},
         {Account:"설계변경", Tag:"조립(제작)", Order:1},
@@ -136,7 +139,8 @@ ClearCollect(
         {Account:"설계변경", Tag:"기획/검토", Order:6},
         {Account:"설계변경", Tag:"CAE", Order:7},
         {Account:"설계변경", Tag:"문서/보고", Order:8},
-        {Account:"원가절감", Tag:"기타", Order:9},
+        {Account:"원가절감", Tag:"인증", Order:9},
+        {Account:"원가절감", Tag:"기타", Order:10},
 
         // ── TF : 세트 C ──
         {Account:"TF", Tag:"— 미선택 —", Order:0},
@@ -207,6 +211,13 @@ ClearCollect(
         {Account:"연구관리_데이터분석", Tag:"회의", Order:4},
         {Account:"연구관리_데이터분석", Tag:"기타", Order:5},
 
+        // ── 연구관리 : 엔진시험관리 ──
+        {Account:"연구관리_엔진시험관리", Tag:"— 미선택 —", Order:0},
+        {Account:"연구관리_엔진시험관리", Tag:"인력관리", Order:1},
+        {Account:"연구관리_엔진시험관리", Tag:"시설/장비관리", Order:2},
+        {Account:"연구관리_엔진시험관리", Tag:"안전관리", Order:3},
+        {Account:"연구관리_엔진시험관리", Tag:"기타", Order:4},
+
          // ── 출장 ──
         {Account:"출장", Tag:"필드 클레임", Order:0},
         {Account:"출장", Tag:"테스트", Order:1},
@@ -254,39 +265,17 @@ ClearCollect(
 // - 빈 값 제외
 // - Value 기준 정렬
 
+// ── colProjectList: 팀별 모드 (colTargetAuthors가 Task_DB에 등록한 프로젝트) ──
+// Task_DB는 작성자 필터 시 수십~수백건 → Delegation 문제 없음
 
 
-
-
-
-// ── colAllProjects: 프로젝트별 모드 (Project_DB 전체 — 68건, delegation 문제 없음) ──
+// ── colAllProjects: 프로젝트별 모드 (Project_DB 전체 — 68건, 한도 없음) ──
 ClearCollect(
     colAllProjects,
     Sort(
         Distinct(
             AddColumns(
                 Filter(Project_DB, !IsBlank(프로젝트명)),
-                Value,
-                Trim(프로젝트명)
-            ),
-            Value
-        ),
-        Value,
-        SortOrder.Ascending
-    )
-);
-
-// ── colProjectList: 팀별 모드 (우리 팀 작성자가 Task_DB에 등록한 프로젝트) ──
-ClearCollect(
-    colProjectList,
-    Sort(
-        Distinct(
-            AddColumns(
-                Filter(
-                    Task_DB,
-                    작성자 in colTargetAuthors.이름_한글 &&
-                    !IsBlank(프로젝트명)
-                ),
                 Value,
                 Trim(프로젝트명)
             ),
@@ -414,19 +403,21 @@ ClearCollect(
         "소장",   Filter(colUsers, 직급2 = "팀장"),
         "부문장", Filter(colUsers, 직급2 = "팀장" && 부문 = varMyDivision),
         "팀장",   Filter(colUsers, 팀 = varMyTeam),
-                  Filter(colUsers, 이름_한글 = varMyName)
+                  Filter(colUsers, 팀 = varMyTeam)  // 팀원도 팀 전체로 변경 ✅
     )
 );
 
 
-// ── colProjectList: 팀별 모드용 (Project_DB 기반 — delegation 문제 없음) ──
+
+// ── colTargetAuthors 아래에 이걸 붙여 ──
 ClearCollect(
     colProjectList,
     Sort(
         Distinct(
             AddColumns(
                 Filter(
-                    Project_DB,
+                    Task_DB,
+                    작성자 in colTargetAuthors.이름_한글 &&
                     !IsBlank(프로젝트명)
                 ),
                 Value,
